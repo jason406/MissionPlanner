@@ -6456,5 +6456,82 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             TXT_homelat.Text = MouseDownStart.Lat.ToString();
             TXT_homelng.Text = MouseDownStart.Lng.ToString();
         }
+
+        private void panoramaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string altin = "50";
+            string overlapIn= "0.3";
+            string focusLengthIn = "35";
+            int alt = 0;
+            int overlap = 0;
+            int focusLength = 35;
+            if (DialogResult.Cancel == InputBox.Show("输入飞行高度", "高度", ref altin))
+                return;
+            if (!int.TryParse(altin, out alt))
+            {
+                CustomMessageBox.Show("Bad altitude");
+                return;
+            }
+            if (DialogResult.Cancel == InputBox.Show("输入重叠度百分比（APS-C画幅）", "重叠度", ref overlapIn))
+                return;
+            if (!int.TryParse(altin, out overlap))
+            {
+                CustomMessageBox.Show("Bad overlap");
+                return;
+            }
+            //if (DialogResult.Cancel == InputBox.Show("输入焦距（APS-C画幅）", "焦距", ref focusLengthIn))
+            //    return;
+            //if (!int.TryParse(altin, out focusLength))
+            //{
+            //    CustomMessageBox.Show("Bad focus length");
+            //    return;
+            //}
+
+            double mlat = MouseDownEnd.Lat;
+            double mlon = MouseDownEnd.Lng;
+            AddCommand(MAVLink.MAV_CMD.TAKEOFF, 0, 0, 0, 0, 0, 0, alt);
+            AddCommand(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, mlon, mlat, alt);
+
+            switch (overlap)
+            {
+                case 30:
+                    panoramaPhotos(14, 0, mlon, mlat, alt);
+                    panoramaPhotos(13, -18, mlon, mlat, alt);
+                    panoramaPhotos(12, -36, mlon, mlat, alt);
+                    panoramaPhotos(9, -52, mlon, mlat, alt);
+                    panoramaPhotos(6, -67, mlon, mlat, alt);
+                    panoramaPhotos(3, -90, mlon, mlat, alt);
+                    break;
+                case 25:
+                    
+                    break;
+                
+            }
+
+            
+
+
+
+            AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, 0, 0, 0, 0, 0, 0, 10);//云台水平
+            AddCommand(MAVLink.MAV_CMD.RETURN_TO_LAUNCH, 0, 0, 0, 0, 0, 0, 0);//返航
+        }
+        private void panoramaPhotos(int photoCount, int gimbalAngle, double mlon, double mlat, int alt)
+        {
+            float angle = 360 / photoCount;
+            int loiter_1 = 1;
+            int loiter_2 = 1;
+            AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, 0, 0, 0, 0, 10);
+            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
+            AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //转角度
+            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+            for (int i = 0; i < photoCount; i++)
+            {
+                int azimuth = Convert.ToInt32(angle * i);
+                AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+            }
+        }
     }
 }

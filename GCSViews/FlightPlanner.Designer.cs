@@ -196,6 +196,7 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.panoramaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -789,6 +790,7 @@
             // 
             // contextMenuStrip1
             // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.deleteWPToolStripMenuItem,
             this.insertWpToolStripMenuItem,
@@ -1073,7 +1075,8 @@
             this.createWpCircleToolStripMenuItem,
             this.createSplineCircleToolStripMenuItem,
             this.areaToolStripMenuItem1,
-            this.textToolStripMenuItem});
+            this.textToolStripMenuItem,
+            this.panoramaToolStripMenuItem});
             this.autoWPToolStripMenuItem.Name = "autoWPToolStripMenuItem";
             resources.ApplyResources(this.autoWPToolStripMenuItem, "autoWPToolStripMenuItem");
             // 
@@ -1295,6 +1298,12 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
+            // panoramaToolStripMenuItem
+            // 
+            this.panoramaToolStripMenuItem.Name = "panoramaToolStripMenuItem";
+            resources.ApplyResources(this.panoramaToolStripMenuItem, "panoramaToolStripMenuItem");
+            this.panoramaToolStripMenuItem.Click += new System.EventHandler(this.panoramaToolStripMenuItem_Click);
+            // 
             // FlightPlanner
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
@@ -1467,5 +1476,6 @@
         private System.Windows.Forms.ToolStripMenuItem areaToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem setHomeHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem areaToolStripMenuItem1;
+        private System.Windows.Forms.ToolStripMenuItem panoramaToolStripMenuItem;
     }
 }
