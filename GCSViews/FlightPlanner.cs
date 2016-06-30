@@ -6460,11 +6460,13 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void panoramaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             string altin = "50";
-            string overlapIn= "0.3";
+            string overlapIn= "30";
             string focusLengthIn = "35";
+            string useGimbalIn = "true";
             int alt = 0;
             int overlap = 0;
             int focusLength = 35;
+            bool useGimbal = true;
             if (DialogResult.Cancel == InputBox.Show("输入飞行高度", "高度", ref altin))
                 return;
             if (!int.TryParse(altin, out alt))
@@ -6474,18 +6476,18 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             if (DialogResult.Cancel == InputBox.Show("输入重叠度百分比（APS-C画幅）", "重叠度", ref overlapIn))
                 return;
-            if (!int.TryParse(altin, out overlap))
+            if (!int.TryParse(overlapIn, out overlap))
             {
                 CustomMessageBox.Show("Bad overlap");
                 return;
             }
-            //if (DialogResult.Cancel == InputBox.Show("输入焦距（APS-C画幅）", "焦距", ref focusLengthIn))
-            //    return;
-            //if (!int.TryParse(altin, out focusLength))
-            //{
-            //    CustomMessageBox.Show("Bad focus length");
-            //    return;
-            //}
+            if (DialogResult.Cancel == InputBox.Show("是否使用云台？", "云台", ref useGimbalIn))
+                return;
+            if (!bool.TryParse(useGimbalIn, out useGimbal))
+            {
+                CustomMessageBox.Show("please input 1 or 0");
+                return;
+            }
 
             double mlat = MouseDownEnd.Lat;
             double mlon = MouseDownEnd.Lng;
@@ -6495,23 +6497,24 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             switch (overlap)
             {
                 case 30:
-                    panoramaPhotos(14, 0, mlon, mlat, alt);
-                    panoramaPhotos(13, -18, mlon, mlat, alt);
-                    panoramaPhotos(12, -36, mlon, mlat, alt);
-                    panoramaPhotos(9, -52, mlon, mlat, alt);
-                    panoramaPhotos(6, -67, mlon, mlat, alt);
-                    panoramaPhotos(3, -90, mlon, mlat, alt);
+                    panoramaPhotos(14, 0, mlon, mlat, alt,useGimbal,true);
+                    panoramaPhotos(13, -18, mlon, mlat, alt, useGimbal, false);
+                    panoramaPhotos(12, -36, mlon, mlat, alt, useGimbal, true);
+                    panoramaPhotos(9, -52, mlon, mlat, alt, useGimbal, false);
+                    panoramaPhotos(6, -67, mlon, mlat, alt, useGimbal, true);
+                    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
                     break;
                 case 25:
-                    
+                    panoramaPhotos(13, 0, mlon, mlat, alt, useGimbal, true);
+                    panoramaPhotos(12, -19, mlon, mlat, alt, useGimbal, false);
+                    panoramaPhotos(10, -37, mlon, mlat, alt, useGimbal, true);
+                    panoramaPhotos(7, -56, mlon, mlat, alt, useGimbal, false);
+                    panoramaPhotos(4, -72, mlon, mlat, alt, useGimbal, true);
+                    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
                     break;
                 
             }
-
             
-
-
-
             AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, 0, 0, 0, 0, 0, 0, 10);//云台水平
             AddCommand(MAVLink.MAV_CMD.RETURN_TO_LAUNCH, 0, 0, 0, 0, 0, 0, 0);//返航
         }
@@ -6532,6 +6535,69 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
                 AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
             }
+        }
+        private void panoramaPhotos(int photoCount, int gimbalAngle, double mlon, double mlat, int alt,bool useGimbal,bool isCW=true)
+        {
+            float angle = 360 / photoCount;
+            double loiter_1 = 1.5;
+            double loiter_2 = 0.5;
+            int initalYaw = 0;
+            
+
+            if (useGimbal)
+            {
+                AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //飞机机头指北
+                if (isCW)//顺时针，-180转到180
+                {
+                    initalYaw = -180;
+                    AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, initalYaw, 0, 0, 0, 10); //云台指向-180
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等                
+                    for (int i = 0; i < photoCount; i++)
+                    {
+                        int azimuth = Convert.ToInt32(initalYaw + angle * i);
+                        AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                        AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+                    }
+
+                }
+                else//逆时针，180转到-180
+                {
+                    initalYaw = 180;
+                    AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, initalYaw, 0, 0, 0, 10); //云台指向-180
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 2, 0, 0, 0, mlon, mlat, alt);//等                
+                    for (int i = 0; i < photoCount; i++)
+                    {
+                        int azimuth = Convert.ToInt32(initalYaw - angle * i);
+                        AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                        AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+                    }
+                }
+
+                
+            }
+            else //不用云台
+            {
+                loiter_1 = 1;
+                loiter_2 = 1;
+                AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, 0, 0, 0, 0, 10);
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
+                AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //转角度
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                for (int i = 0; i < photoCount; i++)
+                {
+                    int azimuth = Convert.ToInt32(angle * i);
+                    AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                    AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+                }
+            }
+            
+            
         }
     }
 }
