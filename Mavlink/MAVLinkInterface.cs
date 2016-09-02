@@ -2832,9 +2832,11 @@ Please check the following
                 req.input_c = (int) (pc*100.0);
             }
 
-            generatePacket((byte) MAVLINK_MSG_ID.MOUNT_CONTROL, req);
+            generatePacket((byte)MAVLINK_MSG_ID.MOUNT_CONTROL, req);
             System.Threading.Thread.Sleep(20);
-            generatePacket((byte) MAVLINK_MSG_ID.MOUNT_CONTROL, req);
+            generatePacket((byte)MAVLINK_MSG_ID.MOUNT_CONTROL, req);
+            //generatePacket((byte)MAVLINK_MSG_ID.MOUNT_CONTROL, req);
+            //MainV2.comPort.doCommand(MAV_CMD.DO_MOUNT_CONTROL, Convert.ToInt32(pa/100), 0, 0, 0, 0, 0, 0);
         }
 
         public void setMode(string modein)
