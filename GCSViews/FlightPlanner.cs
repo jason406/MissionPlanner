@@ -6462,7 +6462,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             string altin = "50";
             string overlapIn= "30";
             string focusLengthIn = "35";
-            string useGimbalIn = "true";
+            string useGimbalIn = "false";
             int alt = 0;
             int overlap = 0;
             int focusLength = 35;
@@ -6472,6 +6472,13 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             if (!int.TryParse(altin, out alt))
             {
                 CustomMessageBox.Show("Bad altitude");
+                return;
+            }
+            if (DialogResult.Cancel == InputBox.Show("输入相机焦距", "焦距", ref focusLengthIn))
+                return;
+            if (!int.TryParse(focusLengthIn, out focusLength))
+            {
+                CustomMessageBox.Show("Bad focuslength");
                 return;
             }
             if (DialogResult.Cancel == InputBox.Show("输入重叠度百分比（APS-C画幅）", "重叠度", ref overlapIn))
@@ -6494,26 +6501,67 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             AddCommand(MAVLink.MAV_CMD.TAKEOFF, 0, 0, 0, 0, 0, 0, alt);
             AddCommand(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, mlon, mlat, alt);
 
-            switch (overlap)
+            if (focusLength == 35)
             {
-                case 30:
-                    panoramaPhotos(14, 0, mlon, mlat, alt,useGimbal,true);
-                    panoramaPhotos(13, -18, mlon, mlat, alt, useGimbal, false);
-                    panoramaPhotos(12, -36, mlon, mlat, alt, useGimbal, true);
-                    panoramaPhotos(9, -52, mlon, mlat, alt, useGimbal, false);
-                    panoramaPhotos(6, -67, mlon, mlat, alt, useGimbal, true);
-                    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
-                    break;
-                case 25:
-                    panoramaPhotos(13, 0, mlon, mlat, alt, useGimbal, true);
-                    panoramaPhotos(12, -19, mlon, mlat, alt, useGimbal, false);
-                    panoramaPhotos(10, -37, mlon, mlat, alt, useGimbal, true);
-                    panoramaPhotos(7, -56, mlon, mlat, alt, useGimbal, false);
-                    panoramaPhotos(4, -72, mlon, mlat, alt, useGimbal, true);
-                    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
-                    break;
-                
+                switch (overlap)
+                {
+                    case 30:
+                        panoramaPhotos(15, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(14, -16, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(12, -33, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(10, -49, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(7, -63, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(4, -78, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);
+                        break;
+                    case 25:
+                        panoramaPhotos(14, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(13, -18, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(11, -35, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(8, -52, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(6, -68, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
+                        break;
+                    case 20:
+                        panoramaPhotos(13, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(12, -20, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(10, -38, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(7, -57, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(4, -74, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
+                        break;
+                    case 15:
+                        panoramaPhotos(12, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(11, -20, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(9, -41, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(6, -61, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(3, -79, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, false);
+                        break;
+
+
+                }
             }
+            if (focusLength==75)
+            {
+                switch (overlap)
+                {
+                    case 20:
+                        panoramaPhotos(27, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(27, -9, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(25, -18, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(23, -27, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(22, -35, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(18, -44, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(16, -53, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(12, -62, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(9, -70, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(6, -78, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);                        
+                        break;
+                }
+            }
+            
             
             AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, 0, 0, 0, 0, 0, 0, 10);//云台水平
             AddCommand(MAVLink.MAV_CMD.RETURN_TO_LAUNCH, 0, 0, 0, 0, 0, 0, 0);//返航
@@ -6539,13 +6587,15 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void panoramaPhotos(int photoCount, int gimbalAngle, double mlon, double mlat, int alt,bool useGimbal,bool isCW=true)
         {
             float angle = 360 / photoCount;
-            double loiter_1 = 1.5;
-            double loiter_2 = 0.5;
+            double loiter_1;
+            double loiter_2;
             int initalYaw = 0;
             
 
             if (useGimbal)
             {
+                 loiter_1 = 1.5;
+                 loiter_2 = 0.5;
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //飞机机头指北
                 if (isCW)//顺时针，-180转到180
                 {
@@ -6558,7 +6608,10 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
                         AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
                         AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+                        if (loiter_2 != 0)
+                        {
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                        }
                     }
 
                 }
@@ -6573,7 +6626,10 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
                         AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
                         AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
+                        if (loiter_2 != 0)
+                        {
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                        }
                     }
                 }
 
@@ -6581,8 +6637,8 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             else //不用云台
             {
-                loiter_1 = 1;
-                loiter_2 = 1;
+                loiter_1 = 2;
+                loiter_2 = 0;
                 AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, 0, 0, 0, 0, 10);
                 AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //转角度
@@ -6593,8 +6649,11 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                     AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
                     AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
                     AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
-                }
+                        if (loiter_2 != 0)
+                        {
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                        }
+                    }
             }
             
             
