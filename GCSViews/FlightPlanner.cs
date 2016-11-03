@@ -6505,6 +6505,15 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             {
                 switch (overlap)
                 {
+                    case 300://线性调整重叠度
+                        panoramaPhotos(15, 0, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(14, -12, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(13, -25, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(11, -40, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(9, -55, mlon, mlat, alt, useGimbal, true);
+                        panoramaPhotos(6, -70, mlon, mlat, alt, useGimbal, false);
+                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);
+                        break;
                     case 30:
                         panoramaPhotos(15, 0, mlon, mlat, alt, useGimbal, true);
                         panoramaPhotos(14, -16, mlon, mlat, alt, useGimbal, false);
@@ -6514,7 +6523,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                         panoramaPhotos(4, -78, mlon, mlat, alt, useGimbal, false);
                         panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);
                         break;
-                    case 25:
+                    case 25: 
                         panoramaPhotos(14, 0, mlon, mlat, alt, useGimbal, true);
                         panoramaPhotos(13, -18, mlon, mlat, alt, useGimbal, false);
                         panoramaPhotos(11, -35, mlon, mlat, alt, useGimbal, true);
@@ -6594,8 +6603,8 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
             if (useGimbal)
             {
-                 loiter_1 = 1.5;
-                 loiter_2 = 0.5;
+                 loiter_1 = 2;
+                 loiter_2 = 0;
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //飞机机头指北
                 if (isCW)//顺时针，-180转到180
                 {
@@ -6638,7 +6647,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             else //不用云台
             {
                 loiter_1 = 2;
-                loiter_2 = 0;
+                loiter_2 = 0.5;
                 AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, 0, 0, 0, 0, 10);
                 AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //转角度
