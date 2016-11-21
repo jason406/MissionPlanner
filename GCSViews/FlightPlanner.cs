@@ -6492,7 +6492,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             if (DialogResult.Cancel == InputBox.Show("输入起始角度，负数为朝上", "起始角度", ref startAngleIn))
                 return;
-            if (!int.TryParse(startAngleIn, out overlap))
+            if (!int.TryParse(startAngleIn, out startAngle))
             {
                 CustomMessageBox.Show("Bad overlap");
                 return;
@@ -6579,6 +6579,34 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                             break;
                         case 30:
                             panoramaPhotos(11, 40, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(13, 27, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(14, 15, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(15, 3, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(14, -9, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(14, -23, mlon, mlat, alt, useGimbal, false);
+                            panoramaPhotos(12, -37, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(9, -53, mlon, mlat, alt, useGimbal, false);
+                            panoramaPhotos(6, -68, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(3, -87, mlon, mlat, alt, useGimbal, false);
+                            break;
+                    }
+                }
+
+                if (startAngle == -25)
+                {
+                    switch (overlap)
+                    {
+                        case 25:                            
+                            panoramaPhotos(12, 26, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(13, 13, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(14, 1, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(13, -15, mlon, mlat, alt, useGimbal, false);
+                            panoramaPhotos(12, -31, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(9, -47, mlon, mlat, alt, useGimbal, false);
+                            panoramaPhotos(6, -64, mlon, mlat, alt, useGimbal, true);
+                            panoramaPhotos(3, -83, mlon, mlat, alt, useGimbal, false);
+                            break;
+                        case 30:                            
                             panoramaPhotos(13, 27, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(14, 15, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(15, 3, mlon, mlat, alt, useGimbal, true);
