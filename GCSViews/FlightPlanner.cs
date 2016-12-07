@@ -6485,16 +6485,16 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             if (DialogResult.Cancel == InputBox.Show("输入重叠度百分比（APS-C画幅）", "重叠度", ref overlapIn))
                 return;
-            if (!int.TryParse(overlapIn, out startAngle))
+            if (!int.TryParse(overlapIn, out overlap))
             {
-                CustomMessageBox.Show("Bad startAngle");
+                CustomMessageBox.Show("Bad overlap");
                 return;
             }
             if (DialogResult.Cancel == InputBox.Show("输入起始角度，负数为朝上", "起始角度", ref startAngleIn))
                 return;
             if (!int.TryParse(startAngleIn, out startAngle))
             {
-                CustomMessageBox.Show("Bad overlap");
+                CustomMessageBox.Show("Bad startAngle");
                 return;
             }
             if (DialogResult.Cancel == InputBox.Show("是否使用云台？", "云台", ref useGimbalIn))
