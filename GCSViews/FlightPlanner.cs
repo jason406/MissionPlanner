@@ -6668,6 +6668,10 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void panoramaPhotos(int photoCount, int gimbalAngle, double mlon, double mlat, int alt,bool useGimbal,bool isCW=true)
         {
             float angle = 360 / photoCount;
+            const double loiter_time1_gimbal_yaw=2.5;
+            const double loiter_time2_gimbal_yaw=0;
+            const double loiter_time1_no_gimbal=3.5;
+            const double loiter_time2_no_gimbal=0;
             double loiter_1;
             double loiter_2;
             int initalYaw = 0;
@@ -6675,23 +6679,23 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
             if (useGimbal)
             {
-                 loiter_1 = 2;
-                 loiter_2 = 0;
+                 
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //飞机机头指北
                 if (isCW)//顺时针，-180转到180
                 {
                     initalYaw = -180;
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                     AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, initalYaw, 0, 0, 0, 10); //云台指向-180
                     AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等                
                     for (int i = 0; i < photoCount; i++)
                     {
                         int azimuth = Convert.ToInt32(initalYaw + angle * i);
                         AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
-                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
                         AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                        if (loiter_2 != 0)
+                        if (loiter_time2_gimbal_yaw != 0)
                         {
-                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
                         }
                     }
 
@@ -6699,17 +6703,18 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
                 else//逆时针，180转到-180
                 {
                     initalYaw = 180;
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                     AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, initalYaw, 0, 0, 0, 10); //云台指向-180
                     AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 2, 0, 0, 0, mlon, mlat, alt);//等                
                     for (int i = 0; i < photoCount; i++)
                     {
                         int azimuth = Convert.ToInt32(initalYaw - angle * i);
                         AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
-                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                        AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
                         AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                        if (loiter_2 != 0)
+                        if (loiter_time2_gimbal_yaw != 0)
                         {
-                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
                         }
                     }
                 }
@@ -6718,21 +6723,20 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             else //不用云台
             {
-                loiter_1 = 2.5;
-                loiter_2 = 0;
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                 AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, 0, 0, 0, 0, 10);
                 AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
                 AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //转角度
-                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_no_gimbal, 0, 0, 0, mlon, mlat, alt);//等
                 for (int i = 0; i < photoCount; i++)
                 {
                     int azimuth = Convert.ToInt32(angle * i);
                     AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
-                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
+                    AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_no_gimbal, 0, 0, 0, mlon, mlat, alt);//等
                     AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
-                        if (loiter_2 != 0)
+                        if (loiter_time2_no_gimbal != 0)
                         {
-                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等}
+                            AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_no_gimbal, 0, 0, 0, mlon, mlat, alt);//等}
                         }
                     }
             }
