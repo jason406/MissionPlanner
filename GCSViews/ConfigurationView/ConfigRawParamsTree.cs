@@ -186,9 +186,16 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             if (Common.MessageShowAgain("Write Raw Params Tree", "Are you Sure?") != DialogResult.OK)
                 return;
 
-            var temp = (Hashtable) _changes.Clone();
+            // sort with enable at the bottom - this ensures params are set before the function is disabled
+            var temp = new List<string>();
+            foreach (var item in _changes.Keys)
+            {
+                temp.Add((string)item);
+            }
 
-            foreach (string value in temp.Keys)
+            temp.SortENABLE();
+
+            foreach (string value in temp)
             {
                 try
                 {
@@ -339,7 +346,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 data.root = split[0];
 
                 data.paramname = value;
-                data.Value = ((float) MainV2.comPort.MAV.param[value]).ToString();
+                data.Value = MainV2.comPort.MAV.param[value].ToString();
                 try
                 {
                     var metaDataDescription = ParameterMetaDataRepository.GetParameterMetaData(value,
@@ -425,7 +432,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
         private void BUT_paramfileload_Click(object sender, EventArgs e)
         {
-            var filepath = Application.StartupPath + Path.DirectorySeparatorChar + CMB_paramfiles.Text;
+            var filepath = Settings.GetUserDataDirectory() + CMB_paramfiles.Text;
 
             try
             {

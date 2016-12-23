@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
@@ -15,8 +15,9 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
-    <NuGetPackageImportStamp>8c4aca6f</NuGetPackageImportStamp>
-    <PublishUrl>C:\publish\MissionPlanner\</PublishUrl>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <PublishUrl>f:\publish\MissionPlanner\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
     <UpdateEnabled>false</UpdateEnabled>
@@ -31,14 +32,14 @@
     <PublisherName>Michael Oborne</PublisherName>
     <CreateWebPageOnPublish>true</CreateWebPageOnPublish>
     <WebPage>index.htm</WebPage>
-    <ApplicationRevision>5</ApplicationRevision>
-    <ApplicationVersion>0.0.0.%2a</ApplicationVersion>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.39.1.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -52,7 +53,7 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
-    <PlatformTarget>x86</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -73,7 +74,7 @@
     <StartupObject>MissionPlanner.Program</StartupObject>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>B6B1638E5EFC0DA254F575DF248AD0D1D227924B</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>6DC36D951ED074FB9F9133D7127A2732E1A5C23E</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
     <ManifestKeyFile>
@@ -83,11 +84,11 @@
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
-    <SignManifests>false</SignManifests>
+    <SignManifests>true</SignManifests>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
-    <TargetZone>Custom</TargetZone>
+    <TargetZone>Internet</TargetZone>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -120,6 +121,24 @@
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <LangVersion>default</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="alglibnet2">
       <HintPath>ExtLibs\alglibnet2.dll</HintPath>
@@ -145,9 +164,17 @@
     <Reference Include="DotSpatial.Topology">
       <HintPath>packages\DotSpatial.Topology.1.6.0.0\lib\net40-Client\DotSpatial.Topology.dll</HintPath>
     </Reference>
-    <Reference Include="fftpack_lite, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
+    <Reference Include="Flurl, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLLs\fftpack_lite.dll</HintPath>
+      <HintPath>ExtLibs\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoJSON.Net, Version=0.1.37.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GeoJSON.Net.0.1.37\lib\GeoJSON.Net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -155,26 +182,28 @@
     <Reference Include="Ionic.Zip">
       <HintPath>packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
     </Reference>
-    <Reference Include="lapack_lite, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLLs\lapack_lite.dll</HintPath>
-    </Reference>
     <Reference Include="log4net">
       <HintPath>packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
-      <HintPath>ExtLibs\Microsoft.DirectX.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.DirectX.DirectInput, Version=1.0.2902.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
       <Private>True</Private>
-      <HintPath>ExtLibs\Microsoft.DirectX.DirectInput.dll</HintPath>
     </Reference>
-    <Reference Include="mtrand, Version=0.0.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>DLLs\mtrand.dll</HintPath>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="netDxf, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\netDXF.0.9.3\lib\netDxf.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="ObjectListView">
       <HintPath>packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
@@ -182,26 +211,65 @@
     <Reference Include="protobuf-net">
       <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
     </Reference>
+    <Reference Include="SharpDX">
+      <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DirectInput">
+      <HintPath>$(SharpDXPackageBinDir)\SharpDX.DirectInput.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System.Management" />
-    <Reference Include="System.Reactive.Core">
-      <HintPath>packages\Rx-Core.2.2.4\lib\net40\System.Reactive.Core.dll</HintPath>
+    <Reference Include="System.Net" />
+    <Reference Include="System.Net.Http, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces">
-      <HintPath>packages\Rx-Interfaces.2.2.4\lib\net40\System.Reactive.Interfaces.dll</HintPath>
+    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Extensions.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.Linq">
-      <HintPath>packages\Rx-Linq.2.2.4\lib\net40\System.Reactive.Linq.dll</HintPath>
+    <Reference Include="System.Net.Http.Primitives, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Primitives.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices">
-      <HintPath>packages\Rx-PlatformServices.2.2.4\lib\net40\System.Reactive.PlatformServices.dll</HintPath>
+    <Reference Include="System.Net.Http.WebRequest, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Rx-Core.2.2.5\lib\net40\System.Reactive.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Rx-Interfaces.2.2.5\lib\net40\System.Reactive.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Rx-Linq.2.2.5\lib\net40\System.Reactive.Linq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>packages\Rx-PlatformServices.2.2.5\lib\net40\System.Reactive.PlatformServices.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
     <Reference Include="System.Speech">
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Web" />
@@ -210,9 +278,6 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Transitions">
-      <HintPath>ExtLibs\Transitions.dll</HintPath>
-    </Reference>
     <Reference Include="BouncyCastle.Crypto">
       <HintPath>packages\BouncyCastle.1.7.0\lib\Net20\BouncyCastle.Crypto.dll</HintPath>
     </Reference>
@@ -243,9 +308,6 @@
     <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
       <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
     </Reference>
-    <Reference Include="netDxf">
-      <HintPath>ExtLibs\netDxf.dll</HintPath>
-    </Reference>
     <Reference Include="OpenTK">
       <HintPath>ExtLibs\OpenTK.dll</HintPath>
     </Reference>
@@ -257,6 +319,10 @@
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="Transitions, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\Transitions.dll</HintPath>
+    </Reference>
     <Reference Include="zlib.net">
       <HintPath>ExtLibs\zlib.net.dll</HintPath>
     </Reference>
@@ -273,7 +339,40 @@
       <DependentUpon>Tracker.cs</DependentUpon>
     </Compile>
     <Compile Include="Arduino\IArduinoComms.cs" />
-    <Compile Include="Arduino\BoardDetect.cs" />
+    <Compile Include="Controls\ControlSensorsStatus.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\ControlSensorsStatus.Designer.cs">
+      <DependentUpon>ControlSensorsStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Swarm\FollowLeader\Control.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Swarm\FollowLeader\Control.Designer.cs">
+      <DependentUpon>Control.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Swarm\FollowLeader\Drone.cs" />
+    <Compile Include="Swarm\FollowLeader\DroneGroup.cs" />
+    <Compile Include="Swarm\WaypointLeader\WPControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Swarm\WaypointLeader\WPControl.Designer.cs">
+      <DependentUpon>WPControl.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Swarm\WaypointLeader\Drone.cs" />
+    <Compile Include="Swarm\WaypointLeader\DroneGroup.cs" />
+    <Compile Include="Swarm\WaypointLeader\Path.cs" />
+    <Compile Include="Utilities\AltitudeAngel\AASettings.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utilities\AltitudeAngel\AASettings.Designer.cs">
+      <DependentUpon>AASettings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\AltitudeAngel\AltitudeAngel.cs" />
+    <Compile Include="Utilities\AltitudeAngel\MapAdapter.cs" />
+    <Compile Include="Utilities\AltitudeAngel\MissionPlannerAdaptor.cs" />
+    <Compile Include="Utilities\AltitudeAngel\OverlayAdapter.cs" />
+    <Compile Include="Utilities\BoardDetect.cs" />
     <Compile Include="Arduino\ArduinoSTK.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -300,6 +399,12 @@
     </Compile>
     <Compile Include="Controls\ConnectionStats.Designer.cs">
       <DependentUpon>ConnectionStats.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ControlTest.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\ControlTest.Designer.cs">
+      <DependentUpon>ControlTest.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\DistanceBar.cs">
       <SubType>UserControl</SubType>
@@ -357,7 +462,7 @@
       <DependentUpon>ServoOptions.cs</DependentUpon>
     </Compile>
     <Compile Include="Controls\SITL.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\SITL.Designer.cs">
       <DependentUpon>SITL.cs</DependentUpon>
@@ -462,12 +567,6 @@
     <Compile Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.Designer.cs">
       <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
     </Compile>
-    <Compile Include="GCSViews\ConfigurationView\ConfigCameraStab.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GCSViews\ConfigurationView\ConfigCameraStab.Designer.cs">
-      <DependentUpon>ConfigCameraStab.cs</DependentUpon>
-    </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigCompassMot.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -542,6 +641,12 @@
     </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigHWCompass.Designer.cs">
       <DependentUpon>ConfigHWCompass.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.Designer.cs">
+      <DependentUpon>ConfigHWUAVCAN.cs</DependentUpon>
     </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigHWPX4Flow.cs">
       <SubType>UserControl</SubType>
@@ -669,12 +774,6 @@
     <Compile Include="GCSViews\InitialSetup.Designer.cs">
       <DependentUpon>InitialSetup.cs</DependentUpon>
     </Compile>
-    <Compile Include="GCSViews\Simulation.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GCSViews\Simulation.Designer.cs">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </Compile>
     <Compile Include="GCSViews\SoftwareConfig.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -799,6 +898,11 @@
       <DependentUpon>PluginUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ConfigCameraStabModel.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Radio\XModem.cs" />
     <Compile Include="ScriptConsole.cs">
       <SubType>Form</SubType>
@@ -823,6 +927,21 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Strings.resx</DependentUpon>
     </Compile>
+    <Compile Include="Strings.id-ID.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.id-ID.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Strings.ja-JP.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.ja-JP.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Strings.ko-KR.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Strings.ko-KR.resx</DependentUpon>
+    </Compile>
     <Compile Include="Strings.zh-Hans.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -834,13 +953,13 @@
     <Compile Include="Swarm\FollowPathControl.Designer.cs">
       <DependentUpon>FollowPathControl.cs</DependentUpon>
     </Compile>
-    <Compile Include="System.cs" />
     <Compile Include="Utilities\Airports.cs" />
     <Compile Include="Utilities\AP_GPS_base.cs" />
     <Compile Include="Utilities\AP_GPS_GSOF.cs" />
     <Compile Include="Utilities\AP_GPS_NOVA.cs" />
     <Compile Include="Utilities\AP_GPS_SBF.cs" />
     <Compile Include="Utilities\AP_Terrain.cs" />
+    <Compile Include="Utilities\dxf.cs" />
     <Compile Include="Utilities\GMapMarkerOverlapCount.cs" />
     <Compile Include="Utilities\GMapMarkerPOI.cs" />
     <Compile Include="Utilities\GMapMarkerPhoto.cs" />
@@ -862,6 +981,7 @@
     <Compile Include="Utilities\ICorrections.cs" />
     <Compile Include="Utilities\ImageProjection.cs" />
     <Compile Include="Utilities\LineOffset.cs" />
+    <Compile Include="Utilities\ListExtension.cs" />
     <Compile Include="Utilities\LogAnalyzer.cs" />
     <Compile Include="NoFly\NoFly.cs" />
     <Compile Include="Utilities\NGEN.cs" />
@@ -869,6 +989,7 @@
     <Compile Include="Utilities\ParameterMetaDataRepositoryAPM.cs" />
     <Compile Include="Utilities\ParameterMetaDataRepositoryPX4.cs" />
     <Compile Include="Utilities\Firmware.cs" />
+    <Compile Include="Utilities\ubx_m8p.cs" />
     <Compile Include="Wizard\10FlightModes.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -968,6 +1089,12 @@
     </Compile>
     <EmbeddedResource Include="Controls\AuthKeys.resx">
       <DependentUpon>AuthKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ControlSensorsStatus.resx">
+      <DependentUpon>ControlSensorsStatus.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ControlTest.resx">
+      <DependentUpon>ControlTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\Loading.resx">
       <DependentUpon>Loading.cs</DependentUpon>
@@ -1280,9 +1407,6 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.zh-TW.resx">
       <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigCameraStab.resx">
-      <DependentUpon>ConfigCameraStab.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigCompassMot.resx">
       <DependentUpon>ConfigCompassMot.cs</DependentUpon>
     </EmbeddedResource>
@@ -1566,6 +1690,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWCompass.zh-TW.resx">
       <DependentUpon>ConfigHWCompass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.resx">
+      <DependentUpon>ConfigHWUAVCAN.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWPX4Flow.resx">
       <DependentUpon>ConfigHWPX4Flow.cs</DependentUpon>
@@ -2088,46 +2215,6 @@
     <EmbeddedResource Include="GCSViews\InitialSetup.zh-TW.resx">
       <DependentUpon>InitialSetup.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.de-DE.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.es-ES.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.fr.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.id-ID.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.it-IT.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.ja-JP.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.ko-KR.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.pl.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.ru-RU.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.zh-Hans.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.zh-Hant.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\Simulation.zh-TW.resx">
-      <DependentUpon>Simulation.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\SoftwareConfig.resx">
       <DependentUpon>SoftwareConfig.cs</DependentUpon>
     </EmbeddedResource>
@@ -2173,6 +2260,15 @@
     <EmbeddedResource Include="Log\LogStrings.resx">
       <LastGenOutput>LogStrings.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Swarm\FollowLeader\Control.resx">
+      <DependentUpon>Control.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Swarm\WaypointLeader\WPControl.resx">
+      <DependentUpon>WPControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utilities\AltitudeAngel\AASettings.resx">
+      <DependentUpon>AASettings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\10FlightModes.id-ID.resx">
       <DependentUpon>10FlightModes.cs</DependentUpon>
@@ -2512,30 +2608,28 @@
     <None Include="Drivers\mindpx.cat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Drivers\px4flow.cat" />
-    <None Include="Drivers\px4flow.inf" />
-    <None Include="Drivers\px4fmu.cat" />
-    <None Include="Drivers\px4fmu.inf" />
+    <None Include="Drivers\px4flow.cat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\px4flow.inf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\px4fmu.cat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\px4fmu.inf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Drivers\px4mav.cat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Drivers\vrbrain.cat" />
-    <None Include="Drivers\vrcore.cat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Include="Drivers\vrbrain.cat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Drivers\vrflightstop.cat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="Drivers\vrgimbal.cat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Drivers\vrhero.cat" />
-    <None Include="Drivers\vrmapper.cat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="Drivers\vrspark.cat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
     <None Include="Drivers\vrthermal.cat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -2543,6 +2637,11 @@
     <None Include="Drivers\vrugimbal.cat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="Lib.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="LogAnalyzer\py2exe\createexe.bat" />
+    <None Include="LogAnalyzer\upload.bat" />
     <None Include="Utilities\ImageOverFilter.cs" />
     <EmbeddedResource Include="Antenna\Tracker.id-ID.resx">
       <DependentUpon>Tracker.cs</DependentUpon>
@@ -3400,14 +3499,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <EmbeddedResource Include="SerialOutputNMEA.resx">
       <DependentUpon>SerialOutputNMEA.cs</DependentUpon>
     </EmbeddedResource>
@@ -3444,8 +3538,17 @@
     <Content Include="acsimplepids.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="adb.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="AdbWinApi.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="aircraft.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="appxmanifest.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="ArduCopterConfig.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -3477,13 +3580,24 @@
     <Content Include="DLLs\NumpyDotNet.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Drivers\dpinst.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Drivers\DPInstx64.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Drivers\DPInstx86.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Drivers\mindpx.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Drivers\px4mav.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Drivers\vrbrain.inf" />
+    <Content Include="Drivers\vrbrain.inf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Drivers\vrcore.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3507,1014 +3621,37 @@
     <Content Include="Drivers\vrugimbal.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Lib\abc.py" />
-    <Content Include="Lib\aifc.py" />
-    <Content Include="Lib\antigravity.py" />
-    <Content Include="Lib\anydbm.py" />
-    <Content Include="Lib\argparse.py" />
-    <Content Include="Lib\ast.py" />
-    <Content Include="Lib\asynchat.py" />
-    <Content Include="Lib\asyncore.py" />
-    <Content Include="Lib\atexit.py" />
-    <Content Include="Lib\audiodev.py" />
-    <Content Include="Lib\base64.py" />
-    <Content Include="Lib\BaseHTTPServer.py" />
-    <Content Include="Lib\Bastion.py" />
-    <Content Include="Lib\bdb.py" />
-    <Content Include="Lib\binhex.py" />
-    <Content Include="Lib\bisect.py" />
-    <Content Include="Lib\calendar.py" />
-    <Content Include="Lib\cgi.py" />
-    <Content Include="Lib\CGIHTTPServer.py" />
-    <Content Include="Lib\cgitb.py" />
-    <Content Include="Lib\chunk.py" />
-    <Content Include="Lib\cmd.py" />
-    <Content Include="Lib\code.py" />
-    <Content Include="Lib\codecs.py" />
-    <Content Include="Lib\codeop.py" />
-    <Content Include="Lib\collections.py" />
-    <Content Include="Lib\colorsys.py" />
-    <Content Include="Lib\commands.py" />
-    <Content Include="Lib\compileall.py" />
-    <Content Include="Lib\ConfigParser.py" />
-    <Content Include="Lib\contextlib.py" />
-    <Content Include="Lib\Cookie.py" />
-    <Content Include="Lib\cookielib.py" />
-    <Content Include="Lib\copy.py" />
-    <Content Include="Lib\csv.py" />
-    <Content Include="Lib\ctypes\macholib\dyld.py" />
-    <Content Include="Lib\ctypes\macholib\dylib.py" />
-    <Content Include="Lib\ctypes\macholib\framework.py" />
-    <Content Include="Lib\ctypes\macholib\__init__.py" />
-    <Content Include="Lib\ctypes\util.py" />
-    <Content Include="Lib\ctypes\wintypes.py" />
-    <Content Include="Lib\ctypes\_endian.py" />
-    <Content Include="Lib\ctypes\__init__.py" />
-    <Content Include="Lib\decimal.py" />
-    <Content Include="Lib\difflib.py" />
-    <Content Include="Lib\dircache.py" />
-    <Content Include="Lib\dis.py" />
-    <Content Include="Lib\distutils\archive_util.py" />
-    <Content Include="Lib\distutils\bcppcompiler.py" />
-    <Content Include="Lib\distutils\ccompiler.py" />
-    <Content Include="Lib\distutils\cmd.py" />
-    <Content Include="Lib\distutils\command\bdist.py" />
-    <Content Include="Lib\distutils\command\bdist_dumb.py" />
-    <Content Include="Lib\distutils\command\bdist_rpm.py" />
-    <Content Include="Lib\distutils\command\bdist_wininst.py" />
-    <Content Include="Lib\distutils\command\build.py" />
-    <Content Include="Lib\distutils\command\build_clib.py" />
-    <Content Include="Lib\distutils\command\build_ext.py" />
-    <Content Include="Lib\distutils\command\build_py.py" />
-    <Content Include="Lib\distutils\command\build_scripts.py" />
-    <Content Include="Lib\distutils\command\check.py" />
-    <Content Include="Lib\distutils\command\clean.py" />
-    <Content Include="Lib\distutils\command\config.py" />
-    <Content Include="Lib\distutils\command\install.py" />
-    <Content Include="Lib\distutils\command\install_data.py" />
-    <Content Include="Lib\distutils\command\install_egg_info.py" />
-    <Content Include="Lib\distutils\command\install_headers.py" />
-    <Content Include="Lib\distutils\command\install_lib.py" />
-    <Content Include="Lib\distutils\command\install_scripts.py" />
-    <Content Include="Lib\distutils\command\register.py" />
-    <Content Include="Lib\distutils\command\sdist.py" />
-    <Content Include="Lib\distutils\command\upload.py" />
-    <Content Include="Lib\distutils\command\__init__.py" />
-    <Content Include="Lib\distutils\config.py" />
-    <Content Include="Lib\distutils\core.py" />
-    <Content Include="Lib\distutils\cygwinccompiler.py" />
-    <Content Include="Lib\distutils\debug.py" />
-    <Content Include="Lib\distutils\dep_util.py" />
-    <Content Include="Lib\distutils\dir_util.py" />
-    <Content Include="Lib\distutils\dist.py" />
-    <Content Include="Lib\distutils\emxccompiler.py" />
-    <Content Include="Lib\distutils\errors.py" />
-    <Content Include="Lib\distutils\extension.py" />
-    <Content Include="Lib\distutils\fancy_getopt.py" />
-    <Content Include="Lib\distutils\filelist.py" />
-    <Content Include="Lib\distutils\file_util.py" />
-    <Content Include="Lib\distutils\log.py" />
-    <Content Include="Lib\distutils\msvccompiler.py" />
-    <Content Include="Lib\distutils\spawn.py" />
-    <Content Include="Lib\distutils\sysconfig.py" />
-    <Content Include="Lib\distutils\text_file.py" />
-    <Content Include="Lib\distutils\unixccompiler.py" />
-    <Content Include="Lib\distutils\util.py" />
-    <Content Include="Lib\distutils\version.py" />
-    <Content Include="Lib\distutils\versionpredicate.py" />
-    <Content Include="Lib\distutils\__init__.py" />
-    <Content Include="Lib\doctest.py" />
-    <Content Include="Lib\DocXMLRPCServer.py" />
-    <Content Include="Lib\dumbdbm.py" />
-    <Content Include="Lib\dummy_thread.py" />
-    <Content Include="Lib\dummy_threading.py" />
-    <Content Include="Lib\email\base64mime.py" />
-    <Content Include="Lib\email\charset.py" />
-    <Content Include="Lib\email\encoders.py" />
-    <Content Include="Lib\email\errors.py" />
-    <Content Include="Lib\email\feedparser.py" />
-    <Content Include="Lib\email\generator.py" />
-    <Content Include="Lib\email\header.py" />
-    <Content Include="Lib\email\iterators.py" />
-    <Content Include="Lib\email\message.py" />
-    <Content Include="Lib\email\mime\application.py" />
-    <Content Include="Lib\email\mime\audio.py" />
-    <Content Include="Lib\email\mime\base.py" />
-    <Content Include="Lib\email\mime\image.py" />
-    <Content Include="Lib\email\mime\message.py" />
-    <Content Include="Lib\email\mime\multipart.py" />
-    <Content Include="Lib\email\mime\nonmultipart.py" />
-    <Content Include="Lib\email\mime\text.py" />
-    <Content Include="Lib\email\mime\__init__.py" />
-    <Content Include="Lib\email\parser.py" />
-    <Content Include="Lib\email\quoprimime.py" />
-    <Content Include="Lib\email\utils.py" />
-    <Content Include="Lib\email\_parseaddr.py" />
-    <Content Include="Lib\email\__init__.py" />
-    <Content Include="Lib\encodings\aliases.py" />
-    <Content Include="Lib\encodings\ascii.py" />
-    <Content Include="Lib\encodings\base64_codec.py" />
-    <Content Include="Lib\encodings\charmap.py" />
-    <Content Include="Lib\encodings\cp037.py" />
-    <Content Include="Lib\encodings\cp1006.py" />
-    <Content Include="Lib\encodings\cp1026.py" />
-    <Content Include="Lib\encodings\cp1140.py" />
-    <Content Include="Lib\encodings\cp1250.py" />
-    <Content Include="Lib\encodings\cp1251.py" />
-    <Content Include="Lib\encodings\cp1252.py" />
-    <Content Include="Lib\encodings\cp1253.py" />
-    <Content Include="Lib\encodings\cp1254.py" />
-    <Content Include="Lib\encodings\cp1255.py" />
-    <Content Include="Lib\encodings\cp1256.py" />
-    <Content Include="Lib\encodings\cp1257.py" />
-    <Content Include="Lib\encodings\cp1258.py" />
-    <Content Include="Lib\encodings\cp424.py" />
-    <Content Include="Lib\encodings\cp437.py" />
-    <Content Include="Lib\encodings\cp500.py" />
-    <Content Include="Lib\encodings\cp720.py" />
-    <Content Include="Lib\encodings\cp737.py" />
-    <Content Include="Lib\encodings\cp775.py" />
-    <Content Include="Lib\encodings\cp850.py" />
-    <Content Include="Lib\encodings\cp852.py" />
-    <Content Include="Lib\encodings\cp855.py" />
-    <Content Include="Lib\encodings\cp856.py" />
-    <Content Include="Lib\encodings\cp857.py" />
-    <Content Include="Lib\encodings\cp858.py" />
-    <Content Include="Lib\encodings\cp860.py" />
-    <Content Include="Lib\encodings\cp861.py" />
-    <Content Include="Lib\encodings\cp862.py" />
-    <Content Include="Lib\encodings\cp863.py" />
-    <Content Include="Lib\encodings\cp864.py" />
-    <Content Include="Lib\encodings\cp865.py" />
-    <Content Include="Lib\encodings\cp866.py" />
-    <Content Include="Lib\encodings\cp869.py" />
-    <Content Include="Lib\encodings\cp874.py" />
-    <Content Include="Lib\encodings\cp875.py" />
-    <Content Include="Lib\encodings\hex_codec.py" />
-    <Content Include="Lib\encodings\hp_roman8.py" />
-    <Content Include="Lib\encodings\iso8859_1.py" />
-    <Content Include="Lib\encodings\iso8859_10.py" />
-    <Content Include="Lib\encodings\iso8859_11.py" />
-    <Content Include="Lib\encodings\iso8859_13.py" />
-    <Content Include="Lib\encodings\iso8859_14.py" />
-    <Content Include="Lib\encodings\iso8859_15.py" />
-    <Content Include="Lib\encodings\iso8859_16.py" />
-    <Content Include="Lib\encodings\iso8859_2.py" />
-    <Content Include="Lib\encodings\iso8859_3.py" />
-    <Content Include="Lib\encodings\iso8859_4.py" />
-    <Content Include="Lib\encodings\iso8859_5.py" />
-    <Content Include="Lib\encodings\iso8859_6.py" />
-    <Content Include="Lib\encodings\iso8859_7.py" />
-    <Content Include="Lib\encodings\iso8859_8.py" />
-    <Content Include="Lib\encodings\iso8859_9.py" />
-    <Content Include="Lib\encodings\koi8_r.py" />
-    <Content Include="Lib\encodings\koi8_u.py" />
-    <Content Include="Lib\encodings\latin_1.py" />
-    <Content Include="Lib\encodings\mac_arabic.py" />
-    <Content Include="Lib\encodings\mac_centeuro.py" />
-    <Content Include="Lib\encodings\mac_croatian.py" />
-    <Content Include="Lib\encodings\mac_cyrillic.py" />
-    <Content Include="Lib\encodings\mac_farsi.py" />
-    <Content Include="Lib\encodings\mac_greek.py" />
-    <Content Include="Lib\encodings\mac_iceland.py" />
-    <Content Include="Lib\encodings\mac_latin2.py" />
-    <Content Include="Lib\encodings\mac_roman.py" />
-    <Content Include="Lib\encodings\mac_romanian.py" />
-    <Content Include="Lib\encodings\mac_turkish.py" />
-    <Content Include="Lib\encodings\mbcs.py" />
-    <Content Include="Lib\encodings\palmos.py" />
-    <Content Include="Lib\encodings\ptcp154.py" />
-    <Content Include="Lib\encodings\punycode.py" />
-    <Content Include="Lib\encodings\quopri_codec.py" />
-    <Content Include="Lib\encodings\raw_unicode_escape.py" />
-    <Content Include="Lib\encodings\rot_13.py" />
-    <Content Include="Lib\encodings\string_escape.py" />
-    <Content Include="Lib\encodings\tis_620.py" />
-    <Content Include="Lib\encodings\undefined.py" />
-    <Content Include="Lib\encodings\unicode_escape.py" />
-    <Content Include="Lib\encodings\unicode_internal.py" />
-    <Content Include="Lib\encodings\utf_16.py" />
-    <Content Include="Lib\encodings\utf_16_be.py" />
-    <Content Include="Lib\encodings\utf_16_le.py" />
-    <Content Include="Lib\encodings\utf_32.py" />
-    <Content Include="Lib\encodings\utf_32_le.py" />
-    <Content Include="Lib\encodings\utf_7.py" />
-    <Content Include="Lib\encodings\utf_8.py" />
-    <Content Include="Lib\encodings\utf_8_sig.py" />
-    <Content Include="Lib\encodings\uu_codec.py" />
-    <Content Include="Lib\encodings\zlib_codec.py" />
-    <Content Include="Lib\encodings\__init__.py" />
-    <Content Include="Lib\filecmp.py" />
-    <Content Include="Lib\fileinput.py" />
-    <Content Include="Lib\fnmatch.py" />
-    <Content Include="Lib\formatter.py" />
-    <Content Include="Lib\fpformat.py" />
-    <Content Include="Lib\fractions.py" />
-    <Content Include="Lib\ftplib.py" />
-    <Content Include="Lib\functools.py" />
-    <Content Include="Lib\genericpath.py" />
-    <Content Include="Lib\getopt.py" />
-    <Content Include="Lib\getpass.py" />
-    <Content Include="Lib\gettext.py" />
-    <Content Include="Lib\glob.py" />
-    <Content Include="Lib\gzip.py" />
-    <Content Include="Lib\hashlib.py" />
-    <Content Include="Lib\heapq.py" />
-    <Content Include="Lib\hmac.py" />
-    <Content Include="Lib\htmlentitydefs.py" />
-    <Content Include="Lib\htmllib.py" />
-    <Content Include="Lib\HTMLParser.py" />
-    <Content Include="Lib\httplib.py" />
-    <Content Include="Lib\ihooks.py" />
-    <Content Include="Lib\imaplib.py" />
-    <Content Include="Lib\imghdr.py" />
-    <Content Include="Lib\importlib\__init__.py" />
-    <Content Include="Lib\imputil.py" />
-    <Content Include="Lib\inspect.py" />
-    <Content Include="Lib\io.py" />
-    <Content Include="Lib\json\decoder.py" />
-    <Content Include="Lib\json\encoder.py" />
-    <Content Include="Lib\json\scanner.py" />
-    <Content Include="Lib\json\tool.py" />
-    <Content Include="Lib\json\__init__.py" />
-    <Content Include="Lib\keyword.py" />
-    <Content Include="Lib\lib2to3\btm_matcher.py" />
-    <Content Include="Lib\lib2to3\btm_utils.py" />
-    <Content Include="Lib\lib2to3\fixer_base.py" />
-    <Content Include="Lib\lib2to3\fixer_util.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_apply.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_basestring.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_buffer.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_callable.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_dict.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_except.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_exec.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_execfile.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_exitfunc.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_filter.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_funcattrs.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_future.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_getcwdu.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_has_key.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_idioms.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_import.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_imports.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_imports2.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_input.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_intern.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_isinstance.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_itertools.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_itertools_imports.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_long.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_map.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_metaclass.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_methodattrs.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_ne.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_next.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_nonzero.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_numliterals.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_operator.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_paren.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_print.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_raise.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_raw_input.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_reduce.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_renames.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_repr.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_set_literal.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_standarderror.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_sys_exc.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_throw.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_tuple_params.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_types.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_unicode.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_urllib.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_ws_comma.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_xrange.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_xreadlines.py" />
-    <Content Include="Lib\lib2to3\fixes\fix_zip.py" />
-    <Content Include="Lib\lib2to3\fixes\__init__.py" />
-    <Content Include="Lib\lib2to3\main.py" />
-    <Content Include="Lib\lib2to3\patcomp.py" />
-    <Content Include="Lib\lib2to3\pgen2\conv.py" />
-    <Content Include="Lib\lib2to3\pgen2\driver.py" />
-    <Content Include="Lib\lib2to3\pgen2\grammar.py" />
-    <Content Include="Lib\lib2to3\pgen2\literals.py" />
-    <Content Include="Lib\lib2to3\pgen2\parse.py" />
-    <Content Include="Lib\lib2to3\pgen2\pgen.py" />
-    <Content Include="Lib\lib2to3\pgen2\token.py" />
-    <Content Include="Lib\lib2to3\pgen2\tokenize.py" />
-    <Content Include="Lib\lib2to3\pgen2\__init__.py" />
-    <Content Include="Lib\lib2to3\pygram.py" />
-    <Content Include="Lib\lib2to3\pytree.py" />
-    <Content Include="Lib\lib2to3\refactor.py" />
-    <Content Include="Lib\lib2to3\__init__.py" />
-    <Content Include="Lib\lib2to3\__main__.py" />
-    <Content Include="Lib\linecache.py" />
-    <Content Include="Lib\locale.py" />
-    <Content Include="Lib\logging\config.py" />
-    <Content Include="Lib\logging\handlers.py" />
-    <Content Include="Lib\logging\__init__.py" />
-    <Content Include="Lib\macpath.py" />
-    <Content Include="Lib\macurl2path.py" />
-    <Content Include="Lib\mailbox.py" />
-    <Content Include="Lib\mailcap.py" />
-    <Content Include="Lib\markupbase.py" />
-    <Content Include="Lib\md5.py" />
-    <Content Include="Lib\mhlib.py" />
-    <Content Include="Lib\mimetools.py" />
-    <Content Include="Lib\mimetypes.py" />
-    <Content Include="Lib\MimeWriter.py" />
-    <Content Include="Lib\mimify.py" />
-    <Content Include="Lib\modulefinder.py" />
-    <Content Include="Lib\multifile.py" />
-    <Content Include="Lib\mutex.py" />
-    <Content Include="Lib\netrc.py" />
-    <Content Include="Lib\new.py" />
-    <Content Include="Lib\nntplib.py" />
-    <Content Include="Lib\ntpath.py" />
-    <Content Include="Lib\nturl2path.py" />
-    <Content Include="Lib\numbers.py" />
-    <Content Include="Lib\opcode.py" />
-    <Content Include="Lib\optparse.py" />
-    <Content Include="Lib\os.py" />
-    <Content Include="Lib\os2emxpath.py" />
-    <Content Include="Lib\pdb.py" />
-    <Content Include="Lib\pickle.py" />
-    <Content Include="Lib\pickletools.py" />
-    <Content Include="Lib\pipes.py" />
-    <Content Include="Lib\pkgutil.py" />
-    <Content Include="Lib\platform.py" />
-    <Content Include="Lib\plistlib.py" />
-    <Content Include="Lib\popen2.py" />
-    <Content Include="Lib\poplib.py" />
-    <Content Include="Lib\posixfile.py" />
-    <Content Include="Lib\posixpath.py" />
-    <Content Include="Lib\pprint.py" />
-    <Content Include="Lib\profile.py" />
-    <Content Include="Lib\pstats.py" />
-    <Content Include="Lib\pyclbr.py" />
-    <Content Include="Lib\pydoc.py" />
-    <Content Include="Lib\pydoc_data\topics.py" />
-    <Content Include="Lib\pydoc_data\__init__.py" />
-    <Content Include="Lib\py_compile.py" />
-    <Content Include="Lib\Queue.py" />
-    <Content Include="Lib\quopri.py" />
-    <Content Include="Lib\random.py" />
-    <Content Include="Lib\repr.py" />
-    <Content Include="Lib\rexec.py" />
-    <Content Include="Lib\rfc822.py" />
-    <Content Include="Lib\rlcompleter.py" />
-    <Content Include="Lib\robotparser.py" />
-    <Content Include="Lib\runpy.py" />
-    <Content Include="Lib\sched.py" />
-    <Content Include="Lib\sets.py" />
-    <Content Include="Lib\sgmllib.py" />
-    <Content Include="Lib\sha.py" />
-    <Content Include="Lib\shelve.py" />
-    <Content Include="Lib\shlex.py" />
-    <Content Include="Lib\shutil.py" />
-    <Content Include="Lib\SimpleHTTPServer.py" />
-    <Content Include="Lib\SimpleXMLRPCServer.py" />
-    <Content Include="Lib\site-packages\numpy\add_newdocs.py" />
-    <Content Include="Lib\site-packages\numpy\compat\py3k.py" />
-    <Content Include="Lib\site-packages\numpy\compat\setup.py" />
-    <Content Include="Lib\site-packages\numpy\compat\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\compat\_inspect.py" />
-    <Content Include="Lib\site-packages\numpy\compat\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\core\arrayprint.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\cversions.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\genapi.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\genapi2.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\generate_numpy_api.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\generate_ufunc_api.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\generate_umath.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\numpy_api.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\ufunc_docstrings.py" />
-    <Content Include="Lib\site-packages\numpy\core\code_generators\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\core\defchararray.py" />
-    <Content Include="Lib\site-packages\numpy\core\fromnumeric.py" />
-    <Content Include="Lib\site-packages\numpy\core\function_base.py" />
-    <Content Include="Lib\site-packages\numpy\core\getlimits.py" />
-    <Content Include="Lib\site-packages\numpy\core\info.py" />
-    <Content Include="Lib\site-packages\numpy\core\machar.py" />
-    <Content Include="Lib\site-packages\numpy\core\memmap.py" />
-    <Content Include="Lib\site-packages\numpy\core\multiarray.py" />
-    <Content Include="Lib\site-packages\numpy\core\numeric.py" />
-    <Content Include="Lib\site-packages\numpy\core\numerictypes.py" />
-    <Content Include="Lib\site-packages\numpy\core\records.py" />
-    <Content Include="Lib\site-packages\numpy\core\scons_support.py" />
-    <Content Include="Lib\site-packages\numpy\core\setup.py" />
-    <Content Include="Lib\site-packages\numpy\core\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\core\setup_common.py" />
-    <Content Include="Lib\site-packages\numpy\core\shape_base.py" />
-    <Content Include="Lib\site-packages\numpy\core\src\multiarray\testcalcs.py" />
-    <Content Include="Lib\site-packages\numpy\core\umath.py" />
-    <Content Include="Lib\site-packages\numpy\core\_internal.py" />
-    <Content Include="Lib\site-packages\numpy\core\_mx_datetime_parser.py" />
-    <Content Include="Lib\site-packages\numpy\core\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\ctypeslib.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\ccompiler.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\autodist.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\bdist_rpm.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build_clib.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build_ext.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build_py.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build_scripts.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\build_src.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\config.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\config_compiler.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\develop.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\egg_info.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\install.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\install_clib.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\install_data.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\install_headers.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\scons.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\sdist.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\command\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\compat.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\conv_template.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\core.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\cpuinfo.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\environment.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\exec_command.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\extension.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\absoft.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\compaq.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\g95.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\gnu.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\hpux.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\ibm.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\intel.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\lahey.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\mips.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\nag.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\none.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\pg.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\sun.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\vast.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\fcompiler\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\from_template.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\info.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\intelccompiler.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\interactive.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\lib2def.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\line_endings.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\log.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\mingw32ccompiler.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\misc_util.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\npy_pkg_config.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\numpy_distribution.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\setup.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\system_info.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\unixccompiler.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\distutils\__version__.py" />
-    <Content Include="Lib\site-packages\numpy\doc\basics.py" />
-    <Content Include="Lib\site-packages\numpy\doc\broadcasting.py" />
-    <Content Include="Lib\site-packages\numpy\doc\byteswapping.py" />
-    <Content Include="Lib\site-packages\numpy\doc\constants.py" />
-    <Content Include="Lib\site-packages\numpy\doc\creation.py" />
-    <Content Include="Lib\site-packages\numpy\doc\glossary.py" />
-    <Content Include="Lib\site-packages\numpy\doc\howtofind.py" />
-    <Content Include="Lib\site-packages\numpy\doc\indexing.py" />
-    <Content Include="Lib\site-packages\numpy\doc\internals.py" />
-    <Content Include="Lib\site-packages\numpy\doc\io.py" />
-    <Content Include="Lib\site-packages\numpy\doc\jargon.py" />
-    <Content Include="Lib\site-packages\numpy\doc\methods_vs_functions.py" />
-    <Content Include="Lib\site-packages\numpy\doc\misc.py" />
-    <Content Include="Lib\site-packages\numpy\doc\performance.py" />
-    <Content Include="Lib\site-packages\numpy\doc\structured_arrays.py" />
-    <Content Include="Lib\site-packages\numpy\doc\subclassing.py" />
-    <Content Include="Lib\site-packages\numpy\doc\ufuncs.py" />
-    <Content Include="Lib\site-packages\numpy\doc\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\dual.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\auxfuncs.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\capi_maps.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\cb_rules.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\cfuncs.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\common_rules.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\crackfortran.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\diagnose.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\docs\pytest.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\docs\usersguide\setup_example.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\doc\collectinput.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\f2py2e.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\f2py_testing.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\f90mod_rules.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\func2subr.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\info.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\rules.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\setup.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\use_rules.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\f2py\__version__.py" />
-    <Content Include="Lib\site-packages\numpy\fft\fftpack.py" />
-    <Content Include="Lib\site-packages\numpy\fft\fftpack_lite.py" />
-    <Content Include="Lib\site-packages\numpy\fft\helper.py" />
-    <Content Include="Lib\site-packages\numpy\fft\info.py" />
-    <Content Include="Lib\site-packages\numpy\fft\setup.py" />
-    <Content Include="Lib\site-packages\numpy\fft\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\fft\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\lib\arraysetops.py" />
-    <Content Include="Lib\site-packages\numpy\lib\arrayterator.py" />
-    <Content Include="Lib\site-packages\numpy\lib\benchmarks\bench_arraysetops.py" />
-    <Content Include="Lib\site-packages\numpy\lib\financial.py" />
-    <Content Include="Lib\site-packages\numpy\lib\format.py" />
-    <Content Include="Lib\site-packages\numpy\lib\function_base.py" />
-    <Content Include="Lib\site-packages\numpy\lib\index_tricks.py" />
-    <Content Include="Lib\site-packages\numpy\lib\info.py" />
-    <Content Include="Lib\site-packages\numpy\lib\npyio.py" />
-    <Content Include="Lib\site-packages\numpy\lib\polynomial.py" />
-    <Content Include="Lib\site-packages\numpy\lib\recfunctions.py" />
-    <Content Include="Lib\site-packages\numpy\lib\scimath.py" />
-    <Content Include="Lib\site-packages\numpy\lib\setup.py" />
-    <Content Include="Lib\site-packages\numpy\lib\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\lib\shape_base.py" />
-    <Content Include="Lib\site-packages\numpy\lib\stride_tricks.py" />
-    <Content Include="Lib\site-packages\numpy\lib\twodim_base.py" />
-    <Content Include="Lib\site-packages\numpy\lib\type_check.py" />
-    <Content Include="Lib\site-packages\numpy\lib\ufunclike.py" />
-    <Content Include="Lib\site-packages\numpy\lib\user_array.py" />
-    <Content Include="Lib\site-packages\numpy\lib\utils.py" />
-    <Content Include="Lib\site-packages\numpy\lib\_datasource.py" />
-    <Content Include="Lib\site-packages\numpy\lib\_iotools.py" />
-    <Content Include="Lib\site-packages\numpy\lib\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\info.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\lapack_lite.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\linalg.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\setup.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\linalg\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\matlib.py" />
-    <Content Include="Lib\site-packages\numpy\matrixlib\defmatrix.py" />
-    <Content Include="Lib\site-packages\numpy\matrixlib\setup.py" />
-    <Content Include="Lib\site-packages\numpy\matrixlib\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\matrixlib\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\ma\bench.py" />
-    <Content Include="Lib\site-packages\numpy\ma\core.py" />
-    <Content Include="Lib\site-packages\numpy\ma\extras.py" />
-    <Content Include="Lib\site-packages\numpy\ma\mrecords.py" />
-    <Content Include="Lib\site-packages\numpy\ma\setup.py" />
-    <Content Include="Lib\site-packages\numpy\ma\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\ma\testutils.py" />
-    <Content Include="Lib\site-packages\numpy\ma\timer_comparison.py" />
-    <Content Include="Lib\site-packages\numpy\ma\version.py" />
-    <Content Include="Lib\site-packages\numpy\ma\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\alter_code1.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\alter_code2.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\compat.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\convolve.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\fft.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\functions.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\image.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\linear_algebra.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\ma.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\matrix.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\mlab.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\nd_image.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\numerictypes.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\random_array.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\session.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\setup.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\ufuncs.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\util.py" />
-    <Content Include="Lib\site-packages\numpy\numarray\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\NumpyDotNet\benchmark.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\alter_code1.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\alter_code2.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\arrayfns.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\array_printer.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\compat.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\fft.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\fix_default_axis.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\functions.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\linear_algebra.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\ma.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\matrix.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\misc.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\mlab.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\precision.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\random_array.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\rng.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\rng_stats.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\setup.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\typeconv.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\ufuncs.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\user_array.py" />
-    <Content Include="Lib\site-packages\numpy\oldnumeric\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\chebyshev.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\legendre.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\polynomial.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\polytemplate.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\polyutils.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\setup.py" />
-    <Content Include="Lib\site-packages\numpy\polynomial\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\random\info.py" />
-    <Content Include="Lib\site-packages\numpy\random\mtrand\generate_mtrand_c.py" />
-    <Content Include="Lib\site-packages\numpy\random\setup.py" />
-    <Content Include="Lib\site-packages\numpy\random\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\random\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\setup.py" />
-    <Content Include="Lib\site-packages\numpy\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\testing\decorators.py" />
-    <Content Include="Lib\site-packages\numpy\testing\noseclasses.py" />
-    <Content Include="Lib\site-packages\numpy\testing\nosetester.py" />
-    <Content Include="Lib\site-packages\numpy\testing\nulltester.py" />
-    <Content Include="Lib\site-packages\numpy\testing\numpytest.py" />
-    <Content Include="Lib\site-packages\numpy\testing\setup.py" />
-    <Content Include="Lib\site-packages\numpy\testing\setupscons.py" />
-    <Content Include="Lib\site-packages\numpy\testing\utils.py" />
-    <Content Include="Lib\site-packages\numpy\testing\__init__.py" />
-    <Content Include="Lib\site-packages\numpy\version.py" />
-    <Content Include="Lib\site-packages\numpy\_import_tools.py" />
-    <Content Include="Lib\site-packages\numpy\__config__.py" />
-    <Content Include="Lib\site-packages\numpy\__init__.py" />
-    <Content Include="Lib\site-packages\README.txt" />
-    <Content Include="Lib\site-packages\scipy\cluster\doc\ex1.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\hierarchy.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\info.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\setup.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\vq.py" />
-    <Content Include="Lib\site-packages\scipy\cluster\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\constants\codata.py" />
-    <Content Include="Lib\site-packages\scipy\constants\constants.py" />
-    <Content Include="Lib\site-packages\scipy\constants\setup.py" />
-    <Content Include="Lib\site-packages\scipy\constants\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\basic.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\benchmarks\bench_basic.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\benchmarks\bench_pseudo_diffs.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\convolve.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\fftpack_version.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\helper.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\info.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\pseudo_diffs.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\realtransforms.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\setup.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\_fftpack.py" />
-    <Content Include="Lib\site-packages\scipy\fftpack\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\info.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\ode.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\odepack.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\quadpack.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\quadrature.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\setup.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\vode.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\_dop.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\_odepack.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\_quadpack.py" />
-    <Content Include="Lib\site-packages\scipy\integrate\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\lib\blas\info.py" />
-    <Content Include="Lib\site-packages\scipy\lib\blas\scons_support.py" />
-    <Content Include="Lib\site-packages\scipy\lib\blas\setup.py" />
-    <Content Include="Lib\site-packages\scipy\lib\blas\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\lib\blas\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\lib\info.py" />
-    <Content Include="Lib\site-packages\scipy\lib\lapack\info.py" />
-    <Content Include="Lib\site-packages\scipy\lib\lapack\scons_support.py" />
-    <Content Include="Lib\site-packages\scipy\lib\lapack\setup.py" />
-    <Content Include="Lib\site-packages\scipy\lib\lapack\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\lib\lapack\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\lib\setup.py" />
-    <Content Include="Lib\site-packages\scipy\lib\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\lib\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\basic.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\benchmarks\bench_basic.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\benchmarks\bench_decom.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\blas.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\calc_lwork.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp_cholesky.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp_lu.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp_qr.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp_schur.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\decomp_svd.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\fblas.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\flapack.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\flinalg.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\funcinfo.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\info.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\interface_gen.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\lapack.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\linalg_version.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\matfuncs.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\misc.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\scons_support.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\setup.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\setup_atlas_version.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\special_matrices.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\_flinalg.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\_testutils.py" />
-    <Content Include="Lib\site-packages\scipy\linalg\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\misc\common.py" />
-    <Content Include="Lib\site-packages\scipy\misc\doccer.py" />
-    <Content Include="Lib\site-packages\scipy\misc\info.py" />
-    <Content Include="Lib\site-packages\scipy\misc\pilutil.py" />
-    <Content Include="Lib\site-packages\scipy\misc\setup.py" />
-    <Content Include="Lib\site-packages\scipy\misc\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\misc\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\filters.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\fourier.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\info.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\interpolation.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\io.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\measurements.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\morphology.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\setup.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\_nd_image.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\_ni_support.py" />
-    <Content Include="Lib\site-packages\scipy\ndimage\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\odr\info.py" />
-    <Content Include="Lib\site-packages\scipy\odr\models.py" />
-    <Content Include="Lib\site-packages\scipy\odr\odrpack.py" />
-    <Content Include="Lib\site-packages\scipy\odr\setup.py" />
-    <Content Include="Lib\site-packages\scipy\odr\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\odr\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\odr\__odrpack.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\anneal.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\benchmarks\bench_zeros.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\cobyla.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\info.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\lbfgsb.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\linesearch.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\minpack.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\minpack2.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\moduleTNC.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\nnls.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\nonlin.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\optimize.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\setup.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\slsqp.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\tnc.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\tnc\example.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\zeros.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_cobyla.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_lbfgsb.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_minpack.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_nnls.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_slsqp.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_tstutils.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\_zeros.py" />
-    <Content Include="Lib\site-packages\scipy\optimize\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\setup.py" />
-    <Content Include="Lib\site-packages\scipy\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\signal\bsplines.py" />
-    <Content Include="Lib\site-packages\scipy\signal\correlate_nd.py" />
-    <Content Include="Lib\site-packages\scipy\signal\filter_design.py" />
-    <Content Include="Lib\site-packages\scipy\signal\fir_filter_design.py" />
-    <Content Include="Lib\site-packages\scipy\signal\info.py" />
-    <Content Include="Lib\site-packages\scipy\signal\lfilter.py" />
-    <Content Include="Lib\site-packages\scipy\signal\ltisys.py" />
-    <Content Include="Lib\site-packages\scipy\signal\mytempita.py" />
-    <Content Include="Lib\site-packages\scipy\signal\setup.py" />
-    <Content Include="Lib\site-packages\scipy\signal\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\signal\signaltools.py" />
-    <Content Include="Lib\site-packages\scipy\signal\sigtools.py" />
-    <Content Include="Lib\site-packages\scipy\signal\spectral.py" />
-    <Content Include="Lib\site-packages\scipy\signal\spline.py" />
-    <Content Include="Lib\site-packages\scipy\signal\waveforms.py" />
-    <Content Include="Lib\site-packages\scipy\signal\wavelets.py" />
-    <Content Include="Lib\site-packages\scipy\signal\windows.py" />
-    <Content Include="Lib\site-packages\scipy\signal\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\special\amos\setup.py" />
-    <Content Include="Lib\site-packages\scipy\special\basic.py" />
-    <Content Include="Lib\site-packages\scipy\special\docs\cephestest.py" />
-    <Content Include="Lib\site-packages\scipy\special\gendoc.py" />
-    <Content Include="Lib\site-packages\scipy\special\info.py" />
-    <Content Include="Lib\site-packages\scipy\special\lambertw.py" />
-    <Content Include="Lib\site-packages\scipy\special\orthogonal.py" />
-    <Content Include="Lib\site-packages\scipy\special\orthogonal_eval.py" />
-    <Content Include="Lib\site-packages\scipy\special\setup.py" />
-    <Content Include="Lib\site-packages\scipy\special\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\special\specfun.py" />
-    <Content Include="Lib\site-packages\scipy\special\special_version.py" />
-    <Content Include="Lib\site-packages\scipy\special\spfun_stats.py" />
-    <Content Include="Lib\site-packages\scipy\special\utils\convert.py" />
-    <Content Include="Lib\site-packages\scipy\special\utils\datafunc.py" />
-    <Content Include="Lib\site-packages\scipy\special\utils\makenpz.py" />
-    <Content Include="Lib\site-packages\scipy\special\_cephes.py" />
-    <Content Include="Lib\site-packages\scipy\special\_testutils.py" />
-    <Content Include="Lib\site-packages\scipy\special\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\stats\distributions.py" />
-    <Content Include="Lib\site-packages\scipy\stats\futil.py" />
-    <Content Include="Lib\site-packages\scipy\stats\info.py" />
-    <Content Include="Lib\site-packages\scipy\stats\kde.py" />
-    <Content Include="Lib\site-packages\scipy\stats\morestats.py" />
-    <Content Include="Lib\site-packages\scipy\stats\mstats.py" />
-    <Content Include="Lib\site-packages\scipy\stats\mstats_basic.py" />
-    <Content Include="Lib\site-packages\scipy\stats\mstats_extras.py" />
-    <Content Include="Lib\site-packages\scipy\stats\mvn.py" />
-    <Content Include="Lib\site-packages\scipy\stats\rv.py" />
-    <Content Include="Lib\site-packages\scipy\stats\setup.py" />
-    <Content Include="Lib\site-packages\scipy\stats\setupscons.py" />
-    <Content Include="Lib\site-packages\scipy\stats\statlib.py" />
-    <Content Include="Lib\site-packages\scipy\stats\stats.py" />
-    <Content Include="Lib\site-packages\scipy\stats\vonmises.py" />
-    <Content Include="Lib\site-packages\scipy\stats\vonmises_cython.py" />
-    <Content Include="Lib\site-packages\scipy\stats\_support.py" />
-    <Content Include="Lib\site-packages\scipy\stats\__init__.py" />
-    <Content Include="Lib\site-packages\scipy\version.py" />
-    <Content Include="Lib\site-packages\scipy\__config__.py" />
-    <Content Include="Lib\site-packages\scipy\__init__.py" />
-    <Content Include="Lib\site.py" />
-    <Content Include="Lib\smtpd.py" />
-    <Content Include="Lib\smtplib.py" />
-    <Content Include="Lib\sndhdr.py" />
-    <Content Include="Lib\SocketServer.py" />
-    <Content Include="Lib\sqlite3\dbapi2.py" />
-    <Content Include="Lib\sqlite3\dump.py" />
-    <Content Include="Lib\sqlite3\__init__.py" />
-    <Content Include="Lib\sre_compile.py" />
-    <Content Include="Lib\sre_constants.py" />
-    <Content Include="Lib\sre_parse.py" />
-    <Content Include="Lib\ssl.py" />
-    <Content Include="Lib\stat.py" />
-    <Content Include="Lib\statvfs.py" />
-    <Content Include="Lib\string.py" />
-    <Content Include="Lib\StringIO.py" />
-    <Content Include="Lib\stringold.py" />
-    <Content Include="Lib\struct.py" />
-    <Content Include="Lib\subprocess.py" />
-    <Content Include="Lib\sunau.py" />
-    <Content Include="Lib\sunaudio.py" />
-    <Content Include="Lib\symbol.py" />
-    <Content Include="Lib\sysconfig.py" />
-    <Content Include="Lib\tabnanny.py" />
-    <Content Include="Lib\tarfile.py" />
-    <Content Include="Lib\telnetlib.py" />
-    <Content Include="Lib\tempfile.py" />
-    <Content Include="Lib\textwrap.py" />
-    <Content Include="Lib\this.py" />
-    <Content Include="Lib\threading.py" />
-    <Content Include="Lib\timeit.py" />
-    <Content Include="Lib\toaiff.py" />
-    <Content Include="Lib\token.py" />
-    <Content Include="Lib\tokenize.py" />
-    <Content Include="Lib\trace.py" />
-    <Content Include="Lib\traceback.py" />
-    <Content Include="Lib\types.py" />
-    <Content Include="Lib\unittest\case.py" />
-    <Content Include="Lib\unittest\loader.py" />
-    <Content Include="Lib\unittest\main.py" />
-    <Content Include="Lib\unittest\result.py" />
-    <Content Include="Lib\unittest\runner.py" />
-    <Content Include="Lib\unittest\signals.py" />
-    <Content Include="Lib\unittest\suite.py" />
-    <Content Include="Lib\unittest\util.py" />
-    <Content Include="Lib\unittest\__init__.py" />
-    <Content Include="Lib\unittest\__main__.py" />
-    <Content Include="Lib\urllib.py" />
-    <Content Include="Lib\urllib2.py" />
-    <Content Include="Lib\urlparse.py" />
-    <Content Include="Lib\user.py" />
-    <Content Include="Lib\UserDict.py" />
-    <Content Include="Lib\UserList.py" />
-    <Content Include="Lib\UserString.py" />
-    <Content Include="Lib\uu.py" />
-    <Content Include="Lib\uuid.py" />
-    <Content Include="Lib\warnings.py" />
-    <Content Include="Lib\wave.py" />
-    <Content Include="Lib\weakref.py" />
-    <Content Include="Lib\webbrowser.py" />
-    <Content Include="Lib\whichdb.py" />
-    <Content Include="Lib\wsgiref\handlers.py" />
-    <Content Include="Lib\wsgiref\headers.py" />
-    <Content Include="Lib\wsgiref\simple_server.py" />
-    <Content Include="Lib\wsgiref\util.py" />
-    <Content Include="Lib\wsgiref\validate.py" />
-    <Content Include="Lib\wsgiref\__init__.py" />
-    <Content Include="Lib\xdrlib.py" />
-    <Content Include="Lib\xmllib.py" />
-    <Content Include="Lib\xmlrpclib.py" />
-    <Content Include="Lib\xml\dom\domreg.py" />
-    <Content Include="Lib\xml\dom\minicompat.py" />
-    <Content Include="Lib\xml\dom\minidom.py" />
-    <Content Include="Lib\xml\dom\NodeFilter.py" />
-    <Content Include="Lib\xml\dom\pulldom.py" />
-    <Content Include="Lib\xml\dom\xmlbuilder.py" />
-    <Content Include="Lib\xml\dom\__init__.py" />
-    <Content Include="Lib\xml\etree\ElementInclude.py" />
-    <Content Include="Lib\xml\etree\ElementPath.py" />
-    <Content Include="Lib\xml\etree\ElementTree.py" />
-    <Content Include="Lib\xml\etree\SimpleXMLTreeBuilder.py" />
-    <Content Include="Lib\xml\etree\__init__.py" />
-    <Content Include="Lib\xml\parsers\__init__.py" />
-    <Content Include="Lib\xml\sax\handler.py" />
-    <Content Include="Lib\xml\sax\saxutils.py" />
-    <Content Include="Lib\xml\sax\xmlreader.py" />
-    <Content Include="Lib\xml\sax\_exceptions.py" />
-    <Content Include="Lib\xml\sax\__init__.py" />
-    <Content Include="Lib\xml\__init__.py" />
-    <Content Include="Lib\zipfile.py" />
-    <Content Include="Lib\_abcoll.py" />
-    <Content Include="Lib\_LWPCookieJar.py" />
-    <Content Include="Lib\_MozillaCookieJar.py" />
-    <Content Include="Lib\_pyio.py" />
-    <Content Include="Lib\_strptime.py" />
-    <Content Include="Lib\_threading_local.py" />
-    <Content Include="Lib\_weakrefset.py" />
-    <Content Include="Lib\__future__.py" />
-    <Content Include="Lib\__phello__.foo.py" />
-    <Content Include="LogAnalyzer\DataflashLog.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\example_output.xml">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\LogAnalyzer.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestAutotune.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestBalanceTwist.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestBrownout.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestCompass.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestDualGyroDrift.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestDupeLogData.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestEmpty.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestEvents.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestGPSGlitch.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestIMUMatch.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestMotorBalance.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestParams.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestPerformance.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestPitchRollCoupling.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestThrust.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestVCC.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\tests\TestVibration.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="LogAnalyzer\UnitTest.py">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\Parachute.png" />
-    <Content Include="LogAnalyzer\VehicleType.py">
+    <Content Include="LogAnalyzer\py2exe\DataflashLog.py" />
+    <Content Include="LogAnalyzer\py2exe\example_output.xml" />
+    <Content Include="LogAnalyzer\py2exe\LogAnalyzer.py" />
+    <Content Include="LogAnalyzer\py2exe\runner.py" />
+    <Content Include="LogAnalyzer\py2exe\setup.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestAutotune.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestBrownout.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestCompass.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestDualGyroDrift.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestDupeLogData.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestEmpty.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestEvents.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestGPSGlitch.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestIMUMatch.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestMotorBalance.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestParams.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestPerformance.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestPitchRollCoupling.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestThrust.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestVCC.py" />
+    <Content Include="LogAnalyzer\py2exe\tests\TestVibration.py" />
+    <Content Include="LogAnalyzer\py2exe\UnitTest.py" />
+    <Content Include="LogAnalyzer\py2exe\VehicleType.py" />
+    <Content Include="mavgraphs.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="mavgraphs.xml">
+    <Content Include="mpdesktop150.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="mpdesktop44.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ParameterFactMetaData.xml">
@@ -4526,6 +3663,7 @@
     <None Include="Resources\redsinglecopter2.png" />
     <None Include="Resources\FW icons 2013+logos-011.png" />
     <None Include="Resources\FW icons 2013+logos-012.png" />
+    <None Include="Resources\uavcanesc.jpg" />
     <Content Include="Scripts\example7.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -4820,6 +3958,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="ExtLibs\AltitudeAngelWings\AltitudeAngelWings.csproj">
+      <Project>{098f542c-7c70-4b9c-b2e2-ac5dc5e0294b}</Project>
+      <Name>AltitudeAngelWings</Name>
+    </ProjectReference>
     <ProjectReference Include="ExtLibs\AviFile\AviFile.csproj">
       <Project>{ABB32A29-AF50-47FA-B243-5FD75A5ABA54}</Project>
       <Name>AviFile</Name>
@@ -4862,6 +4004,10 @@
       <Project>{bb06dff7-4f41-4b9d-a3c3-3b6d2b8702b6}</Project>
       <Name>LibVLC.NET</Name>
     </ProjectReference>
+    <ProjectReference Include="ExtLibs\ManagedNativeWifi.Simple\ManagedNativeWifi.Simple.csproj">
+      <Project>{cce510f7-1da6-40f2-8921-b86ed41bb85e}</Project>
+      <Name>ManagedNativeWifi.Simple</Name>
+    </ProjectReference>
     <ProjectReference Include="ExtLibs\Mavlink\MAVLink.csproj">
       <Project>{20296734-5F3C-4593-A0D5-DD20B440B13A}</Project>
       <Name>MAVLink</Name>
@@ -4873,6 +4019,10 @@
     <ProjectReference Include="ExtLibs\px4uploader\px4uploader.csproj">
       <Project>{664FC484-2A94-4B0D-808F-A71F88E06B11}</Project>
       <Name>px4uploader</Name>
+    </ProjectReference>
+    <ProjectReference Include="ExtLibs\SharpAdbClient\SharpAdbClient.csproj">
+      <Project>{65473257-e70f-410b-9269-d0c0f771ea87}</Project>
+      <Name>SharpAdbClient</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\SharpKml\SharpKml.csproj">
       <Project>{53F12A60-E9CC-44BC-8366-1AE3AB2B547D}</Project>
@@ -4893,8 +4043,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Lib\site-packages\numpy\NumpyDotNet\bin\" />
-    <Folder Include="Lib\site-packages\numpy\NumpyDotNet\Release\" />
     <Folder Include="Plugins\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
@@ -4912,7 +4060,11 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
+    <Error Condition="!Exists('packages\SharpDX.2.6.3\build\SharpDX.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpDX.2.6.3\build\SharpDX.targets'))" />
+    <Error Condition="!Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
   </Target>
+  <Import Project="packages\SharpDX.2.6.3\build\SharpDX.targets" Condition="Exists('packages\SharpDX.2.6.3\build\SharpDX.targets')" />
+  <Import Project="packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

@@ -59,7 +59,13 @@ namespace GMap.NET
             {
                label2.Text = "all tiles saved";
             };
-            Invoke(m);
+             try
+             {
+                 Invoke(m);
+             }
+             catch
+             {
+             }
          }
       }
 
@@ -73,7 +79,13 @@ namespace GMap.NET
             {
                label2.Text = "saving tiles...";
             };
-            Invoke(m);
+             try
+             {
+                 Invoke(m);
+             }
+             catch
+             {
+             }
          }
       }
 
@@ -85,7 +97,13 @@ namespace GMap.NET
             {
                label2.Text = left + " tile to save...";
             };
-            Invoke(m);
+             try
+             {
+                 Invoke(m);
+             }
+             catch
+             {
+             }
          }
       }
 
@@ -196,6 +214,9 @@ namespace GMap.NET
 
       void worker_DoWork(object sender, DoWorkEventArgs e)
       {
+          while (!IsHandleCreated)
+              Thread.Sleep(100);
+
          if(list != null)
          {
             list.Clear();
@@ -264,7 +285,11 @@ namespace GMap.NET
 
          if(!IsDisposed)
          {
-            done.WaitOne();
+             try
+             {
+                 done.WaitOne();
+             }
+             catch { }
          }
       }
 

@@ -7,6 +7,7 @@ using GMap.NET;
 using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using MissionPlanner.Utilities;
+using MissionPlanner.Controls;
 
 namespace MissionPlanner
 {
@@ -69,12 +70,12 @@ namespace MissionPlanner
         }
 
         static GMapOverlay polygons = new GMapOverlay("polygons");
-        static GMapControl map = new GMapControl();
+        static myGMAP map = new myGMAP();
 
         static void DoDebug()
         {
             polygons = new GMapOverlay("polygons");
-            map = new GMapControl();
+            map = new myGMAP();
             var form = new Form() {Size = new Size(1024, 768), WindowState = FormWindowState.Maximized};
             map.Dock = DockStyle.Fill;
             map.MapProvider = GMapProviders.GoogleSatelliteMap;
@@ -88,8 +89,8 @@ namespace MissionPlanner
         {
             //DoDebug();
 
-            if (spacing < 10 && spacing != 0)
-                spacing = 10;
+            if (spacing < 4 && spacing != 0)
+                spacing = 4;
 
             if (distance < 0.1)
                 distance = 0.1;
@@ -288,6 +289,7 @@ namespace MissionPlanner
             if (grid.Count == 0)
                 return ans;
 
+            // pick start positon based on initial point rectangle
             utmpos startposutm;
 
             switch (startpos)
@@ -312,6 +314,9 @@ namespace MissionPlanner
                     startposutm = new utmpos(StartPointLatLngAlt);
                     break;
             }
+
+            // find the closes polygon point based from our startpos selection
+            startposutm = findClosestPoint(startposutm, utmpositions);
 
             // find closest line point to startpos
             linelatlng closest = findClosestLine(startposutm, grid, 0 /*Lane separation does not apply to starting point*/, angle);

@@ -236,6 +236,8 @@
             // 
             // groupBox3
             // 
+            this.groupBox3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox3.Controls.Add(this.label1);
             this.groupBox3.Controls.Add(this.NUM_heading);
             this.groupBox3.Location = new System.Drawing.Point(13, 341);
@@ -263,6 +265,8 @@
             // 
             // groupBox4
             // 
+            this.groupBox4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.groupBox4.Controls.Add(this.label7);
             this.groupBox4.Controls.Add(this.cmb_model);
             this.groupBox4.Controls.Add(this.label2);
@@ -290,6 +294,7 @@
             "",
             "quadplane",
             "xplane",
+            "xplane-heli",
             "firefly",
             "+",
             "quad",
@@ -348,13 +353,12 @@
             // SITL
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(862, 544);
             this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.groupBox3);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "SITL";
             this.Text = "SITL";
             this.panel1.ResumeLayout(false);

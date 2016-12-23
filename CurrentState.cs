@@ -8,6 +8,7 @@ using log4net;
 using MissionPlanner.Attributes;
 using MissionPlanner;
 using System.Collections;
+using System.Linq;
 using DirectShowLib;
 
 namespace MissionPlanner
@@ -617,6 +618,12 @@ namespace MissionPlanner
             set
             {
                 if (_lastcurrent == DateTime.MinValue) _lastcurrent = datetime;
+                // case for no sensor
+                if (value == -0.01f)
+                {
+                    _current = 0;
+                    return;
+                }
                 battery_usedmah += (float) ((value*1000.0)*(datetime - _lastcurrent).TotalHours);
                 _current = value;
                 _lastcurrent = datetime;
@@ -631,6 +638,12 @@ namespace MissionPlanner
         }
 
         private DateTime _lastcurrent = DateTime.MinValue;
+
+        [DisplayText("Bat efficiency (mah/km)")]
+        public float battery_mahperkm { get {return battery_usedmah / (distTraveled/1000.0f); } }
+
+        [DisplayText("Bat km left EST (km)")]
+        public float battery_kmleft { get { return (((100.0f / (100.0f - battery_remaining)) * battery_usedmah) - battery_usedmah) / battery_mahperkm; } }
 
         [DisplayText("Bat used EST (mah)")]
         public float battery_usedmah { get; set; }
@@ -692,6 +705,81 @@ namespace MissionPlanner
         public PointLatLngAlt Location
         {
             get { return new PointLatLngAlt(lat, lng, altasl); }
+        }
+
+        public float GeoFenceDist
+        {
+            get
+            {
+                try
+                {
+                    float disttotal = 99999;
+                    PointLatLngAlt lineStartLatLngAlt = null;
+                    var R = 6371e3;
+                    // close loop
+                    var list = MainV2.comPort.MAV.fencepoints.ToList();
+                    if (list.Count > 0)
+                    {
+                        // remove return location
+                        list.RemoveAt(0);
+                    }
+
+                    // check all segments
+                    foreach (var mavlinkFencePointT in list)
+                    {
+                        if (lineStartLatLngAlt == null)
+                        {
+                            lineStartLatLngAlt = new PointLatLngAlt(mavlinkFencePointT.Value.lat,
+                                mavlinkFencePointT.Value.lng);
+                            continue;
+                        }
+
+                        // crosstrack distance
+                        var lineEndLatLngAlt = new PointLatLngAlt(mavlinkFencePointT.Value.lat, mavlinkFencePointT.Value.lng);
+
+                        var lineDist = lineStartLatLngAlt.GetDistance2(lineEndLatLngAlt);
+
+                        var distToLocation = lineStartLatLngAlt.GetDistance2(Location);
+                        var bearToLocation = lineStartLatLngAlt.GetBearing(Location);
+                        var lineBear = lineStartLatLngAlt.GetBearing(lineEndLatLngAlt);
+
+                        var angle = bearToLocation - lineBear;
+                        if (angle < 0)
+                            angle += 360;
+
+                        var alongline = Math.Cos(angle*deg2rad)*distToLocation;
+
+                        // check to see if our point is still within the line length
+                        if (alongline > lineDist)
+                        {
+                            lineStartLatLngAlt = lineEndLatLngAlt;
+                            continue;
+                        }
+
+                        var dXt2 = Math.Sin(angle*deg2rad)*distToLocation;
+
+                        var dXt = Math.Asin(Math.Sin(distToLocation/R)*Math.Sin(angle*deg2rad))*R;
+
+                        disttotal = (float) Math.Min(disttotal, Math.Abs(dXt2));
+
+                        lineStartLatLngAlt = lineEndLatLngAlt;
+                    }
+
+                    // check also distance from the points - because if we are outside the polygon, we may be on a corner segment
+                    foreach (var mavlinkFencePointT in list)
+                    {
+                        var pathpoint = new PointLatLngAlt(mavlinkFencePointT.Value.lat, mavlinkFencePointT.Value.lng);
+                        var dXt2 = pathpoint.GetDistance(Location);
+                        disttotal = (float)Math.Min(disttotal, Math.Abs(dXt2));
+                    }
+
+                    return disttotal;
+                }
+                catch
+                {
+                    return 0;
+                }
+            }
         }
 
         [DisplayText("Distance to Home (dist)")]
@@ -1505,61 +1593,67 @@ namespace MissionPlanner
 
                         terrainactive = sensors_health.terrain && sensors_enabled.terrain && sensors_present.terrain;
 
-                        if (sensors_health.gps != sensors_enabled.gps && sensors_present.gps)
+                        if (!sensors_health.gps && sensors_enabled.gps && sensors_present.gps)
                         {
                             messageHigh = Strings.BadGPSHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.gyro != sensors_enabled.gyro && sensors_present.gyro)
+                        else if (!sensors_health.gyro && sensors_enabled.gyro && sensors_present.gyro)
                         {
                             messageHigh = Strings.BadGyroHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.accelerometer != sensors_enabled.accelerometer &&
+                        else if (!sensors_health.accelerometer && sensors_enabled.accelerometer &&
                                  sensors_present.accelerometer)
                         {
                             messageHigh = Strings.BadAccelHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.compass != sensors_enabled.compass && sensors_present.compass)
+                        else if (!sensors_health.compass && sensors_enabled.compass && sensors_present.compass)
                         {
                             messageHigh = Strings.BadCompassHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.barometer != sensors_enabled.barometer && sensors_present.barometer)
+                        else if (!sensors_health.barometer && sensors_enabled.barometer && sensors_present.barometer)
                         {
                             messageHigh = Strings.BadBaroHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.LASER_POSITION != sensors_enabled.LASER_POSITION &&
+                        else if (!sensors_health.LASER_POSITION && sensors_enabled.LASER_POSITION &&
                                  sensors_present.LASER_POSITION)
                         {
                             messageHigh = Strings.BadLiDARHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.optical_flow != sensors_enabled.optical_flow &&
+                        else if (!sensors_health.optical_flow && sensors_enabled.optical_flow &&
                                  sensors_present.optical_flow)
                         {
                             messageHigh = Strings.BadOptFlowHealth;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.terrain != sensors_enabled.terrain && sensors_present.terrain)
+                        else if (!sensors_health.VISION_POSITION && sensors_enabled.VISION_POSITION &&
+                                 sensors_present.VISION_POSITION)
+                        {
+                            messageHigh = Strings.Bad_Vision_Position;
+                            messageHighTime = DateTime.Now;
+                        }
+                        else if (!sensors_health.terrain && sensors_enabled.terrain && sensors_present.terrain)
                         {
                             messageHigh = Strings.BadorNoTerrainData;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.geofence != sensors_enabled.geofence &&
+                        else if (!sensors_health.geofence && sensors_enabled.geofence &&
                                  sensors_present.geofence)
                         {
                             messageHigh = Strings.GeofenceBreach;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.ahrs != sensors_enabled.ahrs && sensors_present.ahrs)
+                        else if (!sensors_health.ahrs && sensors_enabled.ahrs && sensors_present.ahrs)
                         {
                             messageHigh = Strings.BadAHRS;
                             messageHighTime = DateTime.Now;
                         }
-                        else if (sensors_health.rc_receiver != sensors_enabled.rc_receiver &&
+                        else if (!sensors_health.rc_receiver && sensors_enabled.rc_receiver &&
                                  sensors_present.rc_receiver)
                         {
                             bool reporterror = true;
@@ -1571,9 +1665,14 @@ namespace MissionPlanner
                                 messageHighTime = DateTime.Now;
                             }
                         }
+                        else if (!sensors_health.logging && sensors_enabled.logging && sensors_present.logging)
+                        {
+                            messageHigh = Strings.BadLogging;
+                            messageHighTime = DateTime.Now;
+                        }
 
 
-                        MAV.clearPacket((uint)MAVLink.MAVLINK_MSG_ID.SYS_STATUS);
+                        MAV.clearPacket((uint) MAVLink.MAVLINK_MSG_ID.SYS_STATUS);
                     }
 
                     mavLinkMessage = MAV.getPacket((uint) MAVLink.MAVLINK_MSG_ID.BATTERY2);
@@ -2274,6 +2373,12 @@ namespace MissionPlanner
             {
                 get { return bitArray[ConvertValuetoBitmaskOffset((int)MAVLink.MAV_SYS_STATUS_SENSOR.MAV_SYS_STATUS_REVERSE_MOTOR)]; }
                 set { bitArray[ConvertValuetoBitmaskOffset((int)MAVLink.MAV_SYS_STATUS_SENSOR.MAV_SYS_STATUS_REVERSE_MOTOR)] = value; }
+            }
+
+            public bool logging
+            {
+                get { return bitArray[ConvertValuetoBitmaskOffset((int)MAVLink.MAV_SYS_STATUS_SENSOR.MAV_SYS_STATUS_LOGGING)]; }
+                set { bitArray[ConvertValuetoBitmaskOffset((int)MAVLink.MAV_SYS_STATUS_SENSOR.MAV_SYS_STATUS_LOGGING)] = value; }
             }
 
             int ConvertValuetoBitmaskOffset(int input)

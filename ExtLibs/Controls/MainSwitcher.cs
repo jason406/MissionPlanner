@@ -212,8 +212,10 @@ namespace MissionPlanner.Controls
             {
                 this.Name = Name;
                 this.Control = Control;
-                this.Type = Control.GetType();
                 this.Persistent = Persistent;
+                if (Control == null)
+                    return;
+                this.Type = Control.GetType();
             }
 
             public Screen(string Name, Type Type, bool Persistent = false)
@@ -226,7 +228,7 @@ namespace MissionPlanner.Controls
 
         public void Dispose()
         {
-            if (current.Control != null && current.Control is IDeactivate)
+            if (current != null && current.Control != null && current.Control is IDeactivate)
             {
                 ((IDeactivate)(current.Control)).Deactivate();
             }
@@ -236,7 +238,7 @@ namespace MissionPlanner.Controls
                 try
                 {
                     Console.WriteLine("MainSwitcher dispose " + item.Name);
-                    if (item.Control != null)
+                    if (item != null && item.Control != null)
                     {
                         item.Control.Close();
                         item.Control.Dispose();

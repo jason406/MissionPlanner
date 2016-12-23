@@ -8,6 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using MissionPlanner.Mavlink;
 
 namespace MissionPlanner.Log
 {
@@ -25,7 +26,10 @@ namespace MissionPlanner.Log
                 double miny = 99999;
                 double maxy = -99999;
 
-                List<PointLatLngAlt> locs = new List<PointLatLngAlt>();
+                bool sitl = false;
+
+                Dictionary<int,List<PointLatLngAlt>> loc_list = new Dictionary<int, List<PointLatLngAlt>>();
+
                 try
                 {
                     if (logfile.ToLower().EndsWith(".tlog"))
@@ -37,8 +41,7 @@ namespace MissionPlanner.Log
                             )
                         {
                             mine.logreadmode = true;
-
-                            CurrentState cs = new CurrentState();
+                            mine.speechenabled = false;
 
                             while (mine.logplaybackfile.BaseStream.Position < mine.logplaybackfile.BaseStream.Length)
                             {
@@ -47,13 +50,9 @@ namespace MissionPlanner.Log
                                 if (packet.Length < 5)
                                     continue;
 
-                                try
+                                if (packet.msgid == (byte)MAVLink.MAVLINK_MSG_ID.SIM_STATE || packet.msgid == (byte)MAVLink.MAVLINK_MSG_ID.SIMSTATE)
                                 {
-                                    if (MainV2.speechEngine != null)
-                                        MainV2.speechEngine.SpeakAsyncCancelAll();
-                                }
-                                catch
-                                {
+                                    sitl = true;
                                 }
 
                                 if (packet.msgid == (byte) MAVLink.MAVLINK_MSG_ID.GLOBAL_POSITION_INT)
@@ -63,7 +62,12 @@ namespace MissionPlanner.Log
                                     if (loc.lat == 0 || loc.lon == 0)
                                         continue;
 
-                                    locs.Add(new PointLatLngAlt(loc.lat/10000000.0f, loc.lon/10000000.0f));
+                                    var id = MAVList.GetID(packet.sysid, packet.compid);
+
+                                    if (!loc_list.ContainsKey(id))
+                                        loc_list[id] = new List<PointLatLngAlt>();
+
+                                    loc_list[id].Add(new PointLatLngAlt(loc.lat/10000000.0f, loc.lon/10000000.0f));
 
                                     minx = Math.Min(minx, loc.lon/10000000.0f);
                                     maxx = Math.Max(maxx, loc.lon/10000000.0f);
@@ -84,6 +88,8 @@ namespace MissionPlanner.Log
                         {
                             using (StreamReader sr = new StreamReader(st))
                             {
+                                loc_list[0] = new List<PointLatLngAlt>();
+
                                 while (sr.BaseStream.Position < sr.BaseStream.Length)
                                 {
                                     string line = "";
@@ -105,13 +111,17 @@ namespace MissionPlanner.Log
                                     {
                                         var item = dflog.GetDFItemFromLine(line, 0);
 
+                                        if (!dflog.logformat.ContainsKey("GPS"))
+                                            continue;
+
+                                        var status = double.Parse(item.items[dflog.FindMessageOffset(item.msgtype, "Status")]);
                                         var lat = double.Parse(item.items[dflog.FindMessageOffset(item.msgtype, "Lat")]);
                                         var lon = double.Parse(item.items[dflog.FindMessageOffset(item.msgtype, "Lng")]);
 
-                                        if (lat == 0 || lon == 0)
-                                            continue;
+                                        if (lat == 0 || lon == 0 || status < 3)
+                                            continue;                                            
 
-                                        locs.Add(new PointLatLngAlt(lat, lon));
+                                        loc_list[0].Add(new PointLatLngAlt(lat, lon));
 
                                         minx = Math.Min(minx, lon);
                                         maxx = Math.Max(maxx, lon);
@@ -124,7 +134,7 @@ namespace MissionPlanner.Log
                     }
 
 
-                    if (locs.Count > 10)
+                    if (loc_list.Count > 0 && loc_list.First().Value.Count > 10)
                     {
                         // add a bit of buffer
                         var area = RectLatLng.FromLTRB(minx - 0.001, maxy + 0.001, maxx + 0.001, miny - 0.001);
@@ -132,16 +142,34 @@ namespace MissionPlanner.Log
 
                         var grap = Graphics.FromImage(map);
 
-                        PointF lastpoint = new PointF();
-
-                        foreach (var loc in locs)
+                        if (sitl)
                         {
-                            PointF newpoint = GetPixel(area, loc, map.Size);
+                            AddTextToMap(grap, "SITL");
+                        }
 
-                            if (!lastpoint.IsEmpty)
-                                grap.DrawLine(Pens.Red, lastpoint, newpoint);
+                        Color[] colours =
+                        {
+                            Color.Red, Color.Orange, Color.Yellow, Color.Green, Color.Blue, Color.Indigo,
+                            Color.Violet, Color.Pink
+                        };
 
-                            lastpoint = newpoint;
+                        int a = 0;
+                        foreach (var locs in loc_list.Values)
+                        {
+                            PointF lastpoint = new PointF();
+                            var pen = new Pen(colours[a%(colours.Length - 1)]);
+
+                            foreach (var loc in locs)
+                            {
+                                PointF newpoint = GetPixel(area, loc, map.Size);
+
+                                if (!lastpoint.IsEmpty)
+                                    grap.DrawLine(pen, lastpoint, newpoint);
+
+                                lastpoint = newpoint;
+                            }
+
+                            a++;
                         }
 
                         map.Save(logfile + ".jpg", System.Drawing.Imaging.ImageFormat.Jpeg);
@@ -171,13 +199,18 @@ namespace MissionPlanner.Log
 
             var grap = Graphics.FromImage(map);
 
-            grap.DrawString(text, SystemFonts.DefaultFont, Brushes.Red, 0, 0, StringFormat.GenericDefault);
+            AddTextToMap(grap, text);
 
             map.Save(jpgname, System.Drawing.Imaging.ImageFormat.Jpeg);
 
             map.Dispose();
 
             map = null;
+        }
+
+        static void AddTextToMap(Graphics grap, string text)
+        {
+            grap.DrawString(text, SystemFonts.DefaultFont, Brushes.Red, 0, 0, StringFormat.GenericDefault);
         }
 
         static PointF GetPixel(RectLatLng area, PointLatLngAlt loc, Size size)

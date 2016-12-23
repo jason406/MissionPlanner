@@ -97,18 +97,18 @@ namespace MissionPlanner.Utilities
             //System.Threading.Thread.Sleep(70);
 
             string command4 = "srd, High, UAV\n";
-            //port.Write(ASCIIEncoding.ASCII.GetBytes(command4), 0, command4.Length);
+            port.Write(ASCIIEncoding.ASCII.GetBytes(command4), 0, command4.Length);
 
             System.Threading.Thread.Sleep(70);
 
             string command5 = "sem, PVT, 5\n";
-            //port.Write(ASCIIEncoding.ASCII.GetBytes(command5), 0, command5.Length);
+            port.Write(ASCIIEncoding.ASCII.GetBytes(command5), 0, command5.Length);
 
             System.Threading.Thread.Sleep(70);
 
             // enable sbas "+SBAS"
             string command6 = "spm, Rover, StandAlone+DGPS+RTK\n";
-            //port.Write(ASCIIEncoding.ASCII.GetBytes(command6), 0, command6.Length);
+            port.Write(ASCIIEncoding.ASCII.GetBytes(command6), 0, command6.Length);
 
             System.Threading.Thread.Sleep(70);
             int btr = sport.BytesToRead;
@@ -118,6 +118,8 @@ namespace MissionPlanner.Utilities
             //Console.WriteLine(ASCIIEncoding.ASCII.GetString(data));
 
             //System.Threading.Thread.Sleep(100);
+
+            validcommand = true;
 
             sbf_msg.data = new byte[1024*20];
             read();
@@ -330,7 +332,7 @@ namespace MissionPlanner.Utilities
 
                     state.have_vertical_velocity = true;
 
-                    float ground_vector_sq = state.velocity[0]*state.velocity[0] + state.velocity[1]*state.velocity[1];
+                    float ground_vector_sq = (float)(state.velocity[0]*state.velocity[0] + state.velocity[1]*state.velocity[1]);
                     state.ground_speed = (float) safe_sqrt(ground_vector_sq);
 
                     state.ground_course = (float) (ToDeg(atan2f(state.velocity[1], state.velocity[0])));

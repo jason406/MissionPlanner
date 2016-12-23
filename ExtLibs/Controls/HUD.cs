@@ -30,6 +30,9 @@ namespace MissionPlanner.Controls
         MemoryStream _streamjpg = new MemoryStream();
         //[System.ComponentModel.Browsable(false)]
         public MemoryStream streamjpg { get { lock (streamlock) { return _streamjpg; } } set { lock (streamlock) { _streamjpg = value; } } }
+
+        DateTime textureResetDateTime = DateTime.Now;
+
         /// <summary>
         /// this is to reduce cpu usage
         /// </summary>
@@ -89,6 +92,7 @@ namespace MissionPlanner.Controls
         {
             if (this.DesignMode)
             {
+                VSync = true;
                 opengl = false;
                 //return;
             }
@@ -132,6 +136,8 @@ namespace MissionPlanner.Controls
         float _batteryremaining = 0;
         float _gpsfix = 0;
         float _gpshdop = 0;
+        float _gpsfix2 = 0;
+        float _gpshdop2 = 0;
         float _disttowp = 0;
         float _groundcourse = 0;
         float _xtrack_error = 0;
@@ -178,6 +184,10 @@ namespace MissionPlanner.Controls
         public float gpsfix { get { return _gpsfix; } set { if (_gpsfix != value) { _gpsfix = value; this.Invalidate(); } } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Values")]
         public float gpshdop { get { return _gpshdop; } set { if (_gpshdop != value) { _gpshdop = value; this.Invalidate(); } } }
+        [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Values")]
+        public float gpsfix2 { get { return _gpsfix2; } set { if (_gpsfix2 != value) { _gpsfix2 = value; this.Invalidate(); } } }
+        [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Values")]
+        public float gpshdop2 { get { return _gpshdop2; } set { if (_gpshdop2 != value) { _gpshdop2 = value; this.Invalidate(); } } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Values")]
         public float disttowp { get { return _disttowp; } set { if (_disttowp != value) { _disttowp = value; this.Invalidate(); } } }
         [System.ComponentModel.Browsable(true), System.ComponentModel.Category("Values")]
@@ -459,6 +469,9 @@ namespace MissionPlanner.Controls
             {
                 e.Graphics.Clear(this.BackColor);
                 e.Graphics.Flush();
+                opengl = false;
+                doPaint(e);
+                return;
             }
 
             if ((DateTime.Now - starttime).TotalMilliseconds < 30 && (_bgimage == null))
@@ -466,6 +479,13 @@ namespace MissionPlanner.Controls
                 //Console.WriteLine("ms "+(DateTime.Now - starttime).TotalMilliseconds);
                 //e.Graphics.DrawImageUnscaled(objBitmap, 0, 0);          
                 return;
+            }
+
+            // force texture reset
+            if (textureResetDateTime.Hour != DateTime.Now.Hour)
+            {
+                textureResetDateTime = DateTime.Now;
+                doResize();
             }
 
             lock (this)
@@ -952,7 +972,7 @@ namespace MissionPlanner.Controls
                     objBitmap.MakeTransparent();
                     graphicsObjectGDIP = Graphics.FromImage(objBitmap);
 
-                    graphicsObjectGDIP.SmoothingMode = SmoothingMode.AntiAlias;
+                    graphicsObjectGDIP.SmoothingMode = SmoothingMode.HighSpeed;
                     graphicsObjectGDIP.InterpolationMode = InterpolationMode.NearestNeighbor;
                     graphicsObjectGDIP.CompositingMode = CompositingMode.SourceOver;
                     graphicsObjectGDIP.CompositingQuality = CompositingQuality.HighSpeed;
@@ -1149,7 +1169,7 @@ namespace MissionPlanner.Controls
                         graphicsObject.ResetTransform();
                         graphicsObject.TranslateTransform(this.Width / 2, this.Height / 2);
                         graphicsObject.RotateTransform(a - _roll);
-                        drawstring(graphicsObject, Math.Abs(a).ToString("0").PadLeft(2), font, fontsize, _whiteBrush, 0 - 6 - fontoffset, -lengthlong * 8 - extra);
+                        drawstring(graphicsObject, String.Format("{0,2}",Math.Abs(a)), font, fontsize, _whiteBrush, 0 - 6 - fontoffset, -lengthlong * 8 - extra);
                         graphicsObject.DrawLine(this._whitePen, 0, -lengthlong * 3 - extra, 0, -lengthlong * 3 - extra - lengthlong);
                     }
 
@@ -1281,7 +1301,7 @@ namespace MissionPlanner.Controls
                             }
                             else
                             {
-                                drawstring(graphicsObject, (disp % 360).ToString().PadLeft(3), font, fontsize, _whiteBrush, headbg.Left - 5 + space * (a - start) - fontoffset, headbg.Bottom - 24 - (int)(fontoffset * 1.7));
+                                drawstring(graphicsObject, String.Format("{0,3}",(int)(disp % 360)), font, fontsize, _whiteBrush, headbg.Left - 5 + space * (a - start) - fontoffset, headbg.Bottom - 24 - (int)(fontoffset * 1.7));
                             }
                         }
                         else if ((int)a % 5 == 0)
@@ -1297,11 +1317,11 @@ namespace MissionPlanner.Controls
 
                     if (Math.Abs(_heading - _targetheading) < 4)
                     {
-                        drawstring(graphicsObject, (heading % 360).ToString("0").PadLeft(3), font, fontsize, _whiteBrush, headbg.Width / 2 - (fontsize * 1f), headbg.Bottom - 24 - (int)(fontoffset * 1.7));
+                        drawstring(graphicsObject, String.Format("{0,3}", (int)(heading % 360)), font, fontsize, _whiteBrush, headbg.Width / 2 - (fontsize * 1f), headbg.Bottom - 24 - (int)(fontoffset * 1.7));
                     }
                     else
                     {
-                        drawstring(graphicsObject, (heading % 360).ToString("0").PadLeft(3), font, fontsize, _whiteBrush, headbg.Width / 2 - (fontsize * 1f), headbg.Bottom - 24 - (int)(fontoffset * 1.7));
+                        drawstring(graphicsObject, String.Format("{0,3}",(int)(heading % 360)), font, fontsize, _whiteBrush, headbg.Width / 2 - (fontsize * 1f), headbg.Bottom - 24 - (int)(fontoffset * 1.7));
                     }
 
                 }
@@ -1432,7 +1452,7 @@ namespace MissionPlanner.Controls
                         {
                             //Console.WriteLine(a + " " + scrollbg.Right + " " + (scrollbg.Top - space * (a - start)) + " " + (scrollbg.Right - 20) + " " + (scrollbg.Top - space * (a - start)));
                             graphicsObject.DrawLine(this._whitePen, scrollbg.Right, scrollbg.Top - space * (a - start), scrollbg.Right - 10, scrollbg.Top - space * (a - start));
-                            drawstring(graphicsObject, a.ToString("0").PadLeft(5), font, fontsize, _whiteBrush, 0, (float)(scrollbg.Top - space * (a - start) - 6 - fontoffset));
+                            drawstring(graphicsObject, String.Format("{0,5}",a), font, fontsize, _whiteBrush, 0, (float)(scrollbg.Top - space * (a - start) - 6 - fontoffset));
                         }
                     }
 
@@ -1525,7 +1545,7 @@ namespace MissionPlanner.Controls
                         {
                             //Console.WriteLine(a + " " + scrollbg.Left + " " + (scrollbg.Top - space * (a - start)) + " " + (scrollbg.Left + 20) + " " + (scrollbg.Top - space * (a - start)));
                             graphicsObject.DrawLine(this._whitePen, scrollbg.Left, scrollbg.Top - space * (a - start), scrollbg.Left + 10, scrollbg.Top - space * (a - start));
-                            drawstring(graphicsObject, a.ToString().PadLeft(5), font, fontsize, _whiteBrush, scrollbg.Left + 0 + (int)(0 * fontoffset), scrollbg.Top - space * (a - start) - 6 - fontoffset);
+                            drawstring(graphicsObject, String.Format("{0,5}", a), font, fontsize, _whiteBrush, scrollbg.Left + 0 + (int)(0 * fontoffset), scrollbg.Top - space * (a - start) - 6 - fontoffset);
                         }
 
                     }
@@ -1645,30 +1665,31 @@ namespace MissionPlanner.Controls
                 {
                     string gps = "";
                     SolidBrush col = _whiteBrush;
+                    var _fix = Math.Max(_gpsfix, _gpsfix2);
 
-                    if (_gpsfix == 0)
+                    if (_fix == 0)
                     {
                         gps = (HUDT.GPS0);
                         col = (SolidBrush)Brushes.Red;
                     }
-                    else if (_gpsfix == 1)
+                    else if (_fix == 1)
                     {
                         gps = (HUDT.GPS1);
                         col = (SolidBrush)Brushes.Red;
                     }
-                    else if (_gpsfix == 2)
+                    else if (_fix == 2)
                     {
                         gps = (HUDT.GPS2);
                     }
-                    else if (_gpsfix == 3)
+                    else if (_fix == 3)
                     {
                         gps = (HUDT.GPS3);
                     }
-                    else if (_gpsfix == 4)
+                    else if (_fix == 4)
                     {
                         gps = (HUDT.GPS4);
                     }
-                    else if (_gpsfix == 5)
+                    else if (_fix == 5)
                     {
                         gps = (HUDT.GPS5);
                     }
@@ -1896,11 +1917,9 @@ namespace MissionPlanner.Controls
             GL.PopMatrix(); printer.End();
             */
 
-            char[] chars = text.ToCharArray();
-
             float maxy = 1;
 
-            foreach (char cha in chars)
+            foreach (char cha in text)
             {
                 int charno = (int)cha;
 
@@ -1976,24 +1995,33 @@ namespace MissionPlanner.Controls
                     charDict[charid].gltextureid = textureId;
                 }
 
-                //GL.Enable(EnableCap.Blend);
-                GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
-
-                GL.Enable(EnableCap.Texture2D);
-                GL.BindTexture(TextureTarget.Texture2D, charDict[charid].gltextureid);
-
                 float scale = 1.0f;
 
-                GL.Begin(PrimitiveType.Quads);
-                GL.TexCoord2(0, 0); GL.Vertex2(x, y);
-                GL.TexCoord2(1, 0); GL.Vertex2(x + charDict[charid].bitmap.Width * scale, y);
-                GL.TexCoord2(1, 1); GL.Vertex2(x + charDict[charid].bitmap.Width * scale, y + charDict[charid].bitmap.Height * scale);
-                GL.TexCoord2(0, 1); GL.Vertex2(x + 0, y + charDict[charid].bitmap.Height * scale);
-                GL.End();
+                // dont draw spaces
+                if (cha != ' ')
+                {
+                    //GL.Enable(EnableCap.Blend);
+                    GL.BlendFunc(BlendingFactorSrc.SrcAlpha, BlendingFactorDest.OneMinusSrcAlpha);
 
-                //GL.Disable(EnableCap.Blend);
-                GL.Disable(EnableCap.Texture2D);
+                    GL.Enable(EnableCap.Texture2D);
+                    GL.BindTexture(TextureTarget.Texture2D, charDict[charid].gltextureid);
 
+                    
+
+                    GL.Begin(PrimitiveType.Quads);
+                    GL.TexCoord2(0, 0);
+                    GL.Vertex2(x, y);
+                    GL.TexCoord2(1, 0);
+                    GL.Vertex2(x + charDict[charid].bitmap.Width*scale, y);
+                    GL.TexCoord2(1, 1);
+                    GL.Vertex2(x + charDict[charid].bitmap.Width*scale, y + charDict[charid].bitmap.Height*scale);
+                    GL.TexCoord2(0, 1);
+                    GL.Vertex2(x + 0, y + charDict[charid].bitmap.Height*scale);
+                    GL.End();
+
+                    //GL.Disable(EnableCap.Blend);
+                    GL.Disable(EnableCap.Texture2D);
+                }
                 x += charDict[charid].width * scale;
             }
         }
@@ -2003,12 +2031,9 @@ namespace MissionPlanner.Controls
             if (text == null || text == "")
                 return;
 
-
-            char[] chars = text.ToCharArray();
-
             float maxy = 0;
 
-            foreach (char cha in chars)
+            foreach (char cha in text)
             {
                 int charno = (int)cha;
 
@@ -2061,8 +2086,15 @@ namespace MissionPlanner.Controls
                 // draw it
 
                 float scale = 1.0f;
+                // dont draw spaces
+                if (cha != ' ')
+                {
+                    DrawImage(charDict[charid].bitmap, (int)x, (int)y, charDict[charid].bitmap.Width, charDict[charid].bitmap.Height);
+                }
+                else
+                {
 
-                DrawImage(charDict[charid].bitmap, (int)x, (int)y, charDict[charid].bitmap.Width, charDict[charid].bitmap.Height);
+                }
 
                 x += charDict[charid].width * scale;
             }
@@ -2137,7 +2169,6 @@ namespace MissionPlanner.Controls
                     }
                     catch { }
                 }
-                charDict.Clear();
 
                 if (opengl)
                 {
@@ -2150,10 +2181,10 @@ namespace MissionPlanner.Controls
                             GL.DeleteTexture(texid.gltextureid);
                     }
                 }
+
+                charDict.Clear();
             }
             catch { }
-
-            // GC.Collect();
 
             try
             {

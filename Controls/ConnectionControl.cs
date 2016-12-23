@@ -117,6 +117,9 @@ namespace MissionPlanner.Controls
 
         private void CMB_sysid_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (cmb_sysid.SelectedItem == null)
+                return;
+
             var temp = (port_sysid) cmb_sysid.SelectedItem;
 
             foreach (var port in MainV2.Comports)
@@ -126,6 +129,9 @@ namespace MissionPlanner.Controls
                     MainV2.comPort = port;
                     MainV2.comPort.sysidcurrent = temp.sysid;
                     MainV2.comPort.compidcurrent = temp.compid;
+
+                    if (MainV2.comPort.MAV.param.Count == 0 && !(Control.ModifierKeys == Keys.Control))
+                        MainV2.comPort.getParamList();
                 }
             }
         }

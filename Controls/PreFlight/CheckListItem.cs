@@ -123,7 +123,7 @@ namespace MissionPlanner.Controls.PreFlight
                 }
 
                 if (Item == null)
-                    throw new ArgumentNullException("Item");
+                    return 0;
 
                 if (Item.PropertyType.Name == "String")
                     return 0;
@@ -131,7 +131,14 @@ namespace MissionPlanner.Controls.PreFlight
                 if (Item.PropertyType.Name == "DateTime")
                     return 0;
 
-                return (double)Convert.ChangeType(Item.GetValue(defaultsrc, null), typeof(double));
+                try
+                {
+                    return (double) Convert.ChangeType(Item.GetValue(defaultsrc, null), typeof (double));
+                }
+                catch (InvalidCastException)
+                {
+                    return 0;
+                }
             }
         }
 

@@ -29,14 +29,12 @@ namespace MissionPlanner.Log
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
         SerialStatus status = SerialStatus.Connecting;
-        int currentlog;
         bool closed;
         string logfile = "";
         uint receivedbytes; // current log file
         uint tallyBytes; // previous downloaded logs
         uint totalBytes; // total expected
         List<MAVLink.mavlink_log_entry_t> logEntries;
-        ToolTip toolTip;
 
         //List<Model> orientation = new List<Model>();
 
@@ -150,7 +148,7 @@ namespace MissionPlanner.Log
 
         void RunOnUIThread(Action a)
         {
-            if (closed)
+            if (closed || this.IsDisposed)
             {
                 return;
             }
@@ -352,7 +350,6 @@ namespace MissionPlanner.Log
         {
             try
             {
-
                 status = SerialStatus.Reading;
 
                 totalBytes = 0;
@@ -360,7 +357,6 @@ namespace MissionPlanner.Log
                 receivedbytes = 0;
                 foreach (int a in selectedLogs)
                 {
-                    currentlog = a;
                     var entry = logEntries[a]; // mavlink_log_entry_t
                     totalBytes += entry.size;
                 }
@@ -368,8 +364,6 @@ namespace MissionPlanner.Log
                 UpdateProgress(0, totalBytes, 0);
                 foreach (int a in selectedLogs)
                 {
-                    currentlog = a;
-
                     var entry = logEntries[a]; // mavlink_log_entry_t
                     string fileName = GetItemCaption(entry);
 
@@ -391,7 +385,7 @@ namespace MissionPlanner.Log
             }
             catch (Exception ex)
             {
-                AppendSerialLog("Error in log " + currentlog + ": " + ex.Message);
+                AppendSerialLog("Error in log " + ex.Message);
             }
 
             RunOnUIThread(() =>

@@ -12,7 +12,19 @@ namespace MissionPlanner.Utilities
     {
         static List<TcpClient> clients = new List<TcpClient>();
 
-        static List<int> portlist = new EventList<int>() {5760, 5770, 5780, 5790, 5800};
+        private static List<int> portlist = new EventList<int>()
+        {
+            5760,
+            5770,
+            5780,
+            5790,
+            5800,
+            5810,
+            5820,
+            5830,
+            5840,
+            5850
+        };
 
         static TcpListener listener = new TcpListener(IPAddress.Loopback, 5750);
 
@@ -45,7 +57,7 @@ namespace MissionPlanner.Utilities
 
                 cl.BeginConnect(IPAddress.Loopback, portno, RequestCallback, cl);
 
-                System.Threading.Thread.Sleep(500);
+                System.Threading.Thread.Sleep(100);
             }
 
             th = new System.Threading.Thread(new System.Threading.ThreadStart(mainloop))
@@ -54,6 +66,10 @@ namespace MissionPlanner.Utilities
                 Name = "stream combiner"
             };
             th.Start();
+
+            MainV2.comPort.BaseStream = new TcpSerial() {client = new TcpClient("127.0.0.1", 5750) };
+
+            MainV2.instance.doConnect(MainV2.comPort, "preset", "5750");
         }
 
         public static void Stop()
@@ -96,7 +112,7 @@ namespace MissionPlanner.Utilities
                         int read = Server.GetStream().Read(buffer, 0, buffer.Length);
 
                         // write to all clients
-                        foreach (var client in clients)
+                        foreach (var client in clients.ToArray())
                         {
                             if (client.Connected)
                                 client.GetStream().Write(buffer, 0, read);
@@ -108,7 +124,7 @@ namespace MissionPlanner.Utilities
                 }
 
                 // read from all clients
-                foreach (var client in clients)
+                foreach (var client in clients.ToArray())
                 {
                     try
                     {
@@ -145,33 +161,57 @@ namespace MissionPlanner.Utilities
             listener.BeginAcceptTcpClient(new AsyncCallback(DoAcceptTcpClientCallback), listener);
         }
 
+        static object locker = new object();
+
         private static void RequestCallback(IAsyncResult ar)
         {
             TcpClient client = (TcpClient) ar.AsyncState;
 
-            byte localsysid = newsysid++;
-
-            if (client.Connected)
+            lock (locker)
             {
-                MAVLinkInterface mav = new MAVLinkInterface();
+                byte localsysid = newsysid++;
 
-                mav.BaseStream = new TcpSerial() {client = client};
-
-                try
+                if (client.Connected)
                 {
-                    mav.GetParam("SYSID_THISMAV");
+                    MAVLinkInterface mav = new MAVLinkInterface();
+
+                    mav.BaseStream = new TcpSerial() {client = client};
+
+                    try
+                    {
+                        mav.GetParam("SYSID_THISMAV");
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        mav.GetParam("SYSID_THISMAV");
+                    }
+                    catch
+                    {
+                    }
+                    try
+                    {
+                        mav.GetParam("SYSID_THISMAV");
+                    }
+                    catch
+                    {
+                    }
+
+                    try
+                    {
+                        var ans = mav.setParam("SYSID_THISMAV", localsysid);
+                        Console.WriteLine("this mav set " + ans);
+                    }
+                    catch
+                    {
+                    }
+
+                    mav = null;
+
+                    clients.Add(client);
                 }
-                catch
-                {
-                }
-
-                var ans = mav.setParam("SYSID_THISMAV", localsysid);
-
-                Console.WriteLine("this mav set " + ans);
-
-                mav = null;
-
-                clients.Add(client);
             }
         }
     }
