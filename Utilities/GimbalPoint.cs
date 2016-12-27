@@ -188,11 +188,11 @@ namespace MissionPlanner.Utilities
                 distout += 50;
             }
 
-            Console.WriteLine("pitch " + pitchangle.ToString("0.000") + " yaw " + yawangle.ToString("0.000") + " dist" + distout.ToString("0.000"));
+            //Console.WriteLine("pitch " + pitchangle.ToString("0.000") + " yaw " + yawangle.ToString("0.000") + " dist" + dist.ToString("0.000"));
 
-            PointLatLngAlt newpos2 = currentlocation.newpos(yawangle + MainV2.comPort.MAV.cs.yaw, distout);
+            //PointLatLngAlt newpos = currentlocation.newpos( yawangle + MainV2.comPort.MAV.cs.yaw, dist);
 
-            Console.WriteLine(newpos2);
+            //Console.WriteLine(newpos);
             return newpos;
         }
     }

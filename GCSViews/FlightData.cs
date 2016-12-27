@@ -4291,24 +4291,5 @@ namespace MissionPlanner.GCSViews
         {
             CameraOverlap = onOffCameraOverlapToolStripMenuItem.Checked;
         }
-
-        private void gimbalPitchTestToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (!MainV2.comPort.BaseStream.IsOpen)
-            {
-                CustomMessageBox.Show("Please Connect First");
-                return;
-            }
-            var pitch_angle = "";
-            InputBox.Show("Enter pitch angle", "Please enter the pitch angle", ref pitch_angle);
-            int pitchAngle=0;
-            if (int.TryParse(pitch_angle, out pitchAngle))
-            {
-                MainV2.comPort.setMountConfigure(MAVLink.MAV_MOUNT_MODE.RC_TARGETING, false, false, false);
-                MainV2.comPort.setMountControl(pitchAngle*100, 0, 0, false);
-                //MainV2.comPort.doCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);
-                //MainV2.comPort.setDigicamControl(true);
-            }
-        }
     }
 }
