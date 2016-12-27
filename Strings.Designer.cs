@@ -97,6 +97,15 @@ namespace MissionPlanner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Bad Vision Position.
+        /// </summary>
+        public static string Bad_Vision_Position {
+            get {
+                return ResourceManager.GetString("Bad_Vision_Position", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Bad Accel Health.
         /// </summary>
         public static string BadAccelHealth {
@@ -165,6 +174,15 @@ namespace MissionPlanner {
         public static string BadLiDARHealth {
             get {
                 return ResourceManager.GetString("BadLiDARHealth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Bad Logging.
+        /// </summary>
+        public static string BadLogging {
+            get {
+                return ResourceManager.GetString("BadLogging", resourceCulture);
             }
         }
         
@@ -650,6 +668,15 @@ namespace MissionPlanner {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Failed to download the SITL image..
+        /// </summary>
+        public static string Failed_to_download_the_SITL_image {
+            get {
+                return ResourceManager.GetString("Failed_to_download_the_SITL_image", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Failed download.
         /// </summary>
         public static string FailedDownload {
@@ -1054,6 +1081,16 @@ namespace MissionPlanner {
         public static string Only1HbD {
             get {
                 return ResourceManager.GetString("Only1HbD", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A Param refresh is required - Please press F5
+        ///old #{0}  new #{1}.
+        /// </summary>
+        public static string ParamRefreshRequired {
+            get {
+                return ResourceManager.GetString("ParamRefreshRequired", resourceCulture);
             }
         }
         

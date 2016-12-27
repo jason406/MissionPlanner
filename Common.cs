@@ -473,6 +473,42 @@ union px4_custom_mode {
             input = input.Replace("{timeinair}",
                 (new TimeSpan(0, 0, 0, (int)MainV2.comPort.MAV.cs.timeInAir)).ToString());
 
+            try
+            {
+                object thisBoxed = MainV2.comPort.MAV.cs;
+                Type test = thisBoxed.GetType();
+
+                PropertyInfo[] props = test.GetProperties();
+
+                //props
+                foreach (var field in props)
+                {
+                    // field.Name has the field's name.
+                    object fieldValue;
+                    TypeCode typeCode;
+                    try
+                    {
+                        fieldValue = field.GetValue(thisBoxed, null); // Get value
+
+                        if (fieldValue == null)
+                            continue;
+                        // Get the TypeCode enumeration. Multiple types get mapped to a common typecode.
+                        typeCode = Type.GetTypeCode(fieldValue.GetType());
+                    }
+                    catch
+                    {
+                        continue;
+                    }
+
+                    var fname = String.Format("{{{0}}}", field.Name);
+                    input = input.Replace(fname, fieldValue.ToString());
+                }
+            }
+            catch
+            {
+                
+            }
+
             return input;
         }
 
@@ -506,6 +542,18 @@ union px4_custom_mode {
             }
             else if (MAV.cs.firmware == MainV2.Firmwares.ArduCopter2 || MAV.aptype == MAVLink.MAV_TYPE.QUADROTOR)
             {
+                if (MAV.param.ContainsKey("AVD_W_DIST_XY") && MAV.param.ContainsKey("AVD_F_DIST_XY"))
+                {
+                    var w = MAV.param["AVD_W_DIST_XY"].Value;
+                    var f = MAV.param["AVD_F_DIST_XY"].Value;
+                    return (new GMapMarkerQuad(portlocation, MAV.cs.yaw,
+                        MAV.cs.groundcourse, MAV.cs.nav_bearing, MAV.sysid)
+                    {
+                        danger = (int)f,
+                        warn = (int)w
+                    });
+                }
+
                 return (new GMapMarkerQuad(portlocation, MAV.cs.yaw,
                     MAV.cs.groundcourse, MAV.cs.nav_bearing, MAV.sysid));
             }
@@ -836,7 +884,7 @@ union px4_custom_mode {
 
                 float alpha = ((desired_lead_dist * (float)m2pixelwidth) / radius) * rad2deg;
 
-                if (radius < -1)
+                if (radius < -1 && alpha > 1)
                 {
                     // fixme 
 
@@ -847,7 +895,7 @@ union px4_custom_mode {
                     g.DrawArc(new Pen(Color.HotPink, 2), p1, p2, Math.Abs(radius) * 2, Math.Abs(radius) * 2, cog, alpha);
                 }
 
-                else if (radius > 1)
+                else if (radius > 1 && alpha > 1)
                 {
                     // correct
 
@@ -887,6 +935,9 @@ union px4_custom_mode {
         float cog = -1;
         float target = -1;
         private int sysid = -1;
+
+        public float warn = -1;
+        public float danger = -1;
 
         public GMapMarkerQuad(PointLatLng p, float heading, float cog, float target, int sysid)
             : base(p)
@@ -933,6 +984,32 @@ union px4_custom_mode {
                 -8);
 
             g.Transform = temp;
+
+            {
+                double width =
+       (Overlay.Control.MapProvider.Projection.GetDistance(Overlay.Control.FromLocalToLatLng(0, 0),
+           Overlay.Control.FromLocalToLatLng(Overlay.Control.Width, 0)) * 1000.0);
+                double m2pixelwidth = Overlay.Control.Width / width;
+
+                GPoint loc = new GPoint((int)(LocalPosition.X - (m2pixelwidth * warn * 2)), LocalPosition.Y);
+
+                if (m2pixelwidth > 0.001 && warn > 0)
+                    g.DrawArc(Pens.Orange,
+                        new System.Drawing.Rectangle(
+                            LocalPosition.X - Offset.X - (int)(Math.Abs(loc.X - LocalPosition.X) / 2),
+                            LocalPosition.Y - Offset.Y - (int)Math.Abs(loc.X - LocalPosition.X) / 2,
+                            (int)Math.Abs(loc.X - LocalPosition.X), (int)Math.Abs(loc.X - LocalPosition.X)), 0, 360);
+
+                loc = new GPoint((int)(LocalPosition.X - (m2pixelwidth * danger * 2)), LocalPosition.Y);
+
+                if (m2pixelwidth > 0.001 && danger > 0)
+                    g.DrawArc(Pens.Red,
+                        new System.Drawing.Rectangle(
+                            LocalPosition.X - Offset.X - (int)(Math.Abs(loc.X - LocalPosition.X) / 2),
+                            LocalPosition.Y - Offset.Y - (int)Math.Abs(loc.X - LocalPosition.X) / 2,
+                            (int)Math.Abs(loc.X - LocalPosition.X), (int)Math.Abs(loc.X - LocalPosition.X)), 0, 360);   
+
+            }
         }
     }
 

@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 public partial class MAVLink
 {
-    public const string MAVLINK_BUILD_DATE = "Tue Jun 28 2016";
+    public const string MAVLINK_BUILD_DATE = "Thu Oct 27 2016";
     public const string MAVLINK_WIRE_PROTOCOL_VERSION = "2.0";
     public const int MAVLINK_MAX_PAYLOAD_LEN = 255;
 
@@ -61,7 +61,7 @@ public partial class MAVLink
 		new message_info(33, "GLOBAL_POSITION_INT", 104, 28, 28, typeof( mavlink_global_position_int_t )),
 		new message_info(34, "RC_CHANNELS_SCALED", 237, 22, 22, typeof( mavlink_rc_channels_scaled_t )),
 		new message_info(35, "RC_CHANNELS_RAW", 244, 22, 22, typeof( mavlink_rc_channels_raw_t )),
-		new message_info(36, "SERVO_OUTPUT_RAW", 222, 21, 21, typeof( mavlink_servo_output_raw_t )),
+		new message_info(36, "SERVO_OUTPUT_RAW", 222, 21, 37, typeof( mavlink_servo_output_raw_t )),
 		new message_info(37, "MISSION_REQUEST_PARTIAL_LIST", 212, 6, 6, typeof( mavlink_mission_request_partial_list_t )),
 		new message_info(38, "MISSION_WRITE_PARTIAL_LIST", 9, 6, 6, typeof( mavlink_mission_write_partial_list_t )),
 		new message_info(39, "MISSION_ITEM", 254, 37, 37, typeof( mavlink_mission_item_t )),
@@ -104,6 +104,7 @@ public partial class MAVLink
 		new message_info(90, "HIL_STATE", 183, 56, 56, typeof( mavlink_hil_state_t )),
 		new message_info(91, "HIL_CONTROLS", 63, 42, 42, typeof( mavlink_hil_controls_t )),
 		new message_info(92, "HIL_RC_INPUTS_RAW", 54, 33, 33, typeof( mavlink_hil_rc_inputs_raw_t )),
+		new message_info(93, "HIL_ACTUATOR_CONTROLS", 47, 81, 81, typeof( mavlink_hil_actuator_controls_t )),
 		new message_info(100, "OPTICAL_FLOW", 175, 26, 26, typeof( mavlink_optical_flow_t )),
 		new message_info(101, "GLOBAL_VISION_POSITION_ESTIMATE", 102, 32, 32, typeof( mavlink_global_vision_position_estimate_t )),
 		new message_info(102, "VISION_POSITION_ESTIMATE", 158, 32, 32, typeof( mavlink_vision_position_estimate_t )),
@@ -204,6 +205,7 @@ public partial class MAVLink
 		new message_info(226, "RPM", 207, 8, 8, typeof( mavlink_rpm_t )),
 		new message_info(230, "ESTIMATOR_STATUS", 163, 42, 42, typeof( mavlink_estimator_status_t )),
 		new message_info(231, "WIND_COV", 105, 40, 40, typeof( mavlink_wind_cov_t )),
+		new message_info(232, "GPS_INPUT", 151, 63, 63, typeof( mavlink_gps_input_t )),
 		new message_info(233, "GPS_RTCM_DATA", 35, 182, 182, typeof( mavlink_gps_rtcm_data_t )),
 		new message_info(241, "VIBRATION", 90, 32, 32, typeof( mavlink_vibration_t )),
 		new message_info(242, "HOME_POSITION", 104, 52, 52, typeof( mavlink_home_position_t )),
@@ -211,7 +213,7 @@ public partial class MAVLink
 		new message_info(244, "MESSAGE_INTERVAL", 95, 6, 6, typeof( mavlink_message_interval_t )),
 		new message_info(245, "EXTENDED_SYS_STATE", 130, 2, 2, typeof( mavlink_extended_sys_state_t )),
 		new message_info(246, "ADSB_VEHICLE", 184, 38, 38, typeof( mavlink_adsb_vehicle_t )),
-		new message_info(247, "COLLISION", 229, 19, 19, typeof( mavlink_collision_t )),
+		new message_info(247, "COLLISION", 81, 19, 19, typeof( mavlink_collision_t )),
 		new message_info(248, "V2_EXTENSION", 8, 254, 254, typeof( mavlink_v2_extension_t )),
 		new message_info(249, "MEMORY_VECT", 204, 36, 36, typeof( mavlink_memory_vect_t )),
 		new message_info(250, "DEBUG_VECT", 49, 30, 30, typeof( mavlink_debug_vect_t )),
@@ -220,6 +222,11 @@ public partial class MAVLink
 		new message_info(253, "STATUSTEXT", 83, 51, 51, typeof( mavlink_statustext_t )),
 		new message_info(254, "DEBUG", 46, 9, 9, typeof( mavlink_debug_t )),
 		new message_info(256, "SETUP_SIGNING", 71, 42, 42, typeof( mavlink_setup_signing_t )),
+		new message_info(257, "BUTTON_CHANGE", 131, 9, 9, typeof( mavlink_button_change_t )),
+		new message_info(258, "PLAY_TUNE", 187, 32, 32, typeof( mavlink_play_tune_t )),
+		new message_info(10001, "UAVIONIX_ADSB_OUT_CFG", 209, 20, 20, typeof( mavlink_uavionix_adsb_out_cfg_t )),
+		new message_info(10002, "UAVIONIX_ADSB_OUT_DYNAMIC", 186, 41, 41, typeof( mavlink_uavionix_adsb_out_dynamic_t )),
+		new message_info(10003, "UAVIONIX_ADSB_TRANSCEIVER_HEALTH_REPORT", 4, 1, 1, typeof( mavlink_uavionix_adsb_transceiver_health_report_t )),
 
 	};
 
@@ -228,79 +235,14 @@ public partial class MAVLink
 	public const byte MAVLINK_IFLAG_SIGNED=  0x01;
 	public const byte MAVLINK_IFLAG_MASK   = 0x01;
 
-    static Dictionary<uint,string> names;
-    static Dictionary<uint,Type> infos;
-    static Dictionary<uint,byte> crcs;
-    static Dictionary<uint,byte> lens;
-
-    public static Dictionary<uint,byte> MAVLINK_MESSAGE_LENGTHS 
-    {
-        get
-        {
-            if (lens != null)
-                return lens;
-            lens = new Dictionary<uint, byte>();
-            foreach (var messageInfo in MAVLINK_MESSAGE_INFOS)
-            {
-                lens[messageInfo.msgid] = (byte)messageInfo.length;
-            }
-            return lens;
-        }
-    }
-
-    public static Dictionary<uint, byte> MAVLINK_MESSAGE_CRCS
-    {
-        get
-        {
-            if (crcs != null)
-                return crcs;
-            crcs = new Dictionary<uint, byte>();
-            foreach (var messageInfo in MAVLINK_MESSAGE_INFOS)
-            {
-                crcs[messageInfo.msgid] = (byte)messageInfo.crc;
-            }
-            return crcs;
-        }
-    }
-
-    public static Dictionary<uint,Type> MAVLINK_MESSAGE_INFO
-    {
-        get
-        {
-            if (infos != null)
-                return infos;
-            infos = new Dictionary<uint, Type>();
-            foreach (var messageInfo in MAVLINK_MESSAGE_INFOS)
-            {
-                infos[messageInfo.msgid] = messageInfo.type;
-            }
-            return infos;
-        }
-    }
-
-    public static Dictionary<uint, string> MAVLINK_NAMES
-    {
-        get
-        {
-            if (names != null)
-                return names;
-            names = new Dictionary<uint, string>();
-            foreach (var messageInfo in MAVLINK_MESSAGE_INFOS)
-            {
-                names[messageInfo.msgid] = messageInfo.name;
-            }
-            return names;
-        }
-    }
-
     public struct message_info
     {
-        public uint msgid;
-        public string name;
-        public byte crc;
-		public uint minlength;
-        public uint length;
-        public Type type;
+        public uint msgid { get; internal set; }
+        public string name { get; internal set; }
+        public byte crc { get; internal set; }
+        public uint minlength { get; internal set; }
+        public uint length { get; internal set; }
+        public Type type { get; internal set; }
 
         public message_info(uint msgid, string name, byte crc, uint minlength, uint length, Type type)
         {
@@ -310,6 +252,11 @@ public partial class MAVLink
 			this.minlength = minlength;
             this.length = length;
             this.type = type;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("{0} - {1}",name,msgid);
         }
     }   
 
@@ -382,6 +329,7 @@ LOCAL_POSITION_NED_SYSTEM_GLOBAL_OFFSET = 89,
 HIL_STATE = 90,
 HIL_CONTROLS = 91,
 HIL_RC_INPUTS_RAW = 92,
+HIL_ACTUATOR_CONTROLS = 93,
 OPTICAL_FLOW = 100,
 GLOBAL_VISION_POSITION_ESTIMATE = 101,
 VISION_POSITION_ESTIMATE = 102,
@@ -482,6 +430,7 @@ GOPRO_SET_RESPONSE = 219,
 RPM = 226,
 ESTIMATOR_STATUS = 230,
 WIND_COV = 231,
+GPS_INPUT = 232,
 GPS_RTCM_DATA = 233,
 VIBRATION = 241,
 HOME_POSITION = 242,
@@ -498,6 +447,11 @@ NAMED_VALUE_INT = 252,
 STATUSTEXT = 253,
 DEBUG = 254,
 SETUP_SIGNING = 256,
+BUTTON_CHANGE = 257,
+PLAY_TUNE = 258,
+UAVIONIX_ADSB_OUT_CFG = 10001,
+UAVIONIX_ADSB_OUT_DYNAMIC = 10002,
+UAVIONIX_ADSB_TRANSCEIVER_HEALTH_REPORT = 10003,
 
     }  
 	    
@@ -581,6 +535,8 @@ SETUP_SIGNING = 256,
         DO_REPEAT_SERVO=184, 
     	///<summary> Terminate flight immediately |Flight termination activated if > 0.5| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         DO_FLIGHTTERMINATION=185, 
+    	///<summary> Change altitude set point. |Altitude in meters| Mav frame of new altitude (see MAV_FRAME)| Empty| Empty| Empty| Empty| Empty|  </summary>
+        DO_CHANGE_ALTITUDE=186, 
     	///<summary> Mission command to perform a landing. This is used as a marker in a mission to tell the autopilot where a sequence of mission items that represents a landing starts. It may also be sent via a COMMAND_LONG to trigger a landing, in which case the nearest (geographically) landing sequence in the mission will be used. The Latitude/Longitude is optional, and may be set to 0/0 if not needed. If specified then it will be used to help find the closest landing sequence. |Empty| Empty| Empty| Empty| Latitude| Longitude| Empty|  </summary>
         DO_LAND_START=189, 
     	///<summary> Mission command to perform a landing from a rally point. |Break altitude (meters)| Landing speed (m/s)| Empty| Empty| Empty| Empty| Empty|  </summary>
@@ -591,6 +547,8 @@ SETUP_SIGNING = 256,
         DO_REPOSITION=192, 
     	///<summary> If in a GPS controlled position mode, hold the current position or continue. |0: Pause current mission or reposition command, hold current position. 1: Continue mission. A VTOL capable vehicle should enter hover mode (multicopter and VTOL planes). A plane should loiter with the default loiter radius.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
         DO_PAUSE_CONTINUE=193, 
+    	///<summary> Set moving direction to forward or reverse. |Direction (0=Forward, 1=Reverse)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
+        DO_SET_REVERSE=194, 
     	///<summary> Control onboard camera system. |Camera ID (-1 for all)| Transmission: 0: disabled, 1: enabled compressed, 2: enabled raw| Transmission mode: 0: video stream, >0: single images every n seconds (decimal)| Recording: 0: disabled, 1: enabled compressed, 2: enabled raw| Empty| Empty| Empty|  </summary>
         DO_CONTROL_VIDEO=200, 
     	///<summary> Sets the region of interest (ROI) for a sensor set or the vehicle itself. This can then be used by the vehicles control system to control the vehicle attitude and the attitude of various sensors such as cameras. |Region of intereset mode. (see MAV_ROI enum)| MISSION index/ target ID. (see MAV_ROI enum)| ROI index (allows a vehicle to manage multiple ROI's)| Empty| x the location of the fixed ROI (see MAV_FRAME)| y| z|  </summary>
@@ -617,17 +575,21 @@ SETUP_SIGNING = 256,
         DO_GRIPPER=211, 
     	///<summary> Enable/disable autotune |enable (1: enable, 0:disable)| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         DO_AUTOTUNE_ENABLE=212, 
+    	///<summary> Sets a desired vehicle turn angle and speed change |yaw angle to adjust steering by in centidegress| speed - normalized to 0 .. 1| Empty| Empty| Empty| Empty| Empty|  </summary>
+        SET_YAW_SPEED=213, 
     	///<summary> Mission command to control a camera or antenna mount, using a quaternion as reference. |q1 - quaternion param #1, w (1 in null-rotation)| q2 - quaternion param #2, x (0 in null-rotation)| q3 - quaternion param #3, y (0 in null-rotation)| q4 - quaternion param #4, z (0 in null-rotation)| Empty| Empty| Empty|  </summary>
         DO_MOUNT_CONTROL_QUAT=220, 
     	///<summary> set id of master controller |System ID| Component ID| Empty| Empty| Empty| Empty| Empty|  </summary>
         DO_GUIDED_MASTER=221, 
     	///<summary> set limits for external control |timeout - maximum time (in seconds) that external controller will be allowed to control vehicle. 0 means no timeout| absolute altitude min (in meters, AMSL) - if vehicle moves below this alt, the command will be aborted and the mission will continue.  0 means no lower altitude limit| absolute altitude max (in meters)- if vehicle moves above this alt, the command will be aborted and the mission will continue.  0 means no upper altitude limit| horizontal move limit (in meters, AMSL) - if vehicle moves more than this distance from it's location at the moment the command was executed, the command will be aborted and the mission will continue. 0 means no horizontal altitude limit| Empty| Empty| Empty|  </summary>
         DO_GUIDED_LIMITS=222, 
+    	///<summary> Control vehicle engine. This is interpreted by the vehicles engine controller to change the target engine state. It is intended for vehicles with internal combustion engines |0: Stop engine, 1:Start Engine| 0: Warm start, 1:Cold start. Controls use of choke where applicable| Height delay (meters). This is for commanding engine start only after the vehicle has gained the specified height. Used in VTOL vehicles during takeoff to start engine after the aircraft is off the ground. Zero for no delay.| Empty| Empty| Empty| Empty| Empty|  </summary>
+        DO_ENGINE_CONTROL=223, 
     	///<summary> NOP - This command is only used to mark the upper limit of the DO commands in the enumeration |Empty| Empty| Empty| Empty| Empty| Empty| Empty|  </summary>
         DO_LAST=240, 
     	///<summary> Trigger calibration. This command will be only accepted if in pre-flight mode. |Gyro calibration: 0: no, 1: yes| Magnetometer calibration: 0: no, 1: yes| Ground pressure: 0: no, 1: yes| Radio calibration: 0: no, 1: yes| Accelerometer calibration: 0: no, 1: yes| Compass/Motor interference calibration: 0: no, 1: yes| Empty|  </summary>
         PREFLIGHT_CALIBRATION=241, 
-    	///<summary> Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow, 5: second magnetometer| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  </summary>
+    	///<summary> Set sensor offsets. This command will be only accepted if in pre-flight mode. |Sensor to adjust the offsets for: 0: gyros, 1: accelerometer, 2: magnetometer, 3: barometer, 4: optical flow, 5: second magnetometer, 6: third magnetometer| X axis offset (or generic dimension 1), in the sensor's raw units| Y axis offset (or generic dimension 2), in the sensor's raw units| Z axis offset (or generic dimension 3), in the sensor's raw units| Generic dimension 4, in the sensor's raw units| Generic dimension 5, in the sensor's raw units| Generic dimension 6, in the sensor's raw units|  </summary>
         PREFLIGHT_SET_SENSOR_OFFSETS=242, 
     	///<summary> Trigger UAVCAN config. This command will be only accepted if in pre-flight mode. |1: Trigger actuator ID assignment and direction mapping.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
         PREFLIGHT_UAVCAN=243, 
@@ -665,6 +627,10 @@ SETUP_SIGNING = 256,
         PANORAMA_CREATE=2800, 
     	///<summary> Request VTOL transition |The target VTOL state, as defined by ENUM MAV_VTOL_STATE. Only MAV_VTOL_STATE_MC and MAV_VTOL_STATE_FW can be used.|  </summary>
         DO_VTOL_TRANSITION=3000, 
+    	///<summary> This command sets the submode to standard guided when vehicle is in guided mode. The vehicle holds position and altitude and the user can input the desired velocites along all three axes.                    | </summary>
+        SET_GUIDED_SUBMODE_STANDARD=4000, 
+    	///<summary> This command sets submode circle when vehicle is in guided mode. Vehicle flies along a circle facing the center of the circle. The user can input the velocity along the circle and change the radius. If no input is given the vehicle will hold position.                    |Radius of desired circle in CIRCLE_MODE| User defined| User defined| User defined| Unscaled target latitude of center of circle in CIRCLE_MODE| Unscaled target longitude of center of circle in CIRCLE_MODE|  </summary>
+        SET_GUIDED_SUBMODE_CIRCLE=4001, 
     	///<summary> Deploy payload on a Lat / Lon / Alt position. This includes the navigation to reach the required release position and velocity. |Operation mode. 0: prepare single payload deploy (overwriting previous requests), but do not execute it. 1: execute payload deploy immediately (rejecting further deploy commands during execution, but allowing abort). 2: add payload deploy to existing deployment list.| Desired approach vector in degrees compass heading (0..360). A negative value indicates the system can define the approach vector at will.| Desired ground speed at release time. This can be overriden by the airframe in case it needs to meet minimum airspeed. A negative value indicates the system can define the ground speed at will.| Minimum altitude clearance to the release position in meters. A negative value indicates the system can define the clearance at will.| Latitude unscaled for MISSION_ITEM or in 1e7 degrees for MISSION_ITEM_INT| Longitude unscaled for MISSION_ITEM or in 1e7 degrees for MISSION_ITEM_INT| Altitude, in meters AMSL|  </summary>
         PAYLOAD_PREPARE_DEPLOY=30001, 
     	///<summary> Control the payload deployment. |Operation mode. 0: Abort deployment, continue normal mission. 1: switch to payload deploment mode. 100: delete first payload deployment request. 101: delete all payload deployment requests.| Reserved| Reserved| Reserved| Reserved| Reserved| Reserved|  </summary>
@@ -785,20 +751,6 @@ SETUP_SIGNING = 256,
         PARACHUTE_ENABLE=1, 
     	///<summary> Release parachute | </summary>
         PARACHUTE_RELEASE=2, 
-    	///<summary>  | </summary>
-        ENUM_END=3, 
-    
-    };
-    
-    ///<summary>  </summary>
-    public enum MOTOR_TEST_THROTTLE_TYPE
-    {
-			///<summary> throttle as a percentage from 0 ~ 100 | </summary>
-        MOTOR_TEST_THROTTLE_PERCENT=0, 
-    	///<summary> throttle as an absolute PWM value (normally in range of 1000~2000) | </summary>
-        MOTOR_TEST_THROTTLE_PWM=1, 
-    	///<summary> throttle pass-through from pilot's transmitter | </summary>
-        MOTOR_TEST_THROTTLE_PILOT=2, 
     	///<summary>  | </summary>
         ENUM_END=3, 
     
@@ -1488,11 +1440,11 @@ SETUP_SIGNING = 256,
         HEXAROTOR=13, 
     	///<summary> Octorotor | </summary>
         OCTOROTOR=14, 
-    	///<summary> Octorotor | </summary>
+    	///<summary> Tricopter | </summary>
         TRICOPTER=15, 
     	///<summary> Flapping wing | </summary>
         FLAPPING_WING=16, 
-    	///<summary> Flapping wing | </summary>
+    	///<summary> Kite | </summary>
         KITE=17, 
     	///<summary> Onboard companion controller | </summary>
         ONBOARD_CONTROLLER=18, 
@@ -1601,7 +1553,7 @@ SETUP_SIGNING = 256,
     
     };
     
-    ///<summary>          These defines are predefined OR-combined mode flags. There is no need to use values from this enum, but it         simplifies the use of the mode flags. Note that manual input is enabled in all modes as a safety override.        </summary>
+    ///<summary> These defines are predefined OR-combined mode flags. There is no need to use values from this enum, but it                simplifies the use of the mode flags. Note that manual input is enabled in all modes as a safety override. </summary>
     public enum MAV_MODE
     {
 			///<summary> System is not ready to fly, booting, calibrating, etc. No flag is set. | </summary>
@@ -1701,6 +1653,8 @@ SETUP_SIGNING = 256,
     	///<summary> Generic autopilot peripheral component ID. Meant for devices that do not implement the parameter sub-protocol | </summary>
         MAV_COMP_ID_PERIPHERAL=158, 
     	///<summary>  | </summary>
+        MAV_COMP_ID_QX1_GIMBAL=159, 
+    	///<summary>  | </summary>
         MAV_COMP_ID_MAPPER=180, 
     	///<summary>  | </summary>
         MAV_COMP_ID_MISSIONPLANNER=190, 
@@ -1776,8 +1730,10 @@ SETUP_SIGNING = 256,
         MAV_SYS_STATUS_TERRAIN=4194304, 
     	///<summary> 0x800000 Motors are reversed | </summary>
         MAV_SYS_STATUS_REVERSE_MOTOR=8388608, 
+    	///<summary> 0x1000000 Logging | </summary>
+        MAV_SYS_STATUS_LOGGING=16777216, 
     	///<summary>  | </summary>
-        ENUM_END=8388609, 
+        ENUM_END=16777217, 
     
     };
     
@@ -1844,8 +1800,10 @@ SETUP_SIGNING = 256,
         REPORT=2, 
     	///<summary> Switched to guided mode to return point (fence point 0) with manual throttle control | </summary>
         GUIDED_THR_PASS=3, 
+    	///<summary> Switch to RTL (return to launch) mode and head for the return point. | </summary>
+        RTL=4, 
     	///<summary>  | </summary>
-        ENUM_END=4, 
+        ENUM_END=5, 
     
     };
     
@@ -1883,7 +1841,7 @@ SETUP_SIGNING = 256,
     
     };
     
-    ///<summary>          THIS INTERFACE IS DEPRECATED AS OF JULY 2015. Please use MESSAGE_INTERVAL instead. A data stream is not a fixed set of messages, but rather a         recommendation to the autopilot software. Individual autopilots may or may not obey         the recommended messages.        </summary>
+    ///<summary> THIS INTERFACE IS DEPRECATED AS OF JULY 2015. Please use MESSAGE_INTERVAL instead. A data stream is not a fixed set of messages, but rather a      recommendation to the autopilot software. Individual autopilots may or may not obey      the recommended messages. </summary>
     public enum MAV_DATA_STREAM
     {
 			///<summary> Enable all data streams | </summary>
@@ -1909,7 +1867,7 @@ SETUP_SIGNING = 256,
     
     };
     
-    ///<summary>          The ROI (region of interest) for the vehicle. This can be         be used by the vehicle for camera/vehicle attitude alignment (see         MAV_CMD_NAV_ROI).        </summary>
+    ///<summary>  The ROI (region of interest) for the vehicle. This can be                 be used by the vehicle for camera/vehicle attitude alignment (see                 MAV_CMD_NAV_ROI). </summary>
     public enum MAV_ROI
     {
 			///<summary> No region of interest. | </summary>
@@ -2246,8 +2204,10 @@ SETUP_SIGNING = 256,
         FLIGHT_TERMINATION=2048, 
     	///<summary> Autopilot supports onboard compass calibration. | </summary>
         COMPASS_CALIBRATION=4096, 
+    	///<summary> Autopilot supports mavlink version 2. | </summary>
+        MAVLINK2=8192, 
     	///<summary>  | </summary>
-        ENUM_END=4097, 
+        ENUM_END=8193, 
     
     };
     
@@ -2459,6 +2419,44 @@ SETUP_SIGNING = 256,
     
     };
     
+    ///<summary>  </summary>
+    public enum MOTOR_TEST_THROTTLE_TYPE
+    {
+			///<summary> throttle as a percentage from 0 ~ 100 | </summary>
+        MOTOR_TEST_THROTTLE_PERCENT=0, 
+    	///<summary> throttle as an absolute PWM value (normally in range of 1000~2000) | </summary>
+        MOTOR_TEST_THROTTLE_PWM=1, 
+    	///<summary> throttle pass-through from pilot's transmitter | </summary>
+        MOTOR_TEST_THROTTLE_PILOT=2, 
+    	///<summary>  | </summary>
+        ENUM_END=3, 
+    
+    };
+    
+    ///<summary>  </summary>
+    public enum GPS_INPUT_IGNORE_FLAGS
+    {
+			///<summary> ignore altitude field | </summary>
+        GPS_INPUT_IGNORE_FLAG_ALT=1, 
+    	///<summary> ignore hdop field | </summary>
+        GPS_INPUT_IGNORE_FLAG_HDOP=2, 
+    	///<summary> ignore vdop field | </summary>
+        GPS_INPUT_IGNORE_FLAG_VDOP=4, 
+    	///<summary> ignore horizontal velocity field (vn and ve) | </summary>
+        GPS_INPUT_IGNORE_FLAG_VEL_HORIZ=8, 
+    	///<summary> ignore vertical velocity field (vd) | </summary>
+        GPS_INPUT_IGNORE_FLAG_VEL_VERT=16, 
+    	///<summary> ignore speed accuracy field | </summary>
+        GPS_INPUT_IGNORE_FLAG_SPEED_ACCURACY=32, 
+    	///<summary> ignore horizontal accuracy field | </summary>
+        GPS_INPUT_IGNORE_FLAG_HORIZONTAL_ACCURACY=64, 
+    	///<summary> ignore vertical accuracy field | </summary>
+        GPS_INPUT_IGNORE_FLAG_VERTICAL_ACCURACY=128, 
+    	///<summary>  | </summary>
+        ENUM_END=129, 
+    
+    };
+    
     ///<summary> Possible actions an aircraft can take to avoid a collision. </summary>
     public enum MAV_COLLISION_ACTION
     {
@@ -2466,22 +2464,18 @@ SETUP_SIGNING = 256,
         NONE=0, 
     	///<summary> Report potential collision | </summary>
         REPORT=1, 
-    	///<summary> Descend to avoid thread (or do not take off) | </summary>
-        VERTICAL_DESCEND=2, 
-    	///<summary> Ascend to avoid thread | </summary>
-        VERTICAL_ASCEND=3, 
-    	///<summary> Follow TCAS protocol | </summary>
-        TCAS=4, 
+    	///<summary> Ascend or Descend to avoid thread | </summary>
+        ASCEND_OR_DESCEND=2, 
+    	///<summary> Ascend or Descend to avoid thread | </summary>
+        MOVE_HORIZONTALLY=3, 
     	///<summary> Aircraft to move perpendicular to the collision's velocity vector | </summary>
-        MOVE_PERPENDICULAR=5, 
+        MOVE_PERPENDICULAR=4, 
     	///<summary> Aircraft to fly directly back to its launch point | </summary>
-        RTL=6, 
+        RTL=5, 
     	///<summary> Aircraft to stop in place | </summary>
-        HOVER=7, 
-    	///<summary> Aircraft to return along path it has followed | </summary>
-        RETRACE_PATH=8, 
+        HOVER=6, 
     	///<summary>  | </summary>
-        ENUM_END=9, 
+        ENUM_END=7, 
     
     };
     
@@ -2508,6 +2502,199 @@ SETUP_SIGNING = 256,
         MAVLINK_GPS_GLOBAL_INT=1, 
     	///<summary>  | </summary>
         ENUM_END=2, 
+    
+    };
+    
+    ///<summary> Type of GPS fix </summary>
+    public enum GPS_FIX_TYPE
+    {
+			///<summary> No GPS connected | </summary>
+        NO_GPS=0, 
+    	///<summary> No position information, GPS is connected | </summary>
+        NO_FIX=1, 
+    	///<summary> 2D position | </summary>
+        _2D_FIX=2, 
+    	///<summary> 3D position | </summary>
+        _3D_FIX=3, 
+    	///<summary> DGPS/SBAS aided 3D position | </summary>
+        DGPS=4, 
+    	///<summary> RTK float, 3D position | </summary>
+        RTK_FLOAT=5, 
+    	///<summary> RTK Fixed, 3D position | </summary>
+        RTK_FIXED=6, 
+    	///<summary> Static fixed, typically used for base stations | </summary>
+        STATIC=7, 
+    	///<summary>  | </summary>
+        ENUM_END=8, 
+    
+    };
+    
+    
+    ///<summary> State flags for ADS-B transponder dynamic report </summary>
+    public enum UAVIONIX_ADSB_OUT_DYNAMIC_STATE
+    {
+			///<summary>  | </summary>
+        INTENT_CHANGE=1, 
+    	///<summary>  | </summary>
+        AUTOPILOT_ENABLED=2, 
+    	///<summary>  | </summary>
+        NICBARO_CROSSCHECKED=4, 
+    	///<summary>  | </summary>
+        ON_GROUND=8, 
+    	///<summary>  | </summary>
+        IDENT=16, 
+    	///<summary>  | </summary>
+        ENUM_END=17, 
+    
+    };
+    
+    ///<summary> Transceiver RF control flags for ADS-B transponder dynamic reports </summary>
+    public enum UAVIONIX_ADSB_OUT_RF_SELECT
+    {
+			///<summary>  | </summary>
+        STANDBY=0, 
+    	///<summary>  | </summary>
+        RX_ENABLED=1, 
+    	///<summary>  | </summary>
+        TX_ENABLED=2, 
+    	///<summary>  | </summary>
+        ENUM_END=3, 
+    
+    };
+    
+    ///<summary> Status for ADS-B transponder dynamic input </summary>
+    public enum UAVIONIX_ADSB_OUT_DYNAMIC_GPS_FIX
+    {
+			///<summary>  | </summary>
+        NONE_0=0, 
+    	///<summary>  | </summary>
+        NONE_1=1, 
+    	///<summary>  | </summary>
+        _2D=2, 
+    	///<summary>  | </summary>
+        _3D=3, 
+    	///<summary>  | </summary>
+        DGPS=4, 
+    	///<summary>  | </summary>
+        RTK=5, 
+    	///<summary>  | </summary>
+        ENUM_END=6, 
+    
+    };
+    
+    ///<summary> Status flags for ADS-B transponder dynamic output </summary>
+    public enum UAVIONIX_ADSB_RF_HEALTH
+    {
+			///<summary>  | </summary>
+        INITIALIZING=0, 
+    	///<summary>  | </summary>
+        OK=1, 
+    	///<summary>  | </summary>
+        FAIL_TX=2, 
+    	///<summary>  | </summary>
+        FAIL_RX=16, 
+    	///<summary>  | </summary>
+        ENUM_END=17, 
+    
+    };
+    
+    ///<summary> Definitions for aircraft size </summary>
+    public enum UAVIONIX_ADSB_OUT_CFG_AIRCRAFT_SIZE
+    {
+			///<summary>  | </summary>
+        NO_DATA=0, 
+    	///<summary>  | </summary>
+        L15M_W23M=1, 
+    	///<summary>  | </summary>
+        L25M_W28P5M=2, 
+    	///<summary>  | </summary>
+        L25_34M=3, 
+    	///<summary>  | </summary>
+        L35_33M=4, 
+    	///<summary>  | </summary>
+        L35_38M=5, 
+    	///<summary>  | </summary>
+        L45_39P5M=6, 
+    	///<summary>  | </summary>
+        L45_45M=7, 
+    	///<summary>  | </summary>
+        L55_45M=8, 
+    	///<summary>  | </summary>
+        L55_52M=9, 
+    	///<summary>  | </summary>
+        L65_59P5M=10, 
+    	///<summary>  | </summary>
+        L65_67M=11, 
+    	///<summary>  | </summary>
+        L75_W72P5M=12, 
+    	///<summary>  | </summary>
+        L75_W80M=13, 
+    	///<summary>  | </summary>
+        L85_W80M=14, 
+    	///<summary>  | </summary>
+        L85_W90M=15, 
+    	///<summary>  | </summary>
+        ENUM_END=16, 
+    
+    };
+    
+    ///<summary> GPS lataral offset encoding </summary>
+    public enum UAVIONIX_ADSB_OUT_CFG_GPS_OFFSET_LAT
+    {
+			///<summary>  | </summary>
+        NO_DATA=0, 
+    	///<summary>  | </summary>
+        LEFT_2M=1, 
+    	///<summary>  | </summary>
+        LEFT_4M=2, 
+    	///<summary>  | </summary>
+        LEFT_6M=3, 
+    	///<summary>  | </summary>
+        RIGHT_0M=4, 
+    	///<summary>  | </summary>
+        RIGHT_2M=5, 
+    	///<summary>  | </summary>
+        RIGHT_4M=6, 
+    	///<summary>  | </summary>
+        RIGHT_6M=7, 
+    	///<summary>  | </summary>
+        ENUM_END=8, 
+    
+    };
+    
+    ///<summary> GPS longitudinal offset encoding </summary>
+    public enum UAVIONIX_ADSB_OUT_CFG_GPS_OFFSET_LON
+    {
+			///<summary>  | </summary>
+        NO_DATA=0, 
+    	///<summary>  | </summary>
+        APPLIED_BY_SENSOR=1, 
+    	///<summary>  | </summary>
+        ENUM_END=2, 
+    
+    };
+    
+    ///<summary> Emergency status encoding </summary>
+    public enum UAVIONIX_ADSB_EMERGENCY_STATUS
+    {
+			///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_NO_EMERGENCY=0, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_GENERAL_EMERGENCY=1, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_LIFEGUARD_EMERGENCY=2, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_MINIMUM_FUEL_EMERGENCY=3, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_NO_COMM_EMERGENCY=4, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_UNLAWFUL_INTERFERANCE_EMERGENCY=5, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_DOWNED_AIRCRAFT_EMERGENCY=6, 
+    	///<summary>  | </summary>
+        UAVIONIX_ADSB_OUT_RESERVED=7, 
+    	///<summary>  | </summary>
+        ENUM_END=8, 
     
     };
     
@@ -3660,7 +3847,7 @@ SETUP_SIGNING = 256,
         public  UInt16 vel;
             /// <summary> Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX </summary>
         public  UInt16 cog;
-            /// <summary> 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS, 5: RTK. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix. </summary>
+            /// <summary> See the GPS_FIX_TYPE enum. </summary>
         public  byte fix_type;
             /// <summary> Number of satellites visible. If unknown, set to 255 </summary>
         public  byte satellites_visible;
@@ -3926,7 +4113,7 @@ SETUP_SIGNING = 256,
     };
 
 
-    [StructLayout(LayoutKind.Sequential,Pack=1,Size=21)]
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=37)]
     public struct mavlink_servo_output_raw_t
     {
         /// <summary> Timestamp (microseconds since system boot) </summary>
@@ -3949,6 +4136,22 @@ SETUP_SIGNING = 256,
         public  UInt16 servo8_raw;
             /// <summary> Servo output port (set of 8 outputs = 1 port). Most MAVs will just use one, but this allows to encode more than 8 servos. </summary>
         public  byte port;
+            /// <summary> Servo output 9 value, in microseconds </summary>
+        public  UInt16 servo9_raw;
+            /// <summary> Servo output 10 value, in microseconds </summary>
+        public  UInt16 servo10_raw;
+            /// <summary> Servo output 11 value, in microseconds </summary>
+        public  UInt16 servo11_raw;
+            /// <summary> Servo output 12 value, in microseconds </summary>
+        public  UInt16 servo12_raw;
+            /// <summary> Servo output 13 value, in microseconds </summary>
+        public  UInt16 servo13_raw;
+            /// <summary> Servo output 14 value, in microseconds </summary>
+        public  UInt16 servo14_raw;
+            /// <summary> Servo output 15 value, in microseconds </summary>
+        public  UInt16 servo15_raw;
+            /// <summary> Servo output 16 value, in microseconds </summary>
+        public  UInt16 servo16_raw;
     
     };
 
@@ -4230,7 +4433,7 @@ SETUP_SIGNING = 256,
         public  UInt32 time_boot_ms;
             /// <summary> Quaternion components, w, x, y, z (1 0 0 0 is the null-rotation) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Roll angular speed (rad/s) </summary>
         public  Single rollspeed;
             /// <summary> Pitch angular speed (rad/s) </summary>
@@ -4239,7 +4442,7 @@ SETUP_SIGNING = 256,
         public  Single yawspeed;
             /// <summary> Attitude covariance </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=9)]
-		public float covariance;
+		public float[] covariance;
     
     };
 
@@ -4290,7 +4493,7 @@ SETUP_SIGNING = 256,
         public  Single vz;
             /// <summary> Covariance matrix (first six entries are the first ROW, next six entries are the second row, etc.) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=36)]
-		public float covariance;
+		public float[] covariance;
             /// <summary> Class id of the estimator this estimate originated from. </summary>
         public  byte estimator_type;
     
@@ -4324,7 +4527,7 @@ SETUP_SIGNING = 256,
         public  Single az;
             /// <summary> Covariance matrix upper right triangular (first nine entries are the first ROW, next eight entries are the second row, etc.) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=45)]
-		public float covariance;
+		public float[] covariance;
             /// <summary> Class id of the estimator this estimate originated from. </summary>
         public  byte estimator_type;
     
@@ -4611,7 +4814,7 @@ SETUP_SIGNING = 256,
         public  UInt32 time_boot_ms;
             /// <summary> Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Body roll rate in radians per second </summary>
         public  Single body_roll_rate;
             /// <summary> Body roll rate in radians per second </summary>
@@ -4637,7 +4840,7 @@ SETUP_SIGNING = 256,
         public  UInt32 time_boot_ms;
             /// <summary> Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Body roll rate in radians per second </summary>
         public  Single body_roll_rate;
             /// <summary> Body roll rate in radians per second </summary>
@@ -4920,6 +5123,22 @@ SETUP_SIGNING = 256,
         public  UInt16 chan12_raw;
             /// <summary> Receive signal strength indicator, 0: 0%, 255: 100% </summary>
         public  byte rssi;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=81)]
+    public struct mavlink_hil_actuator_controls_t
+    {
+        /// <summary> Timestamp (microseconds since UNIX epoch or microseconds since system boot) </summary>
+        public  UInt64 time_usec;
+            /// <summary> Flags as bitfield, reserved for future use. </summary>
+        public  UInt64 flags;
+            /// <summary> Control outputs -1 .. 1. Channel assignment depends on the simulated hardware. </summary>
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=16)]
+		public float[] controls;
+            /// <summary> System mode (MAV_MODE), includes arming state. </summary>
+        public  byte mode;
     
     };
 
@@ -5309,7 +5528,7 @@ SETUP_SIGNING = 256,
         public  UInt64 time_usec;
             /// <summary> Vehicle attitude expressed as normalized quaternion in w, x, y, z order (with 1 0 0 0 being the null-rotation) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float attitude_quaternion;
+		public float[] attitude_quaternion;
             /// <summary> Body frame roll / phi angular speed (rad/s) </summary>
         public  Single rollspeed;
             /// <summary> Body frame pitch / theta angular speed (rad/s) </summary>
@@ -5493,7 +5712,7 @@ SETUP_SIGNING = 256,
         public  UInt16 vel;
             /// <summary> Course over ground (NOT heading, but direction of movement) in degrees * 100, 0.0..359.99 degrees. If unknown, set to: UINT16_MAX </summary>
         public  UInt16 cog;
-            /// <summary> 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS fix, 5: RTK Fix. Some applications will not use the value of this field unless it is at least two, so always correctly fill in the fix. </summary>
+            /// <summary> See the GPS_FIX_TYPE enum. </summary>
         public  byte fix_type;
             /// <summary> Number of satellites visible. If unknown, set to 255 </summary>
         public  byte satellites_visible;
@@ -5772,7 +5991,7 @@ SETUP_SIGNING = 256,
         public  UInt64 time_usec;
             /// <summary> Attitude quaternion (w, x, y, z order, zero-rotation is 1, 0, 0, 0) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> X position in meters (NED) </summary>
         public  Single x;
             /// <summary> Y position in meters (NED) </summary>
@@ -5790,7 +6009,7 @@ SETUP_SIGNING = 256,
         public  UInt64 time_usec;
             /// <summary> Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs. </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
-		public float controls;
+		public float[] controls;
             /// <summary> Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should use this field to difference between instances. </summary>
         public  byte group_mlx;
             /// <summary> System ID </summary>
@@ -5808,7 +6027,7 @@ SETUP_SIGNING = 256,
         public  UInt64 time_usec;
             /// <summary> Actuator controls. Normed to -1..+1 where 0 is neutral position. Throttle for single rotation direction motors is 0..1, negative range for reverse direction. Standard mapping for attitude controls (group 0): (index 0-7): roll, pitch, yaw, throttle, flaps, spoilers, airbrakes, landing gear. Load a pass-through mixer to repurpose them as generic outputs. </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=8)]
-		public float controls;
+		public float[] controls;
             /// <summary> Actuator group. The "_mlx" indicates this is a multi-instance message and a MAVLink parser should use this field to difference between instances. </summary>
         public  byte group_mlx;
     
@@ -5818,7 +6037,7 @@ SETUP_SIGNING = 256,
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=32)]
     public struct mavlink_altitude_t
     {
-        /// <summary> Timestamp (milliseconds since system boot) </summary>
+        /// <summary> Timestamp (micros since boot or Unix epoch) </summary>
         public  UInt64 time_usec;
             /// <summary> This altitude measure is initialized on system boot and monotonic (it is never reset, but represents the local altitude change). The only guarantee on this field is that it will never be reset and is consistent within a flight. The recommended value for this field is the uncorrected barometric altitude at boot time. This altitude will also drift and vary between flights. </summary>
         public  Single altitude_monotonic;
@@ -5885,19 +6104,19 @@ SETUP_SIGNING = 256,
         public  Single alt;
             /// <summary> target velocity (0,0,0) for unknown </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float vel;
+		public float[] vel;
             /// <summary> linear target acceleration (0,0,0) for unknown </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float acc;
+		public float[] acc;
             /// <summary> (1 0 0 0 for unknown) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float attitude_q;
+		public float[] attitude_q;
             /// <summary> (0 0 0 for unknown) </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float rates;
+		public float[] rates;
             /// <summary> eph epv </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float position_cov;
+		public float[] position_cov;
             /// <summary> bit positions for tracker reporting capabilities (POS = 0, VEL = 1, ACCEL = 2, ATT + RATES = 3) </summary>
         public  byte est_capabilities;
     
@@ -5931,13 +6150,13 @@ SETUP_SIGNING = 256,
         public  Single airspeed;
             /// <summary> Variance of body velocity estimate </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float vel_variance;
+		public float[] vel_variance;
             /// <summary> Variance in local position </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=3)]
-		public float pos_variance;
+		public float[] pos_variance;
             /// <summary> The attitude, represented as Quaternion </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Angular rate in roll axis </summary>
         public  Single roll_rate;
             /// <summary> Angular rate in pitch axis </summary>
@@ -6081,6 +6300,49 @@ SETUP_SIGNING = 256,
     };
 
 
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=63)]
+    public struct mavlink_gps_input_t
+    {
+        /// <summary> Timestamp (micros since boot or Unix epoch) </summary>
+        public  UInt64 time_usec;
+            /// <summary> GPS time (milliseconds from start of GPS week) </summary>
+        public  UInt32 time_week_ms;
+            /// <summary> Latitude (WGS84), in degrees * 1E7 </summary>
+        public  Int32 lat;
+            /// <summary> Longitude (WGS84), in degrees * 1E7 </summary>
+        public  Int32 lon;
+            /// <summary> Altitude (AMSL, not WGS84), in m (positive for up) </summary>
+        public  Single alt;
+            /// <summary> GPS HDOP horizontal dilution of position in m </summary>
+        public  Single hdop;
+            /// <summary> GPS VDOP vertical dilution of position in m </summary>
+        public  Single vdop;
+            /// <summary> GPS velocity in m/s in NORTH direction in earth-fixed NED frame </summary>
+        public  Single vn;
+            /// <summary> GPS velocity in m/s in EAST direction in earth-fixed NED frame </summary>
+        public  Single ve;
+            /// <summary> GPS velocity in m/s in DOWN direction in earth-fixed NED frame </summary>
+        public  Single vd;
+            /// <summary> GPS speed accuracy in m/s </summary>
+        public  Single speed_accuracy;
+            /// <summary> GPS horizontal accuracy in m </summary>
+        public  Single horiz_accuracy;
+            /// <summary> GPS vertical accuracy in m </summary>
+        public  Single vert_accuracy;
+            /// <summary> Flags indicating which fields to ignore (see GPS_INPUT_IGNORE_FLAGS enum).  All other fields must be provided. </summary>
+        public  UInt16 ignore_flags;
+            /// <summary> GPS week number </summary>
+        public  UInt16 time_week;
+            /// <summary> ID of the GPS for multiple GPS inputs </summary>
+        public  byte gps_id;
+            /// <summary> 0-1: no fix, 2: 2D fix, 3: 3D fix. 4: 3D with DGPS. 5: 3D with RTK </summary>
+        public  byte fix_type;
+            /// <summary> Number of satellites visible. </summary>
+        public  byte satellites_visible;
+    
+    };
+
+
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=182)]
     public struct mavlink_gps_rtcm_data_t
     {
@@ -6133,7 +6395,7 @@ SETUP_SIGNING = 256,
         public  Single z;
             /// <summary> World to surface normal and heading transformation of the takeoff position. Used to indicate the heading and slope of the ground </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Local X position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone. </summary>
         public  Single approach_x;
             /// <summary> Local Y position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone. </summary>
@@ -6161,7 +6423,7 @@ SETUP_SIGNING = 256,
         public  Single z;
             /// <summary> World to surface normal and heading transformation of the takeoff position. Used to indicate the heading and slope of the ground </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=4)]
-		public float q;
+		public float[] q;
             /// <summary> Local X position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone. </summary>
         public  Single approach_x;
             /// <summary> Local Y position of the end of the approach vector. Multicopters should set this position based on their takeoff path. Grass-landing fixed wing aircraft should set it the same way as multicopters. Runway-landing fixed wing aircraft should set it to the opposite direction of the takeoff, assuming the takeoff happened from the threshold / touchdown zone. </summary>
@@ -6233,16 +6495,16 @@ SETUP_SIGNING = 256,
     [StructLayout(LayoutKind.Sequential,Pack=1,Size=19)]
     public struct mavlink_collision_t
     {
-        /// <summary> Unique identifier, domain based on COLLISION_TYPE </summary>
+        /// <summary> Unique identifier, domain based on src field </summary>
         public  UInt32 id;
-            /// <summary> Estimated time until this collision is realised (seconds) </summary>
+            /// <summary> Estimated time until collision occurs (seconds) </summary>
         public  Single time_to_minimum_delta;
-            /// <summary> Closest vehicle will approach this collision (altitude, in metres) </summary>
-        public  Single minimum_delta_altitude;
-            /// <summary> Closest vehicle will approach this collision (horizontal distance, in metres) </summary>
-        public  Single minimum_delta_xy;
-            /// <summary> Collision type </summary>
-        public  byte collision_type;
+            /// <summary> Closest vertical distance in meters between vehicle and object </summary>
+        public  Single altitude_minimum_delta;
+            /// <summary> Closest horizontal distance in meteres between vehicle and object </summary>
+        public  Single horizontal_minimum_delta;
+            /// <summary> Collision data source </summary>
+        public  byte src;
             /// <summary> Action that is being taken to avoid this collision </summary>
         public  byte action;
             /// <summary> How concerned the aircraft is about this collision </summary>
@@ -6368,6 +6630,105 @@ SETUP_SIGNING = 256,
             /// <summary> signing key </summary>
         [MarshalAs(UnmanagedType.ByValArray,SizeConst=32)]
 		public byte[] secret_key;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=9)]
+    public struct mavlink_button_change_t
+    {
+        /// <summary> Timestamp (milliseconds since system boot) </summary>
+        public  UInt32 time_boot_ms;
+            /// <summary> Time of last change of button state </summary>
+        public  UInt32 last_change_ms;
+            /// <summary> Bitmap state of buttons </summary>
+        public  byte state;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=32)]
+    public struct mavlink_play_tune_t
+    {
+        /// <summary> System ID </summary>
+        public  byte target_system;
+            /// <summary> Component ID </summary>
+        public  byte target_component;
+            /// <summary> tune in board specific format </summary>
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=30)]
+		public byte[] tune;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=20)]
+    public struct mavlink_uavionix_adsb_out_cfg_t
+    {
+        /// <summary> Vehicle address (24 bit) </summary>
+        public  UInt32 ICAO;
+            /// <summary> Aircraft stall speed in cm/s </summary>
+        public  UInt16 stallSpeed;
+            /// <summary> Vehicle identifier (8 characters, null terminated, valid characters are A-Z, 0-9, " " only) </summary>
+        [MarshalAs(UnmanagedType.ByValArray,SizeConst=9)]
+		public byte[] callsign;
+            /// <summary> Transmitting vehicle type. See ADSB_EMITTER_TYPE enum </summary>
+        public  byte emitterType;
+            /// <summary> Aircraft length and width encoding (table 2-35 of DO-282B) </summary>
+        public  byte aircraftSize;
+            /// <summary> GPS antenna lateral offset (table 2-36 of DO-282B) </summary>
+        public  byte gpsOffsetLat;
+            /// <summary> GPS antenna longitudinal offset from nose [if non-zero, take position (in meters) divide by 2 and add one] (table 2-37 DO-282B) </summary>
+        public  byte gpsOffsetLon;
+            /// <summary> ADS-B transponder reciever and transmit enable flags </summary>
+        public  byte rfSelect;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=41)]
+    public struct mavlink_uavionix_adsb_out_dynamic_t
+    {
+        /// <summary> UTC time in seconds since GPS epoch (Jan 6, 1980). If unknown set to UINT32_MAX </summary>
+        public  UInt32 utcTime;
+            /// <summary> Latitude WGS84 (deg * 1E7). If unknown set to INT32_MAX </summary>
+        public  Int32 gpsLat;
+            /// <summary> Longitude WGS84 (deg * 1E7). If unknown set to INT32_MAX </summary>
+        public  Int32 gpsLon;
+            /// <summary> Altitude in mm (m * 1E-3) UP +ve. WGS84 altitude. If unknown set to INT32_MAX </summary>
+        public  Int32 gpsAlt;
+            /// <summary> Barometric pressure altitude relative to a standard atmosphere of 1013.2 mBar and NOT bar corrected altitude (m * 1E-3). (up +ve). If unknown set to INT32_MAX </summary>
+        public  Int32 baroAltMSL;
+            /// <summary> Horizontal accuracy in mm (m * 1E-3). If unknown set to UINT32_MAX </summary>
+        public  UInt32 accuracyHor;
+            /// <summary> Vertical accuracy in cm. If unknown set to UINT16_MAX </summary>
+        public  UInt16 accuracyVert;
+            /// <summary> Velocity accuracy in mm/s (m * 1E-3). If unknown set to UINT16_MAX </summary>
+        public  UInt16 accuracyVel;
+            /// <summary> GPS vertical speed in cm/s. If unknown set to INT16_MAX </summary>
+        public  Int16 velVert;
+            /// <summary> North-South velocity over ground in cm/s North +ve. If unknown set to INT16_MAX </summary>
+        public  Int16 velNS;
+            /// <summary> East-West velocity over ground in cm/s East +ve. If unknown set to INT16_MAX </summary>
+        public  Int16 VelEW;
+            /// <summary> ADS-B transponder dynamic input state flags </summary>
+        public  UInt16 state;
+            /// <summary> Mode A code (typically 1200 [0x04B0] for VFR) </summary>
+        public  UInt16 squawk;
+            /// <summary> 0-1: no fix, 2: 2D fix, 3: 3D fix, 4: DGPS, 5: RTK </summary>
+        public  byte gpsFix;
+            /// <summary> Number of satellites visible. If unknown set to UINT8_MAX </summary>
+        public  byte numSats;
+            /// <summary> Emergency status </summary>
+        public  byte emergencyStatus;
+    
+    };
+
+
+    [StructLayout(LayoutKind.Sequential,Pack=1,Size=1)]
+    public struct mavlink_uavionix_adsb_transceiver_health_report_t
+    {
+        /// <summary> ADS-B transponder messages </summary>
+        public  byte rfHealth;
     
     };
 

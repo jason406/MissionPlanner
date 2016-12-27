@@ -101,7 +101,7 @@
             // ConnectionControl
             // 
             resources.ApplyResources(this, "$this");
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackgroundImage = global::MissionPlanner.Properties.Resources.bgdark;
             this.Controls.Add(this.cmb_sysid);
             this.Controls.Add(this.linkLabel1);
@@ -122,6 +122,6 @@
         private System.Windows.Forms.ComboBox cmb_ConnectionType;
         private System.Windows.Forms.ComboBox cmb_Connection;
         private System.Windows.Forms.LinkLabel linkLabel1;
-        private System.Windows.Forms.ComboBox cmb_sysid;
+        public System.Windows.Forms.ComboBox cmb_sysid;
     }
 }

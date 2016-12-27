@@ -15,37 +15,40 @@ namespace MissionPlanner.Mavlink
 
         private Dictionary<int, MAVState> hiddenlist = new Dictionary<int, MAVState>();
 
-        public MAVList()
+        public MAVLinkInterface parent;
+
+        public MAVList(MAVLinkInterface mavLinkInterface)
         {
+            parent = mavLinkInterface;
             // add blank item
-            hiddenlist.Add(0,new MAVState());
+            hiddenlist.Add(0,new MAVState(parent));
         }
 
         public void AddHiddenList(byte sysid, byte compid)
         {
-            int id = (byte)sysid * 256 + (byte)compid;
+            int id = GetID((byte)sysid, (byte)compid);
 
-            hiddenlist[id] = new MAVState() { sysid = sysid, compid = compid };
+            hiddenlist[id] = new MAVState(parent) { sysid = sysid, compid = compid };
         }
 
         public MAVState this[int sysid, int compid]
         {
             get
             {
-                int id = (byte) sysid*256 + (byte) compid;
+                int id = GetID((byte)sysid, (byte)compid);
 
                 // 3dr radio special case
                 if (hiddenlist.ContainsKey(id))
                     return hiddenlist[id];
 
                 if (!masterlist.ContainsKey(id))
-                    return new MAVState();
+                    return new MAVState(parent);
 
                 return masterlist[id];
             }
             set
             {
-                int id = (byte) sysid*256 + (byte) compid;
+                int id = GetID((byte)sysid, (byte)compid);
 
                 masterlist[id] = value;
             }
@@ -68,7 +71,7 @@ namespace MissionPlanner.Mavlink
 
         public bool Contains(byte sysid, byte compid, bool includehidden = true)
         {
-            foreach (var item in masterlist)
+            foreach (var item in masterlist.ToArray())
             {
                 if (item.Value.sysid == sysid && item.Value.compid == compid)
                     return true;
@@ -76,7 +79,7 @@ namespace MissionPlanner.Mavlink
 
             if (includehidden)
             {
-                foreach (var item in hiddenlist)
+                foreach (var item in hiddenlist.ToArray())
                 {
                     if (item.Value.sysid == sysid && item.Value.compid == compid)
                         return true;
@@ -88,7 +91,7 @@ namespace MissionPlanner.Mavlink
 
         internal void Create(byte sysid, byte compid)
         {
-            int id = (byte) sysid*256 + (byte) compid;
+            int id = GetID((byte)sysid, (byte)compid);
 
             // move from hidden to visible
             if (hiddenlist.ContainsKey(id))
@@ -98,12 +101,12 @@ namespace MissionPlanner.Mavlink
             }
 
             if (!masterlist.ContainsKey(id))
-                masterlist[id] = new MAVState();
+                masterlist[id] = new MAVState(parent);
         }
 
         public IEnumerator<MAVState> GetEnumerator()
         {
-            foreach (var key in masterlist.Values)
+            foreach (var key in masterlist.Values.ToArray())
             {
                 yield return key;
             }
@@ -112,6 +115,11 @@ namespace MissionPlanner.Mavlink
         IEnumerator IEnumerable.GetEnumerator()
         {
             return this.GetEnumerator();
+        }
+
+        public static int GetID(byte sysid, byte compid)
+        {
+           return  sysid*256 + compid;
         }
     }
 }

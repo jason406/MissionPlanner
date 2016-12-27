@@ -109,17 +109,17 @@ namespace MissionPlanner.GCSViews.ConfigurationView
                 CHK_stab_roll.setup(1, 0, ParamHead + "STAB_ROLL", MainV2.comPort.MAV.param);
                 CHK_stab_pan.setup(1, 0, ParamHead + "STAB_PAN", MainV2.comPort.MAV.param);
 
-                NUD_CONTROL_x.setup(-180, 180, 100, 1, ParamHead + "CONTROL_X", MainV2.comPort.MAV.param);
-                NUD_CONTROL_y.setup(-180, 180, 100, 1, ParamHead + "CONTROL_Y", MainV2.comPort.MAV.param);
-                NUD_CONTROL_z.setup(-180, 180, 100, 1, ParamHead + "CONTROL_Z", MainV2.comPort.MAV.param);
+                NUD_CONTROL_x.setup(-180, 180, 1, 1, ParamHead + "CONTROL_X", MainV2.comPort.MAV.param);
+                NUD_CONTROL_y.setup(-180, 180, 1, 1, ParamHead + "CONTROL_Y", MainV2.comPort.MAV.param);
+                NUD_CONTROL_z.setup(-180, 180, 1, 1, ParamHead + "CONTROL_Z", MainV2.comPort.MAV.param);
 
-                NUD_NEUTRAL_x.setup(-180, 180, 100, 1, ParamHead + "NEUTRAL_X", MainV2.comPort.MAV.param);
-                NUD_NEUTRAL_y.setup(-180, 180, 100, 1, ParamHead + "NEUTRAL_Y", MainV2.comPort.MAV.param);
-                NUD_NEUTRAL_z.setup(-180, 180, 100, 1, ParamHead + "NEUTRAL_Z", MainV2.comPort.MAV.param);
+                NUD_NEUTRAL_x.setup(-180, 180, 1, 1, ParamHead + "NEUTRAL_X", MainV2.comPort.MAV.param);
+                NUD_NEUTRAL_y.setup(-180, 180, 1, 1, ParamHead + "NEUTRAL_Y", MainV2.comPort.MAV.param);
+                NUD_NEUTRAL_z.setup(-180, 180, 1, 1, ParamHead + "NEUTRAL_Z", MainV2.comPort.MAV.param);
 
-                NUD_RETRACT_x.setup(-180, 180, 100, 1, ParamHead + "RETRACT_X", MainV2.comPort.MAV.param);
-                NUD_RETRACT_y.setup(-180, 180, 100, 1, ParamHead + "RETRACT_Y", MainV2.comPort.MAV.param);
-                NUD_RETRACT_z.setup(-180, 180, 100, 1, ParamHead + "RETRACT_Z", MainV2.comPort.MAV.param);
+                NUD_RETRACT_x.setup(-180, 180, 1, 1, ParamHead + "RETRACT_X", MainV2.comPort.MAV.param);
+                NUD_RETRACT_y.setup(-180, 180, 1, 1, ParamHead + "RETRACT_Y", MainV2.comPort.MAV.param);
+                NUD_RETRACT_z.setup(-180, 180, 1, 1, ParamHead + "RETRACT_Z", MainV2.comPort.MAV.param);
             }
             catch (Exception ex)
             {
@@ -362,7 +362,10 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             RC8 = 1,
             RC9 = 1,
             RC10 = 1,
-            RC11 = 1
+            RC11 = 1,
+            RC12 = 1,
+            RC13 = 1,
+            RC14 = 1
         }
 
         // 0 = disabled 1 = enabled
@@ -375,7 +378,10 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             RC8 = 1,
             RC9 = 1,
             RC10 = 1,
-            RC11 = 1
+            RC11 = 1,
+            RC12 = 1,
+            RC13 = 1,
+            RC14 = 1
         }
 
         private enum ChannelCameraShutter
@@ -388,6 +394,9 @@ namespace MissionPlanner.GCSViews.ConfigurationView
             RC9 = 1,
             RC10 = 10,
             RC11 = 11,
+            RC12 = 1,
+            RC13 = 1,
+            RC14 = 1,
             Relay = 1,
             Transistor = 4
         }

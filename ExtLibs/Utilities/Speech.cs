@@ -28,7 +28,16 @@ namespace MissionPlanner.Utilities
                 }
                 else
                 {
-                    return _speechwindows.State == SynthesizerState.Ready;
+                    try
+                    {
+                        if (_speechwindows != null)
+                            return _speechwindows.State == SynthesizerState.Ready;
+                    }
+                    catch
+                    {
+                        return false;
+                    }
+                    return false;
                 }
             }
         }
@@ -60,6 +69,7 @@ namespace MissionPlanner.Utilities
             text = Regex.Replace(text, @"\bNAV\b", "Navigation", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\b([0-9]+)m\b", "$1 meters", RegexOptions.IgnoreCase);
             text = Regex.Replace(text, @"\b([0-9]+)ft\b", "$1 feet", RegexOptions.IgnoreCase);
+            text = Regex.Replace(text, @"\b([0-9]+)\bbaud\b", "$1 baudrate", RegexOptions.IgnoreCase);
 
             if (MONO)
             {
@@ -91,7 +101,8 @@ namespace MissionPlanner.Utilities
             }
             else
             {
-                _speechwindows.SpeakAsync(text);
+                if (_speechwindows != null)
+                    _speechwindows.SpeakAsync(text);
             }
 
             log.Info("TTS: say " + text);
@@ -119,9 +130,14 @@ namespace MissionPlanner.Utilities
             {
                 try
                 {
-                    _speechwindows.SpeakAsyncCancelAll();
+                    if (_speechwindows!= null)
+                        _speechwindows.SpeakAsyncCancelAll();
                 }
-                catch { } // System.PlatformNotSupportedException:
+                catch (System.PlatformNotSupportedException)
+                {
+                    _speechwindows = null;
+                }
+                catch { }
             }
         }
 

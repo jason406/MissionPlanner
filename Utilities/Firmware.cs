@@ -1,17 +1,19 @@
-﻿using System;
+﻿using log4net;
+using ManagedNativeWifi.Simple;
+using MissionPlanner.Arduino;
+using MissionPlanner.Comms;
+using px4uploader;
+using SharpAdbClient;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Xml;
-using MissionPlanner.Arduino;
-using MissionPlanner.Comms;
-using log4net;
-using px4uploader;
-using System.Collections;
 using System.Xml.Serialization;
 
 namespace MissionPlanner.Utilities
@@ -24,29 +26,11 @@ namespace MissionPlanner.Utilities
 
         string firmwareurl = "https://raw.github.com/diydrones/binary/master/Firmware/firmware2.xml";
 
-        // ap 2.5 - ac 2.7
-        readonly string gcoldurl =
-            ("https://meee146-planner.googlecode.com/git-history/!Hash!/Tools/MissionPlanner.lanner/Firmware/firmware2.xml");
-
-        readonly string gcoldfirmwareurl =
-            ("https://meee146-planner.googlecode.com/git-history/!Hash!/Tools/MissionPlanner.lanner/Firmware/!Firmware!");
-
-        string[] gcoldurls = new string[]
-        {
-            "76ff91fe7b2940a509ea7dfd728542491f480372", "bb5ee0e1c3e643e7e359ffb4c8bde34aa7d4f996",
-            "55ec5eaf662a56044ea25c894d235d17185f0660", "cb5b736976c7ed791ea45675c31f588ecb8228d4",
-            "bcd5239322df38db011f183e48d596f215803838", "8709cc418e00326295abc562530413c0089807a7",
-            "06a64192df594b0f81233dfb1f0214aab2cb2603", "7853ef3fad98e5053f228b7c1748c76858c4d282",
-            "abe930ce723267697542388ef181328f00371f40", "26305d5790333f730cd396afcd08c165cde33ed7",
-            "bc1f26ca40b076e3d06f173adad772fb25aa6512", "dfc5737c5efc1e7b78e908829a097624c273d9d7",
-            "682065db449b6c79d89717908ed8beea1ed6a03a", "b21116847d35472b9ab770408cbeb88ed2ed0a95",
-            "511e00bc89a554aea8768a274bff28af532cd335", "1da56714aa1ed88dcdb078a90d33bcef4eb4315f",
-            "8aa4c7a1ed07648f31335926cc6bcc06c87dc536"
-        };
-
         readonly string gholdurl = ("https://github.com/diydrones/binary/raw/!Hash!/Firmware/firmware2.xml");
         readonly string gholdfirmwareurl = ("https://github.com/diydrones/binary/raw/!Hash!/Firmware/!Firmware!");
+
         string[] gholdurls = new string[] {};
+
         public List<KeyValuePair<string, string>> niceNames = new List<KeyValuePair<string, string>>();
 
         int ingetapmversion = 0;
@@ -71,6 +55,8 @@ namespace MissionPlanner.Utilities
             public string urlvrcorev10;
             public string urlvrubrainv51;
             public string urlvrubrainv52;
+            public string urlbebop2;
+            public string urldisco;
             public string name;
             public string desc;
             public int k_format_version;
@@ -95,18 +81,6 @@ namespace MissionPlanner.Utilities
                         return gholdurl.Replace("!Hash!", hash);
                     string fn = Path.GetFileName(filename);
                     filename = gholdfirmwareurl.Replace("!Hash!", hash);
-                    filename = filename.Replace("!Firmware!", fn);
-                    return filename;
-                }
-            }
-            foreach (string x in gcoldurls)
-            {
-                if (x == hash)
-                {
-                    if (filename == "")
-                        return gcoldurl.Replace("!Hash!", hash);
-                    string fn = Path.GetFileName(filename);
-                    filename = gcoldfirmwareurl.Replace("!Hash!", hash);
                     filename = filename.Replace("!Firmware!", fn);
                     return filename;
                 }
@@ -190,6 +164,8 @@ namespace MissionPlanner.Utilities
             string vrcorev10 = "";
             string vrubrainv51 = "";
             string vrubrainv52 = "";
+            string bebop2 = "";
+            string disco = "";
             string name = "";
             string desc = "";
             int k_format_version = 0;
@@ -258,6 +234,12 @@ namespace MissionPlanner.Utilities
                             case "urlvrubrainv52":
                                 vrubrainv52 = xmlreader.ReadString();
                                 break;
+                            case "urlbebop2":
+                                bebop2 = xmlreader.ReadString();
+                                break;
+                            case "urldisco":
+                                disco = xmlreader.ReadString();
+                                break;
                             case "name":
                                 name = xmlreader.ReadString();
                                 break;
@@ -286,6 +268,8 @@ namespace MissionPlanner.Utilities
                                     temp.urlvrcorev10 = vrcorev10;
                                     temp.urlvrubrainv51 = vrubrainv51;
                                     temp.urlvrubrainv52 = vrubrainv52;
+                                    temp.urlbebop2 = bebop2;
+                                    temp.urldisco = disco;
                                     temp.k_format_version = k_format_version;
 
                                     try
@@ -331,6 +315,8 @@ namespace MissionPlanner.Utilities
                                 vrcorev10 = "";
                                 vrubrainv51 = "";
                                 vrubrainv52 = "";
+                                bebop2 = "";
+                                disco = "";
                                 name = "";
                                 desc = "";
                                 k_format_version = 0;
@@ -366,7 +352,7 @@ namespace MissionPlanner.Utilities
 
             using (
                 StreamWriter sw =
-                    new StreamWriter(Application.StartupPath + Path.DirectorySeparatorChar + "fwversions.xml"))
+                    new StreamWriter(Settings.GetUserDataDirectory() + "fwversions.xml"))
             {
                 writer.Serialize(sw, list);
             }
@@ -381,7 +367,7 @@ namespace MissionPlanner.Utilities
 
                 using (
                     StreamReader sr =
-                        new StreamReader(Application.StartupPath + Path.DirectorySeparatorChar + "fwversions.xml"))
+                        new StreamReader(Settings.GetUserDataDirectory() + "fwversions.xml"))
                 {
                     return (List<software>) reader.Deserialize(sr);
                 }
@@ -415,7 +401,7 @@ namespace MissionPlanner.Utilities
 
                 string baseurl = temp.urlpx4v2;
 
-                if (baseurl == "") return;
+                if (baseurl == "" || !baseurl.ToLower().StartsWith("http")) return;
 
                 L10N.ReplaceMirrorUrl(ref baseurl);
 
@@ -549,6 +535,14 @@ namespace MissionPlanner.Utilities
                 {
                     baseurl = temp.urlvrubrainv52.ToString();
                 }
+                else if (board == BoardDetect.boards.bebop2)
+                {
+                    baseurl = temp.urlbebop2.ToString();
+                }
+                else if (board == BoardDetect.boards.disco)
+                {
+                    baseurl = temp.urldisco.ToString();
+                }
                 else
                 {
                     CustomMessageBox.Show(Strings.InvalidBoardType);
@@ -571,6 +565,8 @@ namespace MissionPlanner.Utilities
 
                 log.Info("Using " + baseurl);
 
+                var starttime = DateTime.Now;
+
                 // Create a request using a URL that can receive a post. 
                 WebRequest request = WebRequest.Create(baseurl);
                 request.Timeout = 10000;
@@ -586,14 +582,13 @@ namespace MissionPlanner.Utilities
                     // Get the stream containing content returned by the server.
                     using (dataStream = response.GetResponseStream())
                     {
-
                         long bytes = response.ContentLength;
                         long contlen = bytes;
 
                         byte[] buf1 = new byte[1024];
 
                         using (FileStream fs = new FileStream(
-                                Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar +
+                                Settings.GetUserDataDirectory() +
                                 @"firmware.hex", FileMode.Create))
                         {
                             updateProgress(0, Strings.DownloadingFromInternet);
@@ -626,6 +621,10 @@ namespace MissionPlanner.Utilities
                     response.Close();
                 }
 
+                var timetook = (DateTime.Now - starttime).TotalMilliseconds;
+
+                Tracking.AddTiming("Firmware Download", board.ToString(), timetook, temp.name);
+
                 updateProgress(100, Strings.DownloadedFromInternet);
                 log.Info("Downloaded");
             }
@@ -638,31 +637,16 @@ namespace MissionPlanner.Utilities
 
             MissionPlanner.Utilities.Tracking.AddFW(temp.name, board.ToString());
 
-            return UploadFlash(comport,
-                Path.GetDirectoryName(Application.ExecutablePath) + Path.DirectorySeparatorChar + @"firmware.hex", board);
-        }
+            var uploadstarttime = DateTime.Now;
 
-        void apmtype(object temp)
-        {
-            try
-            {
-                // Create a request using a URL that can receive a post. 
-                HttpWebRequest request =
-                    (HttpWebRequest) HttpWebRequest.Create("http://vps.oborne.me/axs/ax.pl?" + (string) temp);
-                //request.AllowAutoRedirect = true;
-                request.UserAgent = MainV2.instance.Text + " (res" + Screen.PrimaryScreen.Bounds.Width + "x" +
-                                    Screen.PrimaryScreen.Bounds.Height + "; " + Environment.OSVersion.VersionString +
-                                    "; cores " + Environment.ProcessorCount + ")";
-                request.Timeout = 10000;
-                // Set the Method property of the request to POST.
-                request.Method = "GET";
-                // Get the request stream.
-                // Get the response.
-                WebResponse response = request.GetResponse();
-            }
-            catch
-            {
-            }
+            var ans = UploadFlash(comport,
+                Settings.GetUserDataDirectory() + @"firmware.hex", board);
+
+            var uploadtime = (DateTime.Now - uploadstarttime).TotalMilliseconds;
+
+            Tracking.AddTiming("Firmware Upload", board.ToString(), uploadtime, temp.name);
+
+            return ans;
         }
 
         /// <summary>
@@ -672,7 +656,7 @@ namespace MissionPlanner.Utilities
         public bool UploadPX4(string filename, BoardDetect.boards board)
         {
             Uploader up;
-            updateProgress(0, "Reading Hex File");
+            updateProgress(-1, "Reading Hex File");
             px4uploader.Firmware fw;
             try
             {
@@ -686,12 +670,14 @@ namespace MissionPlanner.Utilities
 
             try
             {
+                updateProgress(-1, "Look for HeartBeat");
                 // check if we are seeing heartbeats
                 MainV2.comPort.BaseStream.Open();
                 MainV2.comPort.giveComport = true;
 
                 if (MainV2.comPort.getHeartBeat().Length > 0)
                 {
+                    updateProgress(-1, "Reboot to Bootloader");
                     MainV2.comPort.doReboot(true, false);
                     MainV2.comPort.Close();
 
@@ -704,6 +690,7 @@ namespace MissionPlanner.Utilities
                 }
                 else
                 {
+                    updateProgress(-1, "No HeartBeat found");
                     MainV2.comPort.BaseStream.Close();
                     CustomMessageBox.Show(Strings.PleaseUnplugTheBoardAnd);
                 }
@@ -716,7 +703,7 @@ namespace MissionPlanner.Utilities
 
             DateTime DEADLINE = DateTime.Now.AddSeconds(30);
 
-            updateProgress(0, "Scanning comports");
+            updateProgress(-1, "Scanning comports");
 
             while (DateTime.Now < DEADLINE)
             {
@@ -725,8 +712,6 @@ namespace MissionPlanner.Utilities
                 foreach (string port in allports)
                 {
                     log.Info(DateTime.Now.Millisecond + " Trying Port " + port);
-
-                    updateProgress(-1, "Connecting");
 
                     try
                     {
@@ -756,6 +741,8 @@ namespace MissionPlanner.Utilities
                         up.close();
                         continue;
                     }
+
+                    updateProgress(-1, "Connecting");
 
                     // test if pausing here stops - System.TimeoutException: The write timed out.
                     System.Threading.Thread.Sleep(500);
@@ -955,6 +942,293 @@ namespace MissionPlanner.Utilities
             return false;
         }
 
+        /// <summary>
+        /// upload to Parrot boards
+        /// </summary>
+        /// <param name="filename"></param>
+        public bool UploadParrot(string filename, BoardDetect.boards board)
+        {
+            string vehicleName = board.ToString().Substring(0, 1).ToUpper() + board.ToString().Substring(1).ToLower();
+            Ping ping = new Ping();
+            PingReply pingReply = pingParrotVehicle(ping);
+
+            updateProgress(0, "Trying to connect to " + vehicleName);
+
+            if (pingReply == null || pingReply.Status != IPStatus.Success)
+            {
+                bool ssidFound = isParrotWifiConnected(vehicleName);
+
+                if (!ssidFound)
+                {
+                    CustomMessageBox.Show("Please connect to " + vehicleName + " Wifi now and after that press OK", vehicleName, MessageBoxButtons.OK);
+                    ssidFound = isParrotWifiConnected(vehicleName);
+                    pingReply = pingParrotVehicle(ping);
+                }
+
+                while (pingReply == null || pingReply.Status != IPStatus.Success)
+                {
+                    if (!ssidFound)
+                    {
+                        if (CustomMessageBox.Show("You don't seem connected to " + vehicleName + " Wifi. Please connect to it and press OK to try again", vehicleName, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                        {
+                            return false;
+                        }
+                    }
+                    else if (CustomMessageBox.Show("You seem connected to " + vehicleName + " Wifi but it didn't answer our request. Do you want to try again?", vehicleName, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                    {
+                        return false;
+                    }
+
+                    ssidFound = isParrotWifiConnected(vehicleName);
+                    pingReply = pingParrotVehicle(ping);
+                }
+            }
+
+            try
+            {
+                AdbServer.Instance.StartServer("adb.exe", true);
+                IAdbClient adbClient = AdbClient.Instance;
+
+                string response = adbClient.Connect(new DnsEndPoint("192.168.42.1", 9050));
+
+                if (!response.Contains("connected to 192.168.42.1:9050"))
+                {
+                    string ntimes = "four";
+
+                    if (board == BoardDetect.boards.disco)
+                    {
+                        ntimes = "two";
+                    }
+
+                    CustomMessageBox.Show("Please press " + vehicleName + " Power button " + ntimes + " times", vehicleName, MessageBoxButtons.OK);
+                    response = adbClient.Connect(new DnsEndPoint("192.168.42.1", 9050));
+
+                    while (!response.Contains("connected to 192.168.42.1:9050"))
+                    {
+                        if (CustomMessageBox.Show("Couldn't contact " + vehicleName + ". Press the Power button " + ntimes + " times. Do you want to try to connect again?", vehicleName, MessageBoxButtons.OKCancel) == DialogResult.Cancel)
+                        {
+                            return false;
+                        }
+
+                        response = adbClient.Connect(new DnsEndPoint("192.168.42.1", 9050));
+                    }
+                }
+
+                DeviceData device = adbClient.GetDevices().First();
+                ConsoleOutputReceiver consoleOut = new ConsoleOutputReceiver();
+
+                try
+                {
+                    using (SyncService service = new SyncService(device))
+                    {
+                        using (FileStream stream = File.OpenRead(filename))
+                        {
+                            updateProgress(10, "Uploading software...");
+                            service.Push(stream, "/data/ftp/internal_000/APM/" + (board == BoardDetect.boards.disco ? "apm-plane-disco" : "arducopter"), 777, DateTime.Now, CancellationToken.None);
+                            updateProgress(50, "Software uploaded");
+                        }
+
+                        if (board != BoardDetect.boards.disco)
+                        {
+                            using (MemoryStream stream = new MemoryStream())
+                            using (StreamReader sr = new StreamReader(stream))
+                            {
+                                updateProgress(60, "Looking for need to update init scripts...");
+                                service.Pull("/etc/init.d/rcS_mode_default", stream, CancellationToken.None);
+
+                                bool initChanged = false;
+                                List<string> initLines = new List<string>();
+                                string[] initAPLines = { "if test -x /data/ftp/internal_000/APM/start_ardupilot.sh && test -x /data/ftp/internal_000/APM/arducopter; then",
+                                                         "  /data/ftp/internal_000/APM/start_ardupilot.sh &",
+                                                         "else" };
+                                int[] initAPLinesIndex = Enumerable.Repeat(-1, initAPLines.Length).ToArray();
+                                int dragonLineIndex = -1;
+
+                                stream.Seek(0, SeekOrigin.Begin);
+
+                                while (!sr.EndOfStream)
+                                {
+                                    string line = sr.ReadLine();
+
+                                    int dragonIndex = line.IndexOf("DragonStarter.sh");
+                                    bool acLine = line.ToLower().Trim().StartsWith("arducopter");
+
+                                    if (dragonIndex != -1)
+                                    {
+                                        int dragonCommentIndex = line.IndexOf('#');
+
+                                        if (dragonCommentIndex != -1 && dragonCommentIndex < dragonIndex)
+                                        {
+                                            line = line.Remove(dragonCommentIndex, 1);
+                                            initChanged = true;
+                                        }
+
+                                        if (line.Substring(0, 2) != "  ")
+                                        {
+                                            line = line.Insert(0, "  ");
+                                            initChanged = true;
+                                        }
+
+                                        dragonLineIndex = initLines.Count;
+                                    }
+                                    else if (acLine)
+                                    {
+                                        initChanged = true;
+                                        continue;
+                                    }
+                                    else
+                                    {
+                                        foreach (int i in Enumerable.Range(0, initAPLines.Length))
+                                        {
+                                            if (line == initAPLines[i])
+                                            {
+                                                initAPLinesIndex[i] = initLines.Count;
+                                                break;
+                                            }
+                                        }
+                                    }
+
+                                    initLines.Add(line);
+                                }
+
+                                if (initAPLinesIndex[0] == -1 ||
+                                    initAPLinesIndex[1] != (initAPLinesIndex[0] + 1) ||
+                                    initAPLinesIndex[2] != (initAPLinesIndex[1] + 1) ||
+                                    dragonLineIndex != (initAPLinesIndex[2] + 1))
+                                {
+                                    foreach(int i in initAPLinesIndex)
+                                    {
+                                        if(i != -1)
+                                        {
+                                            if (i < dragonLineIndex)
+                                                dragonLineIndex--;
+
+                                            initLines.RemoveAt(i);
+                                        }
+                                    }
+
+                                    initLines.InsertRange(dragonLineIndex, initAPLines);
+
+                                    if (initLines[dragonLineIndex + initAPLines.Length + 1] != "fi")
+                                    {
+                                        initLines.Insert(dragonLineIndex + initAPLines.Length + 1, "fi");
+                                    }
+
+                                    initChanged = true;
+                                }
+
+                                string startAPText = "#!/bin/sh\n\n" +
+                                                     "# startup fan\n" +
+                                                     "echo 1 > /sys/devices/platform/user_gpio/FAN/value\n\n" +
+                                                     "while :; do\n" +
+                                                     "  ulogger -t \"rcS_mode_default\" -p I \"Launching ArduPilot\"\n" +
+                                                     "  /data/ftp/internal_000/APM/arducopter -A udp:192.168.42.255:14550:bcast -B /dev/ttyPA1 -C udp:192.168.42.255:14551:bcast -l /data/ftp/internal_000/APM/logs -t /data/ftp/internal_000/APM/terrain\n" +
+                                                     "done\n";
+
+                                // if the above script is changed, change this date to a future date
+                                DateTime startAPDate = new DateTime(2016, 10, 21, 05, 10, 19);
+                                FileStatistics startAPStat = service.Stat("/data/ftp/internal_000/APM/start_ardupilot.sh");
+
+                                if (startAPStat.FileMode == 0 || startAPStat.Time.CompareTo(startAPDate) < 0)
+                                {
+                                    updateProgress(70, "Uploading ArduPilot startup script...");
+                                    using (MemoryStream startScriptStream = new MemoryStream(sr.CurrentEncoding.GetBytes(startAPText)))
+                                    {
+                                        service.Push(startScriptStream, "/data/ftp/internal_000/APM/start_ardupilot.sh", 777, startAPDate, CancellationToken.None);
+                                    }
+                                }
+
+                                FileStatistics binaryStat = service.Stat("/usr/bin/arducopter");
+
+                                if (initChanged || (binaryStat.FileMode.HasFlag(UnixFileMode.Regular)))
+                                {
+                                    adbClient.ExecuteRemoteCommand("mount -o remount,rw /", device, consoleOut);
+
+                                    if (binaryStat.FileMode.HasFlag(UnixFileMode.Regular))
+                                    {
+                                        // remove old binary location
+                                        adbClient.ExecuteRemoteCommand("rm -f /usr/bin/arducopter", device, consoleOut);
+                                    }
+
+                                    if (initChanged)
+                                    {
+                                        // only backup init file if a backup doesn't exist
+                                        adbClient.ExecuteRemoteCommand("mv -n /etc/init.d/rcS_mode_default /etc/init.d/rcS_mode_default.backup", device, consoleOut);
+
+                                        updateProgress(80, "Writing modified init script");
+                                        stream.SetLength(0);
+
+                                        using (StreamWriter sw = new StreamWriter(stream, sr.CurrentEncoding))
+                                        {
+                                            sw.NewLine = "\n";
+                                            initLines.ForEach(line => sw.WriteLine(line));
+                                            sw.Flush();
+                                            stream.Seek(0, SeekOrigin.Begin);
+                                            service.Push(stream, "/etc/init.d/rcS_mode_default", 755, DateTime.Now, CancellationToken.None);
+
+                                            // a bug in 'adb push' sets 'group' and 'other' permissions equal to 'owner' so we run chmod to have the correct original permissions
+                                            adbClient.ExecuteRemoteCommand("chmod 755 /etc/init.d/rcS_mode_default", device, consoleOut);
+                                        }
+                                    }
+                                }
+                                updateProgress(90, "Scripts updated");
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    updateProgress(100, "Rebooting...");
+                    adbClient.ExecuteRemoteCommand("reboot.sh", device, consoleOut);
+                }
+
+                CustomMessageBox.Show("Firmware installed!");
+                updateProgress(-1, "Firmware installed");
+            }
+            catch (Exception e)
+            {
+                log.Error(e);
+                Console.WriteLine("An error occurred: " + e.ToString());
+                updateProgress(-1, "ERROR: " + e.Message);
+                return false;
+            }
+            finally
+            {
+                AdbClient.Instance.KillAdb();
+            }
+
+            return true;
+        }
+
+        bool isParrotWifiConnected(string ssid)
+        {
+            IEnumerable<string> connectedSSIDs = NativeWifi.GetConnectedNetworkSsids();
+            bool ssidFound = false;
+
+            foreach (string ssidName in connectedSSIDs)
+            {
+                if (ssidName.StartsWith(ssid))
+                {
+                    ssidFound = true;
+                    break;
+                }
+            }
+
+            return ssidFound;
+        }
+
+        PingReply pingParrotVehicle(Ping ping)
+        {
+            try
+            {
+                return ping.Send("192.168.42.1");
+            }
+            catch (PingException)
+            {
+                return null;
+            }
+        }
+
         string _message = "";
 
         void up_LogEvent(string message, int level = 0)
@@ -971,10 +1245,12 @@ namespace MissionPlanner.Utilities
         }
 
         /// <summary>
-        /// upload to arduino standalone
+        /// Upload firmware
         /// </summary>
+        /// <param name="comport"></param>
         /// <param name="filename"></param>
         /// <param name="board"></param>
+        /// <returns>pass/fail</returns>
         public bool UploadFlash(string comport, string filename, BoardDetect.boards board)
         {
             if (board == BoardDetect.boards.px4 || board == BoardDetect.boards.px4v2 || board == BoardDetect.boards.px4v4)
@@ -998,6 +1274,16 @@ namespace MissionPlanner.Utilities
                 return UploadVRBRAIN(filename, board);
             }
 
+            if (board == BoardDetect.boards.bebop2)
+            {
+                return UploadParrot(filename, board);
+            }
+
+            return UploadArduino(comport, filename, board);
+        }
+
+        public bool UploadArduino(string comport, string filename, BoardDetect.boards board)
+        { 
             byte[] FLASH = new byte[1];
             try
             {
