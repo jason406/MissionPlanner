@@ -1526,8 +1526,9 @@ namespace MissionPlanner
                 }
 
                 var gridobject = savegriddata();
-
+                //Math.round may cause missing flight path
                 int wpsplit = (int)Math.Round(grid.Count / NUM_split.Value,MidpointRounding.AwayFromZero);
+                int wpsplit2 = (int)Math.Round(grid.Count / NUM_split.Value, MidpointRounding.AwayFromZero);
 
                 List<int> wpsplitstart = new List<int>();
 
@@ -1545,20 +1546,20 @@ namespace MissionPlanner
                     {
                         wpend++;
                     }
-
+                    //add takeoff
                     if (CHK_toandland.Checked)
                     {
                         if (plugin.Host.cs.firmware == MainV2.Firmwares.ArduCopter2)
                         {
                             var wpno = plugin.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 20, 0, 0, 0, 0, 0,
-                                (int)(30 * CurrentState.multiplierdist), gridobject);
+                                (int)((double)NUM_altitude.Value * CurrentState.multiplierdist), gridobject);
 
                             wpsplitstart.Add(wpno);
-                        }
+                         }
                         else
                         {
                             var wpno = plugin.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 20, 0, 0, 0, 0, 0,
-                                (int)(30 * CurrentState.multiplierdist), gridobject);
+                                (int)((double)NUM_altitude.Value * CurrentState.multiplierdist), gridobject);
 
                             wpsplitstart.Add(wpno);
                         }
@@ -1573,6 +1574,7 @@ namespace MissionPlanner
                     int i = 0;
                     bool startedtrigdist = false;
                     PointLatLngAlt lastplla = PointLatLngAlt.Zero;
+                    //plla=pointLagLngAlt
                     foreach (var plla in grid)
                     {
                         // skip before start point
@@ -1689,7 +1691,7 @@ namespace MissionPlanner
                     {
                         plugin.Host.AddWPtoList(MAVLink.MAV_CMD.DO_SET_CAM_TRIGG_DIST, 0, 0, 0, 0, 0, 0, 0, gridobject);
                     }
-
+                    //RTL change to default speed
                     if (CHK_usespeed.Checked)
                     {
                         if (MainV2.comPort.MAV.param["WPNAV_SPEED"] != null)

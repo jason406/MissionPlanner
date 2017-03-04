@@ -56,6 +56,8 @@
             this.label22 = new System.Windows.Forms.Label();
             this.tabCamera = new System.Windows.Forms.TabPage();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label42 = new System.Windows.Forms.Label();
+            this.num_setservono = new System.Windows.Forms.NumericUpDown();
             this.label41 = new System.Windows.Forms.Label();
             this.label39 = new System.Windows.Forms.Label();
             this.num_setservolow = new System.Windows.Forms.NumericUpDown();
@@ -151,11 +153,11 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.TRK_zoom = new MissionPlanner.Controls.MyTrackBar();
             this.map = new MissionPlanner.Controls.myGMAP();
-            this.label42 = new System.Windows.Forms.Label();
-            this.num_setservono = new System.Windows.Forms.NumericUpDown();
+            this.chk_oblique = new System.Windows.Forms.CheckBox();
             this.groupBox5.SuspendLayout();
             this.tabCamera.SuspendLayout();
             this.groupBox3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_setservono)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_setservolow)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_setservohigh)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_repttime)).BeginInit();
@@ -185,7 +187,6 @@
             this.groupBox4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TRK_zoom)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num_setservono)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox5
@@ -368,6 +369,31 @@
             resources.ApplyResources(this.groupBox3, "groupBox3");
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.TabStop = false;
+            // 
+            // label42
+            // 
+            resources.ApplyResources(this.label42, "label42");
+            this.label42.Name = "label42";
+            // 
+            // num_setservono
+            // 
+            resources.ApplyResources(this.num_setservono, "num_setservono");
+            this.num_setservono.Maximum = new decimal(new int[] {
+            12,
+            0,
+            0,
+            0});
+            this.num_setservono.Minimum = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
+            this.num_setservono.Name = "num_setservono";
+            this.num_setservono.Value = new decimal(new int[] {
+            5,
+            0,
+            0,
+            0});
             // 
             // label41
             // 
@@ -785,6 +811,7 @@
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
+            this.groupBox1.Controls.Add(this.chk_oblique);
             this.groupBox1.Controls.Add(this.chk_crossgrid);
             this.groupBox1.Controls.Add(this.label32);
             this.groupBox1.Controls.Add(this.NUM_leadin);
@@ -1233,30 +1260,11 @@
             this.map.MouseDown += new System.Windows.Forms.MouseEventHandler(this.map_MouseDown);
             this.map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.map_MouseMove);
             // 
-            // label42
+            // chk_oblique
             // 
-            resources.ApplyResources(this.label42, "label42");
-            this.label42.Name = "label42";
-            // 
-            // num_setservono
-            // 
-            resources.ApplyResources(this.num_setservono, "num_setservono");
-            this.num_setservono.Maximum = new decimal(new int[] {
-            12,
-            0,
-            0,
-            0});
-            this.num_setservono.Minimum = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
-            this.num_setservono.Name = "num_setservono";
-            this.num_setservono.Value = new decimal(new int[] {
-            5,
-            0,
-            0,
-            0});
+            resources.ApplyResources(this.chk_oblique, "chk_oblique");
+            this.chk_oblique.Name = "chk_oblique";
+            this.chk_oblique.UseVisualStyleBackColor = true;
             // 
             // GridUI
             // 
@@ -1274,6 +1282,7 @@
             this.tabCamera.ResumeLayout(false);
             this.groupBox3.ResumeLayout(false);
             this.groupBox3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.num_setservono)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_setservolow)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.num_setservohigh)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.NUM_repttime)).EndInit();
@@ -1311,7 +1320,6 @@
             this.groupBox4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TRK_zoom)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.num_setservono)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1443,5 +1451,6 @@
         private System.Windows.Forms.NumericUpDown num_setservohigh;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.NumericUpDown num_setservono;
+        private System.Windows.Forms.CheckBox chk_oblique;
     }
 }
