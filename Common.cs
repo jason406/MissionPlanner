@@ -670,8 +670,8 @@ union px4_custom_mode {
         static Dictionary<string, Bitmap> fontBitmaps = new Dictionary<string, Bitmap>();
         static Font font;
 
-        public GMapMarkerWP(PointLatLng p, string wpno)
-            : base(p, GMarkerGoogleType.green)
+        public GMapMarkerWP(PointLatLng p, string wpno, GMarkerGoogleType type = GMarkerGoogleType.green)
+            : base(p, type)
         {
             this.wpno = wpno;
             if (font == null)

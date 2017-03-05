@@ -59,9 +59,19 @@ namespace MissionPlanner
         static void addtomap(utmpos pos, string tag)
         {
             if (tag == "M")
+            {
                 return;
-
-            polygons.Markers.Add(new GMapMarkerWP(pos.ToLLA(), tag));
+            }
+            else if (tag == "SM")
+            {
+                return;
+                //polygons.Markers.Add(new GMapMarkerWP(pos.ToLLA(), tag,GMap.NET.WindowsForms.Markers.GMarkerGoogleType.red_big_stop));
+            }
+            else
+            {
+                polygons.Markers.Add(new GMapMarkerWP(pos.ToLLA(), tag));
+            }
+            
 
             map.ZoomAndCenterMarkers("polygons");
 
@@ -86,7 +96,11 @@ namespace MissionPlanner
 
         public static List<PointLatLngAlt> CreateGrid(List<PointLatLngAlt> polygon, double altitude, double distance, double spacing, double angle, double overshoot1,double overshoot2, StartPosition startpos, bool shutter, float minLaneSeparation, float leadin = 0)
         {
-            //DoDebug();
+            if (spacing > 0)
+            {
+                //DoDebug();
+            }
+            
 
             if (spacing < 10 && spacing != 0)
                 spacing = 10;
@@ -314,18 +328,18 @@ namespace MissionPlanner
             }
 
             // find closest line point to startpos
-            linelatlng closest = findClosestLine(startposutm, grid, 0 /*Lane separation does not apply to starting point*/, angle);
+            linelatlng closestLine = findClosestLine(startposutm, grid, 0 /*Lane separation does not apply to starting point*/, angle);
 
             utmpos lastpnt;
 
             // get the closes point from the line we picked
-            if (closest.p1.GetDistance(startposutm) < closest.p2.GetDistance(startposutm))
+            if (closestLine.p1.GetDistance(startposutm) < closestLine.p2.GetDistance(startposutm))
             {
-                lastpnt = closest.p1;
+                lastpnt = closestLine.p1;
             }
             else
             {
-                lastpnt = closest.p2;
+                lastpnt = closestLine.p2;
             }
 
             // S =  start
@@ -336,26 +350,26 @@ namespace MissionPlanner
             while (grid.Count > 0)
             {
                 // for each line, check which end of the line is the next closest
-                if (closest.p1.GetDistance(lastpnt) < closest.p2.GetDistance(lastpnt))
+                if (closestLine.p1.GetDistance(lastpnt) < closestLine.p2.GetDistance(lastpnt))
                 {
-                    utmpos newstart = newpos(closest.p1, angle, -leadin);
+                    utmpos newstart = newpos(closestLine.p1, angle, -leadin);
                     newstart.Tag = "S";
 
                     addtomap(newstart, "S");
                     ans.Add(newstart);
 
-                    closest.p1.Tag = "SM";
-                    addtomap(closest.p1, "SM");
-                    ans.Add(closest.p1);
+                    closestLine.p1.Tag = "SM";
+                    addtomap(closestLine.p1, "SM");
+                    ans.Add(closestLine.p1);
 
                     if (spacing > 0)
                     {
-                        for (int d = (int)(spacing - ((closest.basepnt.GetDistance(closest.p1)) % spacing));
-                            d < (closest.p1.GetDistance(closest.p2));
+                        for (int d = (int)(spacing - ((closestLine.basepnt.GetDistance(closestLine.p1)) % spacing));
+                            d < (closestLine.p1.GetDistance(closestLine.p2));
                             d += (int)spacing)
                         {
-                            double ax = closest.p1.x;
-                            double ay = closest.p1.y;
+                            double ax = closestLine.p1.x;
+                            double ay = closestLine.p1.y;
 
                             newpos(ref ax, ref ay, angle, d);
                             var utmpos1 = new utmpos(ax, ay, utmzone) {Tag = "M"};
@@ -364,42 +378,42 @@ namespace MissionPlanner
                         }
                     }
 
-                    closest.p2.Tag = "ME";
-                    addtomap(closest.p2, "ME");
-                    ans.Add(closest.p2);
+                    closestLine.p2.Tag = "ME";
+                    addtomap(closestLine.p2, "ME");
+                    ans.Add(closestLine.p2);
 
-                    utmpos newend = newpos(closest.p2, angle, overshoot1);
+                    utmpos newend = newpos(closestLine.p2, angle, overshoot1);
                     newend.Tag = "E";
                     addtomap(newend, "E");
                     ans.Add(newend);
 
-                    lastpnt = closest.p2;
+                    lastpnt = closestLine.p2;
 
-                    grid.Remove(closest);
+                    grid.Remove(closestLine);
                     if (grid.Count == 0)
                         break;
 
-                    closest = findClosestLine(newend, grid, minLaneSeparationINMeters, angle);
+                    closestLine = findClosestLine(newend, grid, minLaneSeparationINMeters, angle);
                 }
                 else
                 {
-                    utmpos newstart = newpos(closest.p2, angle, leadin);
+                    utmpos newstart = newpos(closestLine.p2, angle, leadin);
                     newstart.Tag = "S";
                     addtomap(newstart, "S");
                     ans.Add(newstart);
 
-                    closest.p2.Tag = "SM";
-                    addtomap(closest.p2, "SM");
-                    ans.Add(closest.p2);
+                    closestLine.p2.Tag = "SM";
+                    addtomap(closestLine.p2, "SM");
+                    ans.Add(closestLine.p2);
 
                     if (spacing > 0)
                     {
-                        for (int d = (int)((closest.basepnt.GetDistance(closest.p2)) % spacing);
-                            d < (closest.p1.GetDistance(closest.p2));
+                        for (int d = (int)((closestLine.basepnt.GetDistance(closestLine.p2)) % spacing);
+                            d < (closestLine.p1.GetDistance(closestLine.p2));
                             d += (int)spacing)
                         {
-                            double ax = closest.p2.x;
-                            double ay = closest.p2.y;
+                            double ax = closestLine.p2.x;
+                            double ay = closestLine.p2.y;
 
                             newpos(ref ax, ref ay, angle, -d);
                             var utmpos2 = new utmpos(ax, ay, utmzone) {Tag = "M"};
@@ -408,21 +422,21 @@ namespace MissionPlanner
                         }
                     }
 
-                    closest.p1.Tag = "ME";
-                    addtomap(closest.p1, "ME");
-                    ans.Add(closest.p1);
+                    closestLine.p1.Tag = "ME";
+                    addtomap(closestLine.p1, "ME");
+                    ans.Add(closestLine.p1);
 
-                    utmpos newend = newpos(closest.p1, angle, -overshoot2);
+                    utmpos newend = newpos(closestLine.p1, angle, -overshoot2);
                     newend.Tag = "E";
                     addtomap(newend, "E");
                     ans.Add(newend);
 
-                    lastpnt = closest.p1;
+                    lastpnt = closestLine.p1;
 
-                    grid.Remove(closest);
+                    grid.Remove(closestLine);
                     if (grid.Count == 0)
                         break;
-                    closest = findClosestLine(newend, grid, minLaneSeparationINMeters, angle);
+                    closestLine = findClosestLine(newend, grid, minLaneSeparationINMeters, angle);
                 }
             }
 
@@ -455,6 +469,13 @@ namespace MissionPlanner
         }
 
         // polar to rectangular
+        /// <summary>
+        /// polar to rectangular
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <param name="bearing"></param>
+        /// <param name="distance"></param>
         static void newpos(ref double x, ref double y, double bearing, double distance)
         {
             double degN = 90 - bearing;
@@ -465,6 +486,13 @@ namespace MissionPlanner
         }
 
         // polar to rectangular
+        /// <summary>
+        /// polar to rectangular
+        /// </summary>
+        /// <param name="input"></param>
+        /// <param name="bearing"></param>
+        /// <param name="distance"></param>
+        /// <returns></returns>
         static utmpos newpos(utmpos input, double bearing, double distance)
         {
             double degN = 90 - bearing;

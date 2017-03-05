@@ -1528,7 +1528,7 @@ namespace MissionPlanner
                 var gridobject = savegriddata();
                 //Math.round may cause missing flight path
                 int wpsplit = (int)Math.Round(grid.Count / NUM_split.Value,MidpointRounding.AwayFromZero);
-                int wpsplit2 = (int)Math.Round(grid.Count / NUM_split.Value, MidpointRounding.AwayFromZero);
+                
 
                 List<int> wpsplitstart = new List<int>();
 
@@ -1536,10 +1536,10 @@ namespace MissionPlanner
                 {
                     int wpstart = wpsplit * splitno;
                     int wpend = wpsplit * (splitno + 1);
-
+                    //TODO:fix duplicate flight path BUG
                     while (wpstart != 0 && wpstart < grid.Count && grid[wpstart].Tag != "E")
                     {
-                        wpstart++;
+                        wpstart--; //change ++ to --, avoid missing flight path ; but another BUG of duplicate flight path exist
                     }
 
                     while (wpend < grid.Count && grid[wpend].Tag != "S")
@@ -1588,7 +1588,7 @@ namespace MissionPlanner
                             break;
                         if (i > wpstart)
                         {
-                            if (plla.Tag == "M")
+                            if (plla.Tag == "M") //cam trigger point
                             {
                                 if (rad_repeatservo.Checked)
                                 {
@@ -1610,11 +1610,11 @@ namespace MissionPlanner
                             else
                             {
                                 if (plla.Lat != lastplla.Lat || plla.Lng != lastplla.Lng || plla.Alt != lastplla.Alt)
-                                    AddWP(plla.Lng, plla.Lat, plla.Alt);
+                                    AddWP(plla.Lng, plla.Lat, plla.Alt); //add waypoint and avoid repeated point
 
                                 if (rad_trigdist.Checked)
                                 {
-                                    if (chk_stopstart.Checked)
+                                    if (chk_stopstart.Checked) //not trigger in overshoot and leadin area
                                     {
                                         if (plla.Tag == "SM")
                                         {
@@ -1628,7 +1628,7 @@ namespace MissionPlanner
                                                 0, 0, 0, 0, 0, 0, gridobject);
                                         }
                                     }
-                                    else
+                                    else //trigger in overshoot and leadin area
                                     {
                                         if (!startedtrigdist)
                                         {
@@ -1639,7 +1639,7 @@ namespace MissionPlanner
                                         }
                                     }
                                 } 
-                                else if (rad_repeatservo.Checked)
+                                else if (rad_repeatservo.Checked) //repeat servo
                                 {
                                     if (chk_stopstart.Checked)
                                     {
