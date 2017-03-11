@@ -167,6 +167,7 @@
             this.createSplineCircleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.areaToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.textToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.panoramaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.mapToolToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.ContextMeasure = new System.Windows.Forms.ToolStripMenuItem();
             this.rotateMapToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -196,7 +197,7 @@
             this.panelBASE = new System.Windows.Forms.Panel();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.panoramaToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.bufferToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             ((System.ComponentModel.ISupportInitialize)(this.Commands)).BeginInit();
             this.panel5.SuspendLayout();
             this.panel1.SuspendLayout();
@@ -928,7 +929,8 @@
             this.savePolygonToolStripMenuItem,
             this.loadPolygonToolStripMenuItem,
             this.fromSHPToolStripMenuItem,
-            this.areaToolStripMenuItem});
+            this.areaToolStripMenuItem,
+            this.bufferToolStripMenuItem});
             this.polygonToolStripMenuItem.Name = "polygonToolStripMenuItem";
             resources.ApplyResources(this.polygonToolStripMenuItem, "polygonToolStripMenuItem");
             // 
@@ -1103,6 +1105,12 @@
             this.textToolStripMenuItem.Name = "textToolStripMenuItem";
             resources.ApplyResources(this.textToolStripMenuItem, "textToolStripMenuItem");
             this.textToolStripMenuItem.Click += new System.EventHandler(this.textToolStripMenuItem_Click);
+            // 
+            // panoramaToolStripMenuItem
+            // 
+            this.panoramaToolStripMenuItem.Name = "panoramaToolStripMenuItem";
+            resources.ApplyResources(this.panoramaToolStripMenuItem, "panoramaToolStripMenuItem");
+            this.panoramaToolStripMenuItem.Click += new System.EventHandler(this.panoramaToolStripMenuItem_Click);
             // 
             // mapToolToolStripMenuItem
             // 
@@ -1298,11 +1306,11 @@
             this.timer1.Interval = 1200;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // panoramaToolStripMenuItem
+            // bufferToolStripMenuItem
             // 
-            this.panoramaToolStripMenuItem.Name = "panoramaToolStripMenuItem";
-            resources.ApplyResources(this.panoramaToolStripMenuItem, "panoramaToolStripMenuItem");
-            this.panoramaToolStripMenuItem.Click += new System.EventHandler(this.panoramaToolStripMenuItem_Click);
+            this.bufferToolStripMenuItem.Name = "bufferToolStripMenuItem";
+            resources.ApplyResources(this.bufferToolStripMenuItem, "bufferToolStripMenuItem");
+            this.bufferToolStripMenuItem.Click += new System.EventHandler(this.bufferToolStripMenuItem_Click);
             // 
             // FlightPlanner
             // 
@@ -1477,5 +1485,6 @@
         private System.Windows.Forms.ToolStripMenuItem setHomeHereToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem areaToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem panoramaToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem bufferToolStripMenuItem;
     }
 }

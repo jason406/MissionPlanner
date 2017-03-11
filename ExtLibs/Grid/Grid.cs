@@ -8,6 +8,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using MissionPlanner.Utilities;
 
+
 namespace MissionPlanner
 {
     public class Grid
@@ -80,7 +81,24 @@ namespace MissionPlanner
 
         static GMapOverlay polygons = new GMapOverlay("polygons");
         static GMapControl map = new GMapControl();
+        public static List<PointLatLngAlt> bufferPolygon(List<PointLatLngAlt> polygon, double distance)
+        {
+            //TODO:finish this
+            List<PointLatLngAlt> ans = new List<PointLatLngAlt>();
 
+            // utm zone distance calcs will be done in
+            int utmzone = polygon[0].GetUTMZone();
+
+            // utm position list
+            List<utmpos> utmpositions = utmpos.ToList(PointLatLngAlt.ToUTM(utmzone, polygon), utmzone);
+
+            // close the loop if its not already
+            if (utmpositions[0] != utmpositions[utmpositions.Count - 1])
+                utmpositions.Add(utmpositions[0]); // make a full loop
+            
+
+            return ans;
+        }
         static void DoDebug()
         {
             polygons = new GMapOverlay("polygons");

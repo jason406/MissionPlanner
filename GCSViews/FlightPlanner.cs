@@ -37,9 +37,13 @@ using Feature = SharpKml.Dom.Feature;
 using ILog = log4net.ILog;
 using Placemark = SharpKml.Dom.Placemark;
 using Point = System.Drawing.Point;
+using ClipperLib;
+
 
 namespace MissionPlanner.GCSViews
 {
+    using clipperPolygon = List<IntPoint>;
+    using clipperPolygons = List<List<IntPoint>>;
     public partial class FlightPlanner : MyUserControl, IDeactivate, IActivate
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
@@ -6742,6 +6746,92 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
             }
             
             
+        }
+
+        private void bufferToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string bufferDistIn = "";
+            int bufferDist = 0;
+            if (DialogResult.Cancel == InputBox.Show("输入扩展距离", "距离", ref bufferDistIn))
+                return;
+            if (!int.TryParse(bufferDistIn, out bufferDist))
+            {
+                CustomMessageBox.Show("Bad buffer distance");
+                return;
+            }
+            List<PointLatLngAlt> bufferedPolygon = new List<PointLatLngAlt>();
+            if (drawnpolygon.Points.Count > 1)
+            {
+                bufferedPolygon = bufferPolygon2(drawnpolygon.Points, bufferDist);
+                drawnpolygonsoverlay.Markers.Clear();
+                drawnpolygon.Points.Clear();
+                foreach (var points in bufferedPolygon)
+                {
+                    drawnpolygon.Points.Add(new PointLatLng(points.Lat, points.Lng));
+                }
+
+                //addpolygonmarkergrid(drawnpolygon.Points.Count.ToString(), MouseDownStart.Lng, MouseDownStart.Lat, 0);
+
+
+                MainMap.Invalidate();
+
+                writeKML();
+            }
+        }
+        private  List<PointLatLngAlt> bufferPolygon2(List<PointLatLng> polygonIn, double distance)
+        {
+            
+            List<PointLatLngAlt> polygon = new List<PointLatLngAlt>();
+            foreach (var pt in polygonIn)
+            {
+                PointLatLngAlt ptA = new PointLatLngAlt(pt.Lat, pt.Lng);
+                polygon.Add(ptA);//TODO
+            }
+            //TODO:finish this
+            List<PointLatLngAlt> ans = new List<PointLatLngAlt>();
+
+            // utm zone distance calcs will be done in
+            int utmzone = polygon[0].GetUTMZone();
+
+            // utm position list
+            List<utmpos> utmpositions = utmpos.ToList(PointLatLngAlt.ToUTM(utmzone, polygon), utmzone);
+
+            // close the loop if its not already
+            if (utmpositions[0] != utmpositions[utmpositions.Count - 1])
+                utmpositions.Add(utmpositions[0]); // make a full loop
+
+
+            //do the buffer
+            clipperPolygon poly = new clipperPolygon();
+            //change utmpolygon to clipper polygon
+            for (int i=0;i<utmpositions.Count;i++)
+            {
+                IntPoint pt = new IntPoint(utmpositions[i].x, utmpositions[i].y);
+                poly.Add(pt);
+                    
+            }
+            ClipperOffset co = new ClipperOffset();
+            clipperPolygons solutions = new clipperPolygons();
+            co.AddPath(poly,JoinType.jtMiter,EndType.etClosedPolygon);
+            co.Execute(ref solutions, distance);
+            //change clipper polygon to utmpolygon
+            List<utmpos> solutionUTM = new List<utmpos>();
+            foreach (var polygonParts in solutions)
+            {
+                foreach (var pnts in polygonParts)
+                {
+                    solutionUTM.Add(new utmpos(pnts.X, pnts.Y, utmzone));
+                }
+            }
+            
+            foreach (var utmPt in solutionUTM)
+            {
+                ans.Add(new PointLatLngAlt(utmPt.ToLLA()));
+            }
+
+            //TODO:utmpos.TOLLA()
+
+            return ans;
         }
     }
 }
