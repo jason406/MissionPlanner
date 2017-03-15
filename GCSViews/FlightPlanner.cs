@@ -6750,7 +6750,7 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
 
         private void bufferToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            string bufferDistIn = "";
+            string bufferDistIn = "100";
             int bufferDist = 0;
             if (DialogResult.Cancel == InputBox.Show("输入扩展距离", "距离", ref bufferDistIn))
                 return;

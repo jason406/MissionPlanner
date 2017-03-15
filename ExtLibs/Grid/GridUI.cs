@@ -840,11 +840,11 @@ namespace MissionPlanner
 
             if (NUM_copter_delay.Value > 0)
             {
-                plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, (double)NUM_copter_delay.Value, 0, 0, 0, Lng, Lat, Alt * CurrentState.multiplierdist, gridobject);
+                plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, (double)NUM_copter_delay.Value, 0, 0, 0, Lng, Lat, (int)((Alt-(double)NUM_takeoffAttitude.Value)) * CurrentState.multiplierdist, gridobject);
             }
             else
             {
-                plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, Lng, Lat, (int)(Alt * CurrentState.multiplierdist), gridobject);
+                plugin.Host.AddWPtoList(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, Lng, Lat, (int)((Alt - (double)NUM_takeoffAttitude.Value) * CurrentState.multiplierdist), gridobject);
             }
         }
 
@@ -1552,14 +1552,14 @@ namespace MissionPlanner
                         if (plugin.Host.cs.firmware == MainV2.Firmwares.ArduCopter2)
                         {
                             var wpno = plugin.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 20, 0, 0, 0, 0, 0,
-                                (int)((double)NUM_altitude.Value * CurrentState.multiplierdist), gridobject);
+                                (int)(((double)NUM_altitude.Value-(double)NUM_takeoffAttitude.Value) * CurrentState.multiplierdist), gridobject);
 
                             wpsplitstart.Add(wpno);
                          }
                         else
                         {
                             var wpno = plugin.Host.AddWPtoList(MAVLink.MAV_CMD.TAKEOFF, 20, 0, 0, 0, 0, 0,
-                                (int)((double)NUM_altitude.Value * CurrentState.multiplierdist), gridobject);
+                                (int)((double)NUM_altitude.Value-(double)NUM_takeoffAttitude.Value * CurrentState.multiplierdist), gridobject);
 
                             wpsplitstart.Add(wpno);
                         }
@@ -1790,6 +1790,14 @@ namespace MissionPlanner
         {
             // doCalc
             domainUpDown1_ValueChanged(sender, e);
+        }
+
+        private void NUM_takeoffAttitude_ValueChanged(object sender, EventArgs e)
+        {
+            if ((int)NUM_takeoffAttitude.Value>(int)NUM_altitude.Value)
+            {
+                NUM_takeoffAttitude.Value = NUM_altitude.Value;
+            }
         }
     }
 }

@@ -153,7 +153,8 @@
             this.tabControl1 = new System.Windows.Forms.TabControl();
             this.TRK_zoom = new MissionPlanner.Controls.MyTrackBar();
             this.map = new MissionPlanner.Controls.myGMAP();
-            this.chk_oblique = new System.Windows.Forms.CheckBox();
+            this.label43 = new System.Windows.Forms.Label();
+            this.NUM_takeoffAttitude = new System.Windows.Forms.NumericUpDown();
             this.groupBox5.SuspendLayout();
             this.tabCamera.SuspendLayout();
             this.groupBox3.SuspendLayout();
@@ -187,6 +188,7 @@
             this.groupBox4.SuspendLayout();
             this.tabControl1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TRK_zoom)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUM_takeoffAttitude)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox5
@@ -811,7 +813,8 @@
             // groupBox1
             // 
             resources.ApplyResources(this.groupBox1, "groupBox1");
-            this.groupBox1.Controls.Add(this.chk_oblique);
+            this.groupBox1.Controls.Add(this.label43);
+            this.groupBox1.Controls.Add(this.NUM_takeoffAttitude);
             this.groupBox1.Controls.Add(this.chk_crossgrid);
             this.groupBox1.Controls.Add(this.label32);
             this.groupBox1.Controls.Add(this.NUM_leadin);
@@ -1260,11 +1263,21 @@
             this.map.MouseDown += new System.Windows.Forms.MouseEventHandler(this.map_MouseDown);
             this.map.MouseMove += new System.Windows.Forms.MouseEventHandler(this.map_MouseMove);
             // 
-            // chk_oblique
+            // label43
             // 
-            resources.ApplyResources(this.chk_oblique, "chk_oblique");
-            this.chk_oblique.Name = "chk_oblique";
-            this.chk_oblique.UseVisualStyleBackColor = true;
+            resources.ApplyResources(this.label43, "label43");
+            this.label43.Name = "label43";
+            // 
+            // NUM_takeoffAttitude
+            // 
+            resources.ApplyResources(this.NUM_takeoffAttitude, "NUM_takeoffAttitude");
+            this.NUM_takeoffAttitude.Maximum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.NUM_takeoffAttitude.Name = "NUM_takeoffAttitude";
+            this.NUM_takeoffAttitude.ValueChanged += new System.EventHandler(this.NUM_takeoffAttitude_ValueChanged);
             // 
             // GridUI
             // 
@@ -1320,6 +1333,7 @@
             this.groupBox4.PerformLayout();
             this.tabControl1.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.TRK_zoom)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.NUM_takeoffAttitude)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1451,6 +1465,7 @@
         private System.Windows.Forms.NumericUpDown num_setservohigh;
         private System.Windows.Forms.Label label42;
         private System.Windows.Forms.NumericUpDown num_setservono;
-        private System.Windows.Forms.CheckBox chk_oblique;
+        private System.Windows.Forms.Label label43;
+        private System.Windows.Forms.NumericUpDown NUM_takeoffAttitude;
     }
 }
