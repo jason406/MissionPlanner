@@ -1536,15 +1536,15 @@ namespace MissionPlanner
                 {
                     int wpstart = wpsplit * splitno;
                     int wpend = wpsplit * (splitno + 1);
-                    //TODO:fix duplicate flight path BUG
+                    
                     while (wpstart != 0 && wpstart < grid.Count && grid[wpstart].Tag != "E")
                     {
-                        wpstart--; //change ++ to --, avoid missing flight path ; but another BUG of duplicate flight path exist
+                        wpstart--; //change ++ to --, avoid missing flight path 
                     }
 
-                    while (wpend < grid.Count && grid[wpend].Tag != "S")
+                    while (wpend > 0 && wpend < grid.Count && grid[wpend].Tag != "S")
                     {
-                        wpend++;
+                        wpend--; //change ++ to -- ,  avoid missing flight path 
                     }
                     //add takeoff
                     if (CHK_toandland.Checked)
