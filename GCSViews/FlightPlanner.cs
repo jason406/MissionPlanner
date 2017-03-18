@@ -1722,77 +1722,95 @@ namespace MissionPlanner.GCSViews
                 string file = fd.FileName;
                 if (file != "")
                 {
-                    string[] fileNames = new string[takeoffPos.Count - 1];
-                    file.Replace(fd.DefaultExt, "");
-                    for (int i=0;i<takeoffPos.Count;i++)
+                    string[] fileNames = new string[takeoffPos.Count];
+                    string new_filename = file.Replace(".waypoints", "");
+                    for (int i = 0; i < takeoffPos.Count; i++)
                     {
-                        fileNames[i] = file + "_" + (i + 1) + fd.DefaultExt;
+                        fileNames[i] = new_filename + "_" + (i + 1) + "." + fd.DefaultExt;
                     }
 
+                    for (int j = 0; j<takeoffPos.Count; j++)
+                    {
+                        saveWaypoints(takeoffPos[j], rtlPos[j], fileNames[j]);
+                    }
+
+                }
 
 
+                   
+            }
+        }
 
+        /// <summary>
+        /// save waypoints by start and end pos
+        /// </summary>
+        /// <param name="startPos"></param>
+        /// <param name="endPos"></param>
+        /// <param name="filePath"></param>
+        private void saveWaypoints(int startPos, int endPos, string filePath)
+        {
+            if (filePath != "")
+            {
+                try
+                {
+                    StreamWriter sw = new StreamWriter(filePath);
+                    sw.WriteLine("QGC WPL 110"); //file header
                     try
                     {
-                        StreamWriter sw = new StreamWriter(file);
-                        sw.WriteLine("QGC WPL 110"); //file header
-                        try
-                        {
-                            sw.WriteLine("0\t1\t0\t16\t0\t0\t0\t0\t" +
-                                         double.Parse(TXT_homelat.Text).ToString("0.000000", new CultureInfo("en-US")) +
-                                         "\t" +
-                                         double.Parse(TXT_homelng.Text).ToString("0.000000", new CultureInfo("en-US")) +
-                                         "\t" +
-                                         double.Parse(TXT_homealt.Text).ToString("0.000000", new CultureInfo("en-US")) +
-                                         "\t1"); //home location
-                        }
-                        catch
-                        {
-                            sw.WriteLine("0\t1\t0\t0\t0\t0\t0\t0\t0\t0\t0\t1");
-                        }
-                        for (int a = 0; a < Commands.Rows.Count - 0; a++)
-                        {
-                            byte mode = //command mode, takeoff:22    rtl:20
-                                (byte)
-                                    (MAVLink.MAV_CMD)
-                                        Enum.Parse(typeof(MAVLink.MAV_CMD), Commands.Rows[a].Cells[0].Value.ToString());
-
-                            sw.Write((a + 1)); // seq
-                            sw.Write("\t" + 0); // current
-                            sw.Write("\t" + CMB_altmode.SelectedValue); //frame 
-                            sw.Write("\t" + mode);
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Param1.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Param2.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Param3.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Param4.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Lat.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     double.Parse(Commands.Rows[a].Cells[Lon.Index].Value.ToString())
-                                         .ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" +
-                                     (double.Parse(Commands.Rows[a].Cells[Alt.Index].Value.ToString()) /
-                                      CurrentState.multiplierdist).ToString("0.000000", new CultureInfo("en-US")));
-                            sw.Write("\t" + 1);
-                            sw.WriteLine("");
-                        }
-                        sw.Close();
-
-                        lbl_wpfile.Text = "Saved " + Path.GetFileName(file);
+                        sw.WriteLine("0\t1\t0\t16\t0\t0\t0\t0\t" +
+                                     double.Parse(TXT_homelat.Text).ToString("0.000000", new CultureInfo("en-US")) +
+                                     "\t" +
+                                     double.Parse(TXT_homelng.Text).ToString("0.000000", new CultureInfo("en-US")) +
+                                     "\t" +
+                                     double.Parse(TXT_homealt.Text).ToString("0.000000", new CultureInfo("en-US")) +
+                                     "\t1"); //home location
                     }
-                    catch (Exception)
+                    catch
                     {
-                        CustomMessageBox.Show(Strings.ERROR);
+                        sw.WriteLine("0\t1\t0\t0\t0\t0\t0\t0\t0\t0\t0\t1");
                     }
+                    for (int a = startPos; a <= endPos; a++)
+                    {
+                        byte mode = //command mode, takeoff:22    rtl:20
+                            (byte)
+                                (MAVLink.MAV_CMD)
+                                    Enum.Parse(typeof(MAVLink.MAV_CMD), Commands.Rows[a].Cells[0].Value.ToString());
+
+                        sw.Write((a + 1)); // seq
+                        sw.Write("\t" + 0); // current
+                        sw.Write("\t" + CMB_altmode.SelectedValue); //frame 
+                        sw.Write("\t" + mode);
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Param1.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Param2.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Param3.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Param4.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Lat.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 double.Parse(Commands.Rows[a].Cells[Lon.Index].Value.ToString())
+                                     .ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" +
+                                 (double.Parse(Commands.Rows[a].Cells[Alt.Index].Value.ToString()) /
+                                  CurrentState.multiplierdist).ToString("0.000000", new CultureInfo("en-US")));
+                        sw.Write("\t" + 1);
+                        sw.WriteLine("");
+                    }
+                    sw.Close();
+
+                    lbl_wpfile.Text = "Saved " + Path.GetFileName(filePath);
+                }
+                catch (Exception)
+                {
+                    CustomMessageBox.Show(Strings.ERROR);
                 }
             }
         }
@@ -1800,7 +1818,7 @@ namespace MissionPlanner.GCSViews
         private void SaveFile_Click(object sender, EventArgs e)
         {
             saveMultipleWaypoints();
-            savewaypoints();
+            //savewaypoints();
             writeKML();
         }
 
