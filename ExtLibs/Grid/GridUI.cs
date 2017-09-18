@@ -691,6 +691,7 @@ namespace MissionPlanner
                                 itemcopy.Alt += startalt;
                                 var temp = ImageProjection.calc(itemcopy, 0, 0, bearing, fovha, fovva);
 
+                                //add camera footprint
                                 List<PointLatLng> footprint = new List<PointLatLng>();
                                 footprint.Add(temp[0]);
                                 footprint.Add(temp[1]);
@@ -701,8 +702,8 @@ namespace MissionPlanner
                                 poly.Stroke =
                                     new Pen(Color.FromArgb(250 - ((a*5)%240), 250 - ((a*3)%240), 250 - ((a*9)%240)), 1);
                                 poly.Fill = new SolidBrush(Color.Transparent);
-
-                                GMapMarkerOverlap.Add(poly);
+                                //poly.Fill = new SolidBrush(Color.FromArgb(250 - ((a * 5) % 240), 250 - ((a * 3) % 240), 250 - ((a * 9) % 240)));
+                                GMapMarkerOverlap.Add(poly); //add overlap points
 
                                 routesOverlay.Polygons.Add(poly);
                                 a++;

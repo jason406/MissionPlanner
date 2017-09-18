@@ -39,7 +39,7 @@ namespace MissionPlanner
         public override bool Loaded()
         {
             Host2 = Host;
-            menuitem = new ToolStripMenuItem("Panorama");
+            menuitem = new ToolStripMenuItem("Panorama Plugin");
             menuitem.Click += menuitem_Click;
 
             bool hit = false;
@@ -274,7 +274,7 @@ namespace MissionPlanner
                 int azimuth = Convert.ToInt32(angle * i);
                 FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
                 FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_1, 0, 0, 0, mlon, mlat, alt);//等
-                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
                 FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_2, 0, 0, 0, mlon, mlat, alt);//等
             }
         }
@@ -305,7 +305,7 @@ namespace MissionPlanner
                         int azimuth = Convert.ToInt32(initalYaw + angle * i);
                         FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
                         FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
-                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
                         if (loiter_time2_gimbal_yaw != 0)
                         {
                             FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
@@ -324,7 +324,7 @@ namespace MissionPlanner
                         int azimuth = Convert.ToInt32(initalYaw - angle * i);
                         FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
                         FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
-                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
                         if (loiter_time2_gimbal_yaw != 0)
                         {
                             FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
@@ -346,7 +346,7 @@ namespace MissionPlanner
                     int azimuth = Convert.ToInt32(angle * i);
                     FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, azimuth, 0, 0, 0, 0, 0, 0); //转角度
                     FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_no_gimbal, 0, 0, 0, mlon, mlat, alt);//等
-                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 0, 0, 0, 0, 0, 0, 0);//拍照
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
                     if (loiter_time2_no_gimbal != 0)
                     {
                         FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_no_gimbal, 0, 0, 0, mlon, mlat, alt);//等}

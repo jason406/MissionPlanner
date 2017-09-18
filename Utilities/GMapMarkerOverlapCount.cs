@@ -84,7 +84,8 @@ namespace MissionPlanner.Utilities
 
                 var coloruse = colorbrushs[col];
 
-                var widthc = 5*m2pixelwidth;
+                var widthc = 5*m2pixelwidth; //圆点大小
+                
 
                 var halfwidthc = widthc/2.0f;
 
