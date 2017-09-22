@@ -9,6 +9,7 @@ using MissionPlanner.Controls;
 using GMap.NET;
 
 
+
 namespace MissionPlanner
 {
     public class PanoramaPlugin : MissionPlanner.Plugin.Plugin
@@ -65,15 +66,17 @@ namespace MissionPlanner
         void menuitem_Click(object sender, EventArgs e)
         {
             string altin = "50";
-            string overlapIn= "30";
+            string overlapIn = "30";
             string focusLengthIn = "35";
             string startAngleIn = "0";
             string useGimbalIn = "false";
+            string gimbalLimited = "true";
             int alt = 0;
             int overlap = 0;
             int focusLength = 35;
             int startAngle = 0;
             bool useGimbal = true;
+            bool isGimbalLimited = true;
             if (DialogResult.Cancel == InputBox.Show("输入飞行高度", "高度", ref altin))
                 return;
             if (!int.TryParse(altin, out alt))
@@ -109,11 +112,20 @@ namespace MissionPlanner
                 CustomMessageBox.Show("please input 1 or 0");
                 return;
             }
+            //if (DialogResult.Cancel == InputBox.Show("是否规划半程云台全景", "云台", ref useGimbalIn))
+            //    return;
+            //if (!bool.TryParse(gimbalLimited, out isGimbalLimited))
+            //{
+            //    CustomMessageBox.Show("please input 1 or 0");
+            //    return;
+            //}
+
+
 
             PointLatLng panoPoint = Host2.FPMenuMapPosition;
             double mlat = panoPoint.Lat;
             double mlon = panoPoint.Lng;
-            
+
             FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.TAKEOFF, 0, 0, 0, 0, 0, 0, alt);
             FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.WAYPOINT, 0, 0, 0, 0, mlon, mlat, alt);
 
@@ -203,7 +215,7 @@ namespace MissionPlanner
                 {
                     switch (overlap)
                     {
-                        case 25:                            
+                        case 25:
                             panoramaPhotos(12, 26, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(13, 13, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(14, 1, mlon, mlat, alt, useGimbal, true);
@@ -213,7 +225,7 @@ namespace MissionPlanner
                             panoramaPhotos(6, -64, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(3, -83, mlon, mlat, alt, useGimbal, false);
                             break;
-                        case 30:                            
+                        case 30:
                             panoramaPhotos(13, 27, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(14, 15, mlon, mlat, alt, useGimbal, true);
                             panoramaPhotos(15, 3, mlon, mlat, alt, useGimbal, true);
@@ -230,23 +242,84 @@ namespace MissionPlanner
 
 
 
-            if (focusLength==75)
+            if (focusLength == 75)
             {
+                string direction = "true";
+                bool isPointingNorth = true;
+                if (DialogResult.Cancel == InputBox.Show("机头指北？", "第一架次机头朝北，第二架次朝南。true或者false", ref direction))
+                    return;
+                if (!bool.TryParse(direction, out isPointingNorth))
+                {
+                    CustomMessageBox.Show("please input true or false");
+                    return;
+                }
+                if (isPointingNorth)
+                {
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 0, 0, 0, 0, 0, 0, 0); //飞机机头指北
+                }
+                else
+                {
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.CONDITION_YAW, 180, 0, 0, 0, 0, 0, 0); //飞机机头指北
+                }
+
                 switch (overlap)
                 {
-                    case 20:
-                        panoramaPhotos(27, 0, mlon, mlat, alt, useGimbal, true);
-                        panoramaPhotos(27, -9, mlon, mlat, alt, useGimbal, false);
-                        panoramaPhotos(25, -18, mlon, mlat, alt, useGimbal, true);
-                        panoramaPhotos(23, -27, mlon, mlat, alt, useGimbal, false);
-                        panoramaPhotos(22, -35, mlon, mlat, alt, useGimbal, true);
-                        panoramaPhotos(18, -44, mlon, mlat, alt, useGimbal, false);
-                        panoramaPhotos(16, -53, mlon, mlat, alt, useGimbal, true);
-                        panoramaPhotos(12, -62, mlon, mlat, alt, useGimbal, false);
-                        panoramaPhotos(9, -70, mlon, mlat, alt, useGimbal, true);
-                        panoramaPhotos(6, -78, mlon, mlat, alt, useGimbal, false);
-                        panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);                        
+                    case 25:
+                        panoramaPhotosGimbalHalf(29, 0, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(29, -6, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(27, -13, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(27, -20, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(25, -27, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(23, -35, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(20, -43, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(17, -51, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(14, -59, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(11, -67, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(8, -75, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(4, -84, mlon, mlat, alt, false);
+                        panoramaPhotosGimbalHalf(3, -90, mlon, mlat, alt, true);
                         break;
+
+                    case 20:
+                        panoramaPhotosGimbalHalf(27, 0, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(27, -9, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(25, -18, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(23, -27, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(22, -35, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(18, -44, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(16, -53, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(12, -62, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(9, -70, mlon, mlat, alt,  true);
+                        panoramaPhotosGimbalHalf(6, -78, mlon, mlat, alt,  false);
+                        panoramaPhotosGimbalHalf(3, -90, mlon, mlat, alt,  true);
+                        break;
+                        //case 25:
+                        //    panoramaPhotos(27, 0, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(27, -9, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(25, -18, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(23, -27, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(22, -35, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(18, -44, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(16, -53, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(12, -62, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(9, -70, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(6, -78, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);
+                        //    break;
+
+                        //case 20:
+                        //    panoramaPhotos(27, 0, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(27, -9, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(25, -18, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(23, -27, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(22, -35, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(18, -44, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(16, -53, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(12, -62, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(9, -70, mlon, mlat, alt, useGimbal, true);
+                        //    panoramaPhotos(6, -78, mlon, mlat, alt, useGimbal, false);
+                        //    panoramaPhotos(3, -90, mlon, mlat, alt, useGimbal, true);
+                        //    break;
                 }
             }
 
@@ -353,6 +426,63 @@ namespace MissionPlanner
                     }
                 }
             }
+
+
+        }
+
+        private void panoramaPhotosGimbalHalf(int photoCount, int gimbalAngle, double mlon, double mlat, int alt, bool isCW = true)
+        {
+
+            
+            const float gimbalCaptureAngle = 220;        
+
+            float angle = 360 / photoCount;
+            //double photoCountHalf = Math.Ceiling((double)(photoCount / 2));
+            const double loiter_time1_gimbal_yaw = 2.5;
+            const double loiter_time2_gimbal_yaw = 0;
+            double initalYaw = -gimbalCaptureAngle / 2;            
+
+
+            if (isCW)//顺时针
+            {
+                //FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
+                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, initalYaw, 0, 0, 0, 10); //云台指向initYaw
+                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等 
+                int azimuth = Convert.ToInt32(initalYaw);
+                while (azimuth <= -initalYaw + angle)
+                {
+                    
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
+                    if (loiter_time2_gimbal_yaw != 0)
+                    {
+                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
+                    }
+                    azimuth = Convert.ToInt32(azimuth + angle);
+                }
+            }
+            else//逆时针
+            {
+                
+                //FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等
+                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, -initalYaw, 0, 0, 0, 10); //云台指向initYaw
+                FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, 3, 0, 0, 0, mlon, mlat, alt);//等 
+                int azimuth = Convert.ToInt32(-initalYaw);
+                while (azimuth >= initalYaw - angle)
+                {
+
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_MOUNT_CONTROL, gimbalAngle, 0, azimuth, 0, 0, 0, 10);//云台转角度                        
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time1_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等
+                    FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.DO_DIGICAM_CONTROL, 1, 0, 0, 0, 0, 1, 0);//拍照
+                    if (loiter_time2_gimbal_yaw != 0)
+                    {
+                        FlightPlanner.instance.AddCommand(MAVLink.MAV_CMD.LOITER_TIME, loiter_time2_gimbal_yaw, 0, 0, 0, mlon, mlat, alt);//等}
+                    }
+                    azimuth = Convert.ToInt32(azimuth - angle);
+                }
+            }
+
 
 
         }
