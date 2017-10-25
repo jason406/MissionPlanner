@@ -40,6 +40,7 @@ namespace MissionPlanner
         public static Bitmap SplashBG = null;
 
         public static string[] names = new string[] { "VVVVZ" };
+        public static bool MONO = false;
 
         /// <summary>
         /// The main entry point for the application.
@@ -51,6 +52,9 @@ namespace MissionPlanner
             Console.WriteLine(
                 "If your error is about Microsoft.DirectX.DirectInput, please install the latest directx redist from here http://www.microsoft.com/en-us/download/details.aspx?id=35 \n\n");
             Console.WriteLine("Debug under mono    MONO_LOG_LEVEL=debug mono MissionPlanner.exe");
+
+            var t = Type.GetType("Mono.Runtime");
+            MONO = (t != null);
 
             Thread = Thread.CurrentThread;
 
@@ -178,9 +182,9 @@ namespace MissionPlanner
             Device.DeviceStructure test2 = new Device.DeviceStructure(262434);
             Device.DeviceStructure test3 = new Device.DeviceStructure(131874);
 
-            //ph2
-            Device.DeviceStructure test5 = new Device.DeviceStructure(131874);
-            Device.DeviceStructure test6 = new Device.DeviceStructure(263178);
+            //ph2 - cube with here
+            Device.DeviceStructure test5 = new Device.DeviceStructure(466441);
+            Device.DeviceStructure test6 = new Device.DeviceStructure(131874);
             Device.DeviceStructure test7 = new Device.DeviceStructure(263178);
             // 
             Device.DeviceStructure test8 = new Device.DeviceStructure(1442082);
@@ -320,6 +324,10 @@ namespace MissionPlanner
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            var list = AppDomain.CurrentDomain.ReflectionOnlyGetAssemblies();
+
+            log.Error(list);
+
             handleException((Exception) e.ExceptionObject);
         }
 

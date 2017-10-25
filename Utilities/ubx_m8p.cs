@@ -37,6 +37,12 @@ namespace MissionPlanner.Utilities
             }
         }
 
+        public bool resetParser()
+        {
+            step = 0;
+            return true;
+        }
+
         public int Read(byte data)
         {
             switch (step)
@@ -152,6 +158,40 @@ namespace MissionPlanner.Utilities
             return data;
         }
 
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct ubx_mon_ver
+        {
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
+            public byte[] swVersion;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 10)]
+            public Byte[] hwVersion;
+
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 30)]
+            public byte[] extension;
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct ubx_mon_hw
+        {
+            public int pinSel;
+            public int pinBank;
+            public int pinDir;
+            public int pinVal;
+            public ushort noisePerMS;
+            public ushort agcCnt;
+            public byte aStatus;
+            public byte aPower;
+            public byte flags;
+            public byte reserved1;
+            public int usedMask;
+            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 17)]
+            public byte[] VP;
+            public byte jamInd;
+            public ushort reserved3;
+            public int pinIrq;
+            public int pullH;
+            public int pullL;
+        }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]
         public struct ubx_nav_pvt
@@ -211,6 +251,20 @@ namespace MissionPlanner.Utilities
 
                 return new double[] { X, Y, Z };
             }
+        }
+
+        [StructLayout(LayoutKind.Sequential, Pack = 1)]
+        public struct ubx_nav_velned
+        {
+            public uint iTOW;
+            public int velN;
+            public int velE;
+            public int velD;
+            public uint speed;
+            public uint gSpeed;
+            public int heading;
+            public uint sAcc;
+            public uint cAcc;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1, Size = 40)]
@@ -336,7 +390,7 @@ namespace MissionPlanner.Utilities
             }
         }
 
-        public void SetupM8P(ICommsSerial port, bool m8p_130plus = false)
+        public void SetupM8P(ICommsSerial port, bool m8p_130plus = false, bool movingbase = false)
         {
             port.BaseStream.Flush();
 
@@ -378,11 +432,18 @@ namespace MissionPlanner.Utilities
             System.Threading.Thread.Sleep(200);
 
             // set navmode to stationary
-            packet = generate(0x6, 0x24, new byte[] { 0xFF ,0xFF ,0x02 ,0x03 ,0x00 ,0x00 ,0x00 ,0x00 ,0x10 ,0x27 ,0x00 ,0x00 ,0x05 ,0x00
-                ,0xFA ,0x00 ,0xFA ,0x00 ,0x64 ,0x00 ,0x2C ,0x01 ,0x00 ,0x00 ,0x00 ,0x00 ,0x10 ,0x27 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00 ,0x00
-                ,0x00 ,0x00 });
-            port.Write(packet, 0, packet.Length);
-            System.Threading.Thread.Sleep(200);
+            if (!movingbase)
+            {
+                packet = generate(0x6, 0x24,
+                    new byte[]
+                    {
+                        0xFF, 0xFF, 0x02, 0x03, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00, 0x05, 0x00, 0xFA, 0x00,
+                        0xFA, 0x00, 0x64, 0x00, 0x2C, 0x01, 0x00, 0x00, 0x00, 0x00, 0x10, 0x27, 0x00, 0x00, 0x00, 0x00,
+                        0x00, 0x00, 0x00, 0x00
+                    });
+                port.Write(packet, 0, packet.Length);
+                System.Threading.Thread.Sleep(200);
+            }
 
             // turn off all nmea
             for (int a = 0; a <= 0xf; a++)
@@ -428,8 +489,22 @@ namespace MissionPlanner.Utilities
             // 1127 - 1s
             turnon_off(port, 0xf5, 0x7f, rate1);
 
+            if (movingbase)
+            {
+                // 4072
+                turnon_off(port, 0xf5, 0xFE, 1);
+            }
+            else
+            {
+                // 4072
+                turnon_off(port, 0xf5, 0xFE, 0);
+            }
+
             // 1230 - 5s
             turnon_off(port, 0xf5, 0xE6, 5);
+
+            // NAV-VELNED - 1s
+            turnon_off(port, 0x01, 0x12, 1);
 
             // rxm-raw/rawx - 1s
             turnon_off(port, 0x02, 0x15, 1);
@@ -439,11 +514,17 @@ namespace MissionPlanner.Utilities
             turnon_off(port, 0x02, 0x13, 2);
             turnon_off(port, 0x02, 0x11, 2);
 
+            // mon-hw - 2s
+            turnon_off(port, 0x0a, 0x09, 2);
+
             System.Threading.Thread.Sleep(100);
         }
 
-        public void SetupBasePos(ICommsSerial port, PointLatLngAlt basepos, int surveyindur = 0, double surveyinacc = 0, bool disable = false)
+        public void SetupBasePos(ICommsSerial port, PointLatLngAlt basepos, int surveyindur = 0, double surveyinacc = 0, bool disable = false, bool movingbase = false)
         {
+            if (movingbase)
+                disable = true;
+
             System.Threading.Thread.Sleep(100);
             System.Threading.Thread.Sleep(100);
 

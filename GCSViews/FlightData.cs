@@ -18,6 +18,7 @@ using GMap.NET.MapProviders;
 using GMap.NET.WindowsForms;
 using GMap.NET.WindowsForms.Markers;
 using log4net;
+using Microsoft.Scripting.Utils;
 using MissionPlanner.Controls;
 using MissionPlanner.Joystick;
 using MissionPlanner.Log;
@@ -377,7 +378,8 @@ namespace MissionPlanner.GCSViews
             int y = 10;
 
             var list = MainV2.comPort.MAV.cs.GetItemList();
-            
+
+            tabStatus.SuspendLayout();
 
             foreach (var field in list)
             {
@@ -416,17 +418,23 @@ namespace MissionPlanner.GCSViews
 
                 lbl2.Location = new Point(lbl1.Right + 5, y);
                 lbl2.Size = new Size(50, 13);
-                //if (lbl2.Name == "")
-                lbl2.DataBindings.Clear();
-                lbl2.DataBindings.Add(new Binding("Text", bindingSourceStatusTab, field, false,
-                    DataSourceUpdateMode.Never, "0"));
+                if (lbl2.DataBindings.Count == 0)
+                {
+                    lbl2.DataBindings.Add(new Binding("Text", bindingSourceStatusTab, field, false,
+                        DataSourceUpdateMode.Never, "0"));
+                }
                 lbl2.Name = field + "value";
                 lbl2.Visible = true;
                 //lbl2.Text = fieldValue.ToString();
 
-                tabStatus.Controls.Add(lbl1);
-                tabStatus.Controls.Add(lbl2);
-
+                if (!tabStatus.Controls.Contains(lbl1))
+                {
+                    tabStatus.Controls.Add(lbl1);
+                }
+                if (!tabStatus.Controls.Contains(lbl2))
+                {
+                    tabStatus.Controls.Add(lbl2);
+                }
 
                 x += 0;
                 y += 15;
@@ -438,6 +446,7 @@ namespace MissionPlanner.GCSViews
                 }
             }
 
+            tabStatus.ResumeLayout();
             tabStatus.Width = x;
 
             ThemeManager.ApplyThemeTo(tabStatus);
@@ -615,6 +624,8 @@ namespace MissionPlanner.GCSViews
             catch
             {
             }
+
+            center.Position = gMapControl1.Position;
         }
 
         private void FlightData_Load(object sender, EventArgs e)
@@ -1595,7 +1606,13 @@ namespace MissionPlanner.GCSViews
                 {
                     // this is an attempt to prevent an invoke queue on the binding update on slow machines
                     if (updateBindingSourcecount > 0)
-                    return;
+                    {
+                        if (lastscreenupdate < DateTime.Now.AddSeconds(-5))
+                        {
+                            updateBindingSourcecount = 0;
+                        }
+                        return;
+                    }
 
                     updateBindingSourcecount++;
                     updateBindingSourceThreadName = Thread.CurrentThread.Name;
@@ -1930,6 +1947,9 @@ namespace MissionPlanner.GCSViews
         {
             if (route != null)
                 route.Points.Clear();
+
+            if (MainV2.comPort.MAV.camerapoints != null)
+                MainV2.comPort.MAV.camerapoints.Clear();
         }
 
         private void BUTactiondo_Click(object sender, EventArgs e)
@@ -2122,13 +2142,13 @@ namespace MissionPlanner.GCSViews
         {
             if (e.Button == MouseButtons.Left)
             {
-                try
-                {
-                    gMapControl1.Core.BeginDrag(new GPoint(e.Location.X, e.Location.Y));
-                }
-                catch
-                {
-                }
+                PointLatLng point = gMapControl1.FromLocalToLatLng(e.X, e.Y);
+
+                double latdif = MouseDownStart.Lat - point.Lat;
+                double lngdif = MouseDownStart.Lng - point.Lng;
+
+                gMapControl1.Position = new PointLatLng(center.Position.Lat + latdif,
+                    center.Position.Lng + lngdif);
             }
             else
             {
@@ -2426,6 +2446,13 @@ namespace MissionPlanner.GCSViews
 
         private void BUT_setmode_Click(object sender, EventArgs e)
         {
+            if (MainV2.comPort.MAV.cs.failsafe)
+            {
+                if (CustomMessageBox.Show("You are in failsafe, are you sure?", "Failsafe",MessageBoxButtons.YesNo) != DialogResult.Yes)
+                {
+                    return;
+                }
+            }
             MainV2.comPort.setMode(CMB_modes.Text);
         }
 
@@ -2613,7 +2640,11 @@ namespace MissionPlanner.GCSViews
 
             if (tabControlactions.SelectedTab == tabStatus)
             {
+                tabControlactions.Visible = false;
+                tabStatus.Visible = false;
                 tabStatus_Resize(sender, e);
+                tabStatus.Visible = true;
+                tabControlactions.Visible = true;
             }
             else if (tabControlactions.SelectedTab == tabPagemessages)
             {
@@ -2737,6 +2768,9 @@ namespace MissionPlanner.GCSViews
             object thisBoxed = MainV2.comPort.MAV.cs;
             Type test = thisBoxed.GetType();
 
+            int max_length = 0;
+            List<string> fields = new List<string>();
+
             foreach (var field in test.GetProperties())
             {
                 // field.Name has the field's name.
@@ -2757,68 +2791,75 @@ namespace MissionPlanner.GCSViews
                     continue;
                 }
 
-                if (
-                    !(typeCode == TypeCode.Single || typeCode == TypeCode.Double || typeCode == TypeCode.Int32 ||
-                      typeCode == TypeCode.UInt16))
+                if (!(typeCode == TypeCode.Single || typeCode == TypeCode.Double || 
+                    typeCode == TypeCode.Int32 || typeCode == TypeCode.UInt16))
                     continue;
 
+                max_length = Math.Max(max_length, TextRenderer.MeasureText(field.Name, selectform.Font).Width);
+                fields.Add(field.Name);
+            }
+            max_length += 15;
+            fields.Sort();
+
+            foreach (var field in fields)
+            {
                 CheckBox chk_box = new CheckBox();
 
                 ThemeManager.ApplyThemeTo(chk_box);
 
-                if (list1item != null && list1item.Name == field.Name)
+                if (list1item != null && list1item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list2item != null && list2item.Name == field.Name)
+                if (list2item != null && list2item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list3item != null && list3item.Name == field.Name)
+                if (list3item != null && list3item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list4item != null && list4item.Name == field.Name)
+                if (list4item != null && list4item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list5item != null && list5item.Name == field.Name)
+                if (list5item != null && list5item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list6item != null && list6item.Name == field.Name)
+                if (list6item != null && list6item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list7item != null && list7item.Name == field.Name)
+                if (list7item != null && list7item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list8item != null && list8item.Name == field.Name)
+                if (list8item != null && list8item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list9item != null && list9item.Name == field.Name)
+                if (list9item != null && list9item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
-                if (list10item != null && list10item.Name == field.Name)
+                if (list10item != null && list10item.Name == field)
                 {
                     chk_box.Checked = true;
                     chk_box.BackColor = Color.Green;
                 }
 
-                chk_box.Text = field.Name;
-                chk_box.Name = field.Name;
+                chk_box.Text = field;
+                chk_box.Name = field;
                 chk_box.Location = new Point(x, y);
                 chk_box.Size = new Size(100, 20);
                 chk_box.CheckedChanged += chk_box_CheckedChanged;
@@ -4152,8 +4193,12 @@ namespace MissionPlanner.GCSViews
             MainV2.comPort.doAbortLand();
         }
 
+        GMapMarker center = new GMarkerGoogle(new PointLatLng(0.0, 0.0), GMarkerGoogleType.none);
+
         private void gMapControl1_OnPositionChanged(PointLatLng point)
         {
+            center.Position = point;
+
             UpdateOverlayVisibility();
         }
 
@@ -4350,7 +4395,7 @@ namespace MissionPlanner.GCSViews
 
         private void altitudeAngelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            //new Utilities.AltitudeAngel.AASettings().Show(this);
+            new Utilities.AltitudeAngel.AASettings().Show(this);
         }
 
         private void setViewCountToolStripMenuItem_Click(object sender, EventArgs e)

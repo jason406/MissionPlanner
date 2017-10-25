@@ -38,6 +38,7 @@ using ILog = log4net.ILog;
 using Placemark = SharpKml.Dom.Placemark;
 using Point = System.Drawing.Point;
 using System.Text.RegularExpressions;
+using MissionPlanner.Plugin;
 
 namespace MissionPlanner.GCSViews
 {
@@ -522,6 +523,24 @@ namespace MissionPlanner.GCSViews
                 return true;
             }
 
+            if (keyData == (Keys.Control | Keys.M))
+            {
+                // get the command list from the datagrid
+                var commandlist = GetCommandList();
+                MainV2.comPort.MAV.wps[0] = new Locationwp().Set(MainV2.comPort.MAV.cs.HomeLocation.Lat,
+                    MainV2.comPort.MAV.cs.HomeLocation.Lng, MainV2.comPort.MAV.cs.HomeLocation.Alt, 0);
+                int a = 1;
+                commandlist.ForEach(i =>
+                {
+                    MAVLink.mavlink_mission_item_t item = (MAVLink.mavlink_mission_item_t) i;
+                    item.seq = (ushort)a;
+                    MainV2.comPort.MAV.wps[a] = item;
+                    a++;
+                });
+
+                return true;
+            }
+
             return base.ProcessCmdKey(ref msg, keyData);
         }
 
@@ -624,6 +643,16 @@ namespace MissionPlanner.GCSViews
             RegeneratePolygon();
 
             updateCMDParams();
+
+            foreach (DataGridViewColumn commandsColumn in Commands.Columns)
+            {
+                if(commandsColumn is DataGridViewTextBoxColumn)
+                    commandsColumn.CellTemplate.Value = "0";
+            }
+
+            Commands.Columns[Delete.Index].CellTemplate.Value = "X";
+            Commands.Columns[Up.Index].CellTemplate.Value = Resources.up;
+            Commands.Columns[Down.Index].CellTemplate.Value = Resources.down;
 
             Up.Image = Resources.up;
             Down.Image = Resources.down;
@@ -1025,7 +1054,10 @@ namespace MissionPlanner.GCSViews
                 string cmd;
                 try
                 {
-                    cmd = Commands[Command.Index, selectedrow].Value.ToString();
+                    if (Commands[Command.Index, selectedrow].Value != null)
+                        cmd = Commands[Command.Index, selectedrow].Value.ToString();
+                    else
+                        cmd = option;
                 }
                 catch
                 {
@@ -1310,6 +1342,7 @@ namespace MissionPlanner.GCSViews
                             command != (ushort)MAVLink.MAV_CMD.VTOL_TAKEOFF && // doesnt have a position
                             command != (ushort) MAVLink.MAV_CMD.RETURN_TO_LAUNCH &&
                             command != (ushort) MAVLink.MAV_CMD.CONTINUE_AND_CHANGE_ALT &&
+                            command != (ushort)MAVLink.MAV_CMD.DELAY &&
                             command != (ushort) MAVLink.MAV_CMD.GUIDED_ENABLE
                             || command == (ushort) MAVLink.MAV_CMD.DO_SET_ROI)
                         {
@@ -1903,7 +1936,7 @@ namespace MissionPlanner.GCSViews
                 }
             }
 
-            ProgressReporterDialogue frmProgressReporter = new ProgressReporterDialogue
+            IProgressReporterDialogue frmProgressReporter = new ProgressReporterDialogue
             {
                 StartPosition = FormStartPosition.CenterScreen,
                 Text = "Receiving WP's"
@@ -2235,7 +2268,7 @@ namespace MissionPlanner.GCSViews
                     }
                 }
 
-                bool use_int = (port.MAV.cs.capabilities & MAVLink.MAV_PROTOCOL_CAPABILITY.MISSION_INT) > 0;
+                bool use_int = (port.MAV.cs.capabilities & (uint)MAVLink.MAV_PROTOCOL_CAPABILITY.MISSION_INT) > 0;
 
                 // set wp total
                 ((ProgressReporterDialogue)sender).UpdateProgressAndStatus(0, "Set total wps ");
@@ -2467,20 +2500,25 @@ namespace MissionPlanner.GCSViews
                 }
 
                 // from ap_common.h
-                if (temp.id < (ushort)MAVLink.MAV_CMD.LAST || temp.id == (ushort)MAVLink.MAV_CMD.DO_SET_HOME)
+                if (temp.id == (ushort)MAVLink.MAV_CMD.WAYPOINT || temp.id == (ushort)MAVLink.MAV_CMD.SPLINE_WAYPOINT ||
+                    temp.id == (ushort)MAVLink.MAV_CMD.TAKEOFF || temp.id == (ushort) MAVLink.MAV_CMD.DO_SET_HOME)
                 {
-                    // check ralatice and terrain flags
-                    if ((temp.options & 0x9) == 0 && i != 0)
+                    // not home
+                    if (i != 0)
                     {
-                        CMB_altmode.SelectedValue = (int) altmode.Absolute;
-                    } // check terrain flag
-                    else if ((temp.options & 0x8) != 0 && i != 0)
-                    {
-                        CMB_altmode.SelectedValue = (int) altmode.Terrain;
-                    } // check relative flag
-                    else if ((temp.options & 0x1) != 0 && i != 0)
-                    {
-                        CMB_altmode.SelectedValue = (int) altmode.Relative;
+                        // check relative and terrain flags
+                        if ((temp.options & 0x9) == 0)
+                        {
+                            CMB_altmode.SelectedValue = (int) altmode.Absolute;
+                        } // check terrain flag
+                        else if ((temp.options & 0x8) != 0)
+                        {
+                            CMB_altmode.SelectedValue = (int) altmode.Terrain;
+                        } // check relative flag
+                        else if ((temp.options & 0x1) != 0 )
+                        {
+                            CMB_altmode.SelectedValue = (int) altmode.Relative;
+                        }
                     }
                 }
 
@@ -2500,7 +2538,7 @@ namespace MissionPlanner.GCSViews
                 cell = Commands.Rows[i].Cells[Param4.Index] as DataGridViewTextBoxCell;
                 cell.Value = temp.p4;
 
-                // convert to utm
+                // convert to utm/other
                 convertFromGeographic(temp.lat, temp.lng);
             }
 
@@ -2814,7 +2852,7 @@ namespace MissionPlanner.GCSViews
         {
             using (OpenFileDialog fd = new OpenFileDialog())
             {
-                fd.Filter = "All Supported Types|*.txt;*.waypoints;*.shp;*.mission";
+                fd.Filter = "All Supported Types|*.txt;*.waypoints;*.shp;*.plan";
                 DialogResult result = fd.ShowDialog();
                 string file = fd.FileName;
 
@@ -2880,6 +2918,7 @@ namespace MissionPlanner.GCSViews
                     if (line.StartsWith("#"))
                         continue;
 
+                    //seq/cur/frame/mode
                     string[] items = line.Split(new[] {'\t', ' ', ','}, StringSplitOptions.RemoveEmptyEntries);
 
                     if (items.Length <= 9)
@@ -2887,11 +2926,22 @@ namespace MissionPlanner.GCSViews
 
                     try
                     {
+                        // check to see if the first wp is index 0/home.
+                        // if it is not index 0, add a blank home point
+                        if (wp_count == 0 && items[0] != "0")
+                        {
+                            cmds.Add(new Locationwp());
+                        }
+
                         Locationwp temp = new Locationwp();
                         if (items[2] == "3")
                         {
                             // abs MAV_FRAME_GLOBAL_RELATIVE_ALT=3
                             temp.options = 1;
+                        }
+                        else if (items[2] == "10")
+                        {
+                            temp.options = 8;
                         }
                         else
                         {
@@ -6994,6 +7044,18 @@ Column 1: Field type (RALLY is the only one at the moment -- may have RALLY_LAND
         private void createCircleSurveyToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Utilities.CircleSurveyMission.createGrid(MouseDownEnd);
+        }
+
+        private void currentPositionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            AddWPToMap(MainV2.comPort.MAV.cs.lat, MainV2.comPort.MAV.cs.lng, (int) MainV2.comPort.MAV.cs.alt);
+        }
+
+        private void surveyGridToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            GridPlugin grid = new GridPlugin();
+            grid.Host = new PluginHost();
+            grid.but_Click(sender, e);
         }
     }
 }

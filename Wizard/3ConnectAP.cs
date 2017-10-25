@@ -17,7 +17,7 @@ namespace MissionPlanner.Wizard
     public partial class _3ConnectAP : MyUserControl, IWizard, IActivate
     {
         List<KeyValuePair<string, string>> fwmap = new List<KeyValuePair<string, string>>();
-        ProgressReporterDialogue pdr;
+        IProgressReporterDialogue pdr;
         string comport = "";
         bool fwdone = false;
         private bool usebeta;
@@ -173,7 +173,7 @@ namespace MissionPlanner.Wizard
             fw.Progress += fw_Progress;
             string firmwareurl = "";
             if (usebeta)
-                firmwareurl = "https://raw.github.com/diydrones/binary/master/dev/firmware2.xml";
+                firmwareurl = "https://raw.github.com/ardupilot/binary/master/dev/firmware2.xml";
 
             List<Utilities.Firmware.software> swlist = fw.getFWList(firmwareurl);
 

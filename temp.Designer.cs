@@ -100,6 +100,9 @@
             this.but_GDAL = new MissionPlanner.Controls.MyButton();
             this.but_sortlogs = new MissionPlanner.Controls.MyButton();
             this.but_logdlscp = new MissionPlanner.Controls.MyButton();
+            this.but_td = new MissionPlanner.Controls.MyButton();
+            this.but_dem = new MissionPlanner.Controls.MyButton();
+            this.but_gsttest = new MissionPlanner.Controls.MyButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -247,14 +250,10 @@
             // 
             // BUT_driverclean
             // 
-            this.BUT_driverclean.Dock = System.Windows.Forms.DockStyle.Fill;
             this.BUT_driverclean.Location = new System.Drawing.Point(3, 318);
             this.BUT_driverclean.Name = "BUT_driverclean";
-            this.BUT_driverclean.Size = new System.Drawing.Size(113, 15);
-            this.BUT_driverclean.TabIndex = 36;
-            this.BUT_driverclean.Text = "Driver Clean";
-            this.BUT_driverclean.UseVisualStyleBackColor = true;
-            this.BUT_driverclean.Click += new System.EventHandler(this.BUT_driverclean_Click);
+            this.BUT_driverclean.Size = new System.Drawing.Size(75, 15);
+            this.BUT_driverclean.TabIndex = 73;
             // 
             // BUT_sorttlogs
             // 
@@ -898,10 +897,43 @@
             this.but_logdlscp.UseVisualStyleBackColor = true;
             this.but_logdlscp.Click += new System.EventHandler(this.but_logdlscp_Click);
             // 
+            // but_td
+            // 
+            this.but_td.Location = new System.Drawing.Point(467, 120);
+            this.but_td.Name = "but_td";
+            this.but_td.Size = new System.Drawing.Size(75, 23);
+            this.but_td.TabIndex = 88;
+            this.but_td.Text = "TD";
+            this.but_td.UseVisualStyleBackColor = true;
+            this.but_td.Click += new System.EventHandler(this.but_td_Click);
+            // 
+            // but_dem
+            // 
+            this.but_dem.Location = new System.Drawing.Point(143, 566);
+            this.but_dem.Name = "but_dem";
+            this.but_dem.Size = new System.Drawing.Size(75, 23);
+            this.but_dem.TabIndex = 89;
+            this.but_dem.Text = "DEM";
+            this.but_dem.UseVisualStyleBackColor = true;
+            this.but_dem.Click += new System.EventHandler(this.but_dem_Click);
+            // 
+            // but_gsttest
+            // 
+            this.but_gsttest.Location = new System.Drawing.Point(62, 566);
+            this.but_gsttest.Name = "but_gsttest";
+            this.but_gsttest.Size = new System.Drawing.Size(75, 23);
+            this.but_gsttest.TabIndex = 90;
+            this.but_gsttest.Text = "GST test";
+            this.but_gsttest.UseVisualStyleBackColor = true;
+            this.but_gsttest.Click += new System.EventHandler(this.but_gsttest_Click);
+            // 
             // temp
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(830, 595);
+            this.Controls.Add(this.but_gsttest);
+            this.Controls.Add(this.but_dem);
+            this.Controls.Add(this.but_td);
             this.Controls.Add(this.but_logdlscp);
             this.Controls.Add(this.but_sortlogs);
             this.Controls.Add(this.but_GDAL);
@@ -1008,5 +1040,8 @@
         private Controls.MyButton but_GDAL;
         private Controls.MyButton but_sortlogs;
         private Controls.MyButton but_logdlscp;
+        private Controls.MyButton but_td;
+        private Controls.MyButton but_dem;
+        private Controls.MyButton but_gsttest;
     }
 }

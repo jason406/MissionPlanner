@@ -19,9 +19,9 @@ namespace MissionPlanner
 
         public event EventHandler csCallBack;
 
-        internal MAVState parent;
+        public MAVState parent;
 
-        internal int lastautowp = -1;
+        public int lastautowp = -1;
 
         // multipliers
         public static float multiplierdist = 1;
@@ -747,6 +747,8 @@ namespace MissionPlanner
 
         public double battery_temp { get; set; }
 
+        public double battery_usedmah2 { get; set; }
+
         [DisplayText("Bat2 Voltage (V)")]
         public double battery_voltage2
         {
@@ -760,14 +762,18 @@ namespace MissionPlanner
 
         internal double _battery_voltage2;
 
+        private DateTime _lastcurrent2 = DateTime.MinValue;
+
         [DisplayText("Bat2 Current (Amps)")]
         public double current2
         {
             get { return _current2; }
             set
             {
-                if (value < 0) return;
+                if (value < 0) return;              
+                battery_usedmah2 += ((value * 1000.0) * (datetime - _lastcurrent2).TotalHours);
                 _current2 = value;
+                _lastcurrent2 = datetime;
             }
         }
 
@@ -787,7 +793,18 @@ namespace MissionPlanner
             set { _homelocation = value; }
         }
 
-        public PointLatLngAlt MovingBase = null;
+        PointLatLngAlt _movingbase = new PointLatLngAlt();
+
+        public PointLatLngAlt MovingBase
+        {
+            get { return _movingbase; }
+            set
+            {
+                if (_movingbase.Lat != value.Lat || _movingbase.Lng != value.Lng || _movingbase.Alt
+                    != value.Alt)
+                    _movingbase = value;
+            }
+        }
 
         static PointLatLngAlt _trackerloc = new PointLatLngAlt();
 
@@ -1084,7 +1101,7 @@ namespace MissionPlanner
         public float servovoltage { get; set; }
 
         [DisplayText("Voltage Flags")]
-        public MAVLink.MAV_POWER_STATUS voltageflag { get; set; }
+        public uint voltageflag {get;set;}
 
         public ushort i2cerrors { get; set; }
 
@@ -1253,7 +1270,7 @@ namespace MissionPlanner
 
         public float rpm2 { get; set; }
 
-        public MAVLink.MAV_PROTOCOL_CAPABILITY capabilities { get; set; }
+        public uint capabilities { get; set; }
 
         public float speedup { get; set; }
 
@@ -1328,8 +1345,8 @@ namespace MissionPlanner
                 distTraveled = 0;
                 timeInAir = 0;
                 version = new Version();
-                voltageflag = MAVLink.MAV_POWER_STATUS.USB_CONNECTED;
-                capabilities = MAVLink.MAV_PROTOCOL_CAPABILITY.MISSION_FLOAT;
+                voltageflag = (uint)MAVLink.MAV_POWER_STATUS.USB_CONNECTED;
+                capabilities = (uint)MAVLink.MAV_PROTOCOL_CAPABILITY.MISSION_FLOAT;
             }
         }
 
@@ -1541,11 +1558,11 @@ namespace MissionPlanner
                         MAVLink.FIRMWARE_VERSION_TYPE type =
                             (MAVLink.FIRMWARE_VERSION_TYPE) (version.flight_sw_version & 0xff);
 
-                        this.version = new Version(main, sub, (int) type, rev);
+                        this.version = new Version(main, sub, rev, (int)type);
 
                         try
                         {
-                            capabilities = (MAVLink.MAV_PROTOCOL_CAPABILITY)version.capabilities;
+                            capabilities = (uint)(MAVLink.MAV_PROTOCOL_CAPABILITY)version.capabilities;
                         }
                         catch
                         {
@@ -1759,11 +1776,10 @@ namespace MissionPlanner
 
                         try
                         {
-                            voltageflag = (MAVLink.MAV_POWER_STATUS) power.flags;
+                            voltageflag = (uint)((MAVLink.MAV_POWER_STATUS) power.flags);
                         }
                         catch
                         {
-                            
                         }
                     }
 
@@ -1964,21 +1980,28 @@ namespace MissionPlanner
                     {
                         var bats = mavLinkMessage.ToStructure<MAVLink.mavlink_battery_status_t>();
 
-                        if (bats.voltages[0] != ushort.MaxValue)
+                        if (bats.id == 0)
                         {
-                            battery_cell1 = bats.voltages[0] / 1000.0;
-                            battery_cell2 = bats.voltages[1] / 1000.0;
-                            battery_cell3 = bats.voltages[2] / 1000.0;
-                            battery_cell4 = bats.voltages[3] / 1000.0;
-                            battery_cell5 = bats.voltages[4] / 1000.0;
-                            battery_cell6 = bats.voltages[5] / 1000.0;
-                        }
+                            if (bats.voltages[0] != ushort.MaxValue)
+                            {
+                                battery_cell1 = bats.voltages[0] / 1000.0;
+                                battery_cell2 = bats.voltages[1] / 1000.0;
+                                battery_cell3 = bats.voltages[2] / 1000.0;
+                                battery_cell4 = bats.voltages[3] / 1000.0;
+                                battery_cell5 = bats.voltages[4] / 1000.0;
+                                battery_cell6 = bats.voltages[5] / 1000.0;
+                            }
 
-                        battery_usedmah = bats.current_consumed;
-                        battery_remaining = bats.battery_remaining;
-                        _current = bats.current_battery / 100.0f;
-                        if(bats.temperature != short.MaxValue)
-                            battery_temp = bats.temperature / 100.0;
+                            battery_usedmah = bats.current_consumed;
+                            battery_remaining = bats.battery_remaining;
+                            _current = bats.current_battery / 100.0f;
+                            if (bats.temperature != short.MaxValue)
+                                battery_temp = bats.temperature / 100.0;
+                        }
+                        else if (bats.id == 1)
+                        {
+                            _current2 = bats.current_battery / 100.0f;
+                        }
                     }
 
                     mavLinkMessage = MAV.getPacket((uint) MAVLink.MAVLINK_MSG_ID.SCALED_PRESSURE);
@@ -2295,11 +2318,13 @@ namespace MissionPlanner
                         var deltaimu = timesec - imutime;
 
                         //Console.WriteLine( + " " + deltawall + " " + deltaimu + " " + System.Threading.Thread.CurrentThread.Name);
-                        if (speedup > 0)
-                            speedup = (float) (speedup*0.95 + (deltaimu/deltawall)*0.05);
+                        if (deltaimu > 0 && deltaimu < 10)
+                        {
+                            speedup = (float) (speedup * 0.95 + (deltaimu / deltawall) * 0.05);
 
-                        imutime = timesec;
-                        lastimutime = DateTime.Now;
+                            imutime = timesec;
+                            lastimutime = DateTime.Now;
+                        }
 
                         //MAVLink.packets[(byte)MAVLink.MSG_NAMES.RAW_IMU);
                     }
