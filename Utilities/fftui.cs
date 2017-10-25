@@ -16,6 +16,7 @@ namespace MissionPlanner.Utilities
     {
         public fftui()
         {
+            this.DoubleBuffered = true;
             InitializeComponent();
         }
 
@@ -287,6 +288,8 @@ namespace MissionPlanner.Utilities
 
                     controlindex++;
                 }
+                
+                SetScale(ctls);
             }
         }
 
@@ -351,6 +354,9 @@ namespace MissionPlanner.Utilities
 
                         double time = double.Parse(item.items[offsetTime])/1000.0;
 
+                        if (time < alldata[sensorno].lasttime)
+                            continue;
+
                         if (time != alldata[sensorno].lasttime)
                             alldata[sensorno].timedelta = alldata[sensorno].timedelta*0.99 +
                                                           (time - alldata[sensorno].lasttime)*0.01;
@@ -372,6 +378,9 @@ namespace MissionPlanner.Utilities
                         int offsetTime = file.dflog.FindMessageOffset(item.msgtype, "TimeUS");
 
                         double time = double.Parse(item.items[offsetTime])/1000.0;
+
+                        if(time < alldata[sensorno].lasttime)
+                            continue;
 
                         if (time != alldata[sensorno].lasttime)
                             alldata[sensorno].timedelta = alldata[sensorno].timedelta*0.99 +
@@ -456,6 +465,38 @@ namespace MissionPlanner.Utilities
 
                     controlindex++;
                 }
+
+                SetScale(ctls);
+            }
+        }
+
+        private void SetScale(ZedGraphControl[] ctls)
+        {
+            // get the max scale
+            double maxg = 0;
+            double maxa = 0;
+            foreach (var zedGraphControl in ctls)
+            {
+                if (zedGraphControl.GraphPane.Title.Text.Contains("GYR"))
+                {
+                    maxg = Math.Max(maxg, zedGraphControl.GraphPane.YAxis.Scale.Max);
+                }
+                else if (zedGraphControl.GraphPane.Title.Text.Contains("ACC"))
+                {
+                    maxa = Math.Max(maxa, zedGraphControl.GraphPane.YAxis.Scale.Max);
+                }
+            }
+            // set the max scale
+            foreach (var zedGraphControl in ctls)
+            {
+                if (zedGraphControl.GraphPane.Title.Text.Contains("GYR"))
+                {
+                    zedGraphControl.GraphPane.YAxis.Scale.Max = maxg;
+                }
+                else if (zedGraphControl.GraphPane.Title.Text.Contains("ACC"))
+                {
+                    zedGraphControl.GraphPane.YAxis.Scale.Max = maxa;
+                }
             }
         }
 
@@ -512,7 +553,7 @@ namespace MissionPlanner.Utilities
                         if (item.msgtype == "IMU3")
                             sensorno = 2;
 
-                        alldata[sensorno+3].type = item.msgtype +" A";
+                        alldata[sensorno+3].type = item.msgtype +" ACC";
 
                         int offsetAX = file.dflog.FindMessageOffset(item.msgtype, "AccX");
                         int offsetAY = file.dflog.FindMessageOffset(item.msgtype, "AccY");
@@ -532,7 +573,7 @@ namespace MissionPlanner.Utilities
                         alldata[sensorno + 3].dataz.Add(double.Parse(item.items[offsetAZ]));
 
                         //gyro
-                        alldata[sensorno].type = item.msgtype + " G";
+                        alldata[sensorno].type = item.msgtype + " GYR";
 
                         int offsetGX = file.dflog.FindMessageOffset(item.msgtype, "GyrX");
                         int offsetGY = file.dflog.FindMessageOffset(item.msgtype, "GyrY");
@@ -621,7 +662,26 @@ namespace MissionPlanner.Utilities
 
                     controlindex++;
                 }
+
+                SetScale(ctls);
             }
+        }
+
+        double prevMouseX = 0; 
+        double prevMouseY = 0;  
+
+        private bool zedGraphControl1_MouseMoveEvent(ZedGraphControl sender, MouseEventArgs e)
+        {
+            // debounce for mousemove and tooltip label
+
+            if (e.X == prevMouseX && e.Y == prevMouseY)
+                return true;
+
+            prevMouseX = e.X;
+            prevMouseY = e.Y;
+
+            // not handled
+            return false;
         }
     }
 }

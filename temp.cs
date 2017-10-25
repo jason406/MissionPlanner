@@ -64,6 +64,12 @@ namespace MissionPlanner
                     Controls.Add(ogl);
 
                     ogl.Dock = DockStyle.Fill;
+
+                    ogl.Click += delegate(object sender, EventArgs args)
+                    {
+                        tableLayoutPanel1.Visible = !tableLayoutPanel1.Visible;
+                        controlSensorsStatus1.Visible = !controlSensorsStatus1.Visible;
+                    };
                 }
                 catch
                 {
@@ -222,7 +228,7 @@ namespace MissionPlanner
                     MainV2.comPort.MAV.cs.roll, MainV2.comPort.MAV.cs.pitch, MainV2.comPort.MAV.cs.yaw);
             }
         }
-        
+
 
         private void BUT_swarm_Click(object sender, EventArgs e)
         {
@@ -238,7 +244,7 @@ namespace MissionPlanner
         {
             new SerialOutputNMEA().Show();
         }
-        
+
         private void BUT_followleader_Click(object sender, EventArgs e)
         {
             new FollowPathControl().Show();
@@ -248,7 +254,7 @@ namespace MissionPlanner
         {
             CleanDrivers.Clean();
         }
-        
+
 
         private void BUT_sorttlogs_Click(object sender, EventArgs e)
         {
@@ -266,7 +272,7 @@ namespace MissionPlanner
                 }
             }
         }
-        
+
         private void BUT_movingbase_Click(object sender, EventArgs e)
         {
             var si = new MovingBase();
@@ -294,8 +300,13 @@ namespace MissionPlanner
 
                 xmlwriter.WriteStartElement("options");
 
+                int a = 0;
+
                 foreach (var software in list)
                 {
+                    a++;
+                    Loading.ShowLoading(((a-1)/(float)list.Count)*100.0+"% "+software.name, this);
+
                     //if (!software.name.Contains("Copter"))
                     //  continue;
 
@@ -431,9 +442,11 @@ namespace MissionPlanner
                 xmlwriter.WriteEndElement();
                 xmlwriter.WriteEndDocument();
             }
+
+            Loading.Close();
         }
 
- 
+
         private void button3_Click(object sender, EventArgs e)
         {
             var frm = new WarningsManager();
@@ -485,7 +498,7 @@ namespace MissionPlanner
             try
             {
                 // Get the listener that handles the client request.
-                var listener = (TcpListener) ar.AsyncState;
+                var listener = (TcpListener)ar.AsyncState;
 
                 listener.BeginAcceptTcpClient(DoAcceptTcpClientCallback, listener);
 
@@ -605,8 +618,8 @@ namespace MissionPlanner
                         {
                             if (reproject)
                             {
-                                double[] xyarray = {point.X, point.Y};
-                                double[] zarray = {point.Z};
+                                double[] xyarray = { point.X, point.Y };
+                                double[] zarray = { point.Z };
 
                                 Reproject.ReprojectPoints(xyarray, zarray, pStart, pESRIEnd, 0, 1);
 
@@ -627,7 +640,7 @@ namespace MissionPlanner
                 }
             }
         }
-        
+
         private void but_gimbaltest_Click(object sender, EventArgs e)
         {
             if (MainV2.comPort.BaseStream.IsOpen)
@@ -635,7 +648,7 @@ namespace MissionPlanner
             else
                 CustomMessageBox.Show(Strings.PleaseConnect, Strings.ERROR);
         }
-        
+
         private void but_maplogs_Click(object sender, EventArgs e)
         {
             var fbd = new FolderBrowserDialog();
@@ -655,14 +668,14 @@ namespace MissionPlanner
 
             form.Show();
         }
-        
+
         private void but_structtest_Click(object sender, EventArgs e)
         {
             var array = new byte[100];
 
             for (var l = 0; l < array.Length; l++)
             {
-                array[l] = (byte) l;
+                array[l] = (byte)l;
             }
 
             var a = 0;
@@ -673,7 +686,7 @@ namespace MissionPlanner
             start = DateTime.Now;
             for (a = 0; a < 1000000; a++)
             {
-                var obj = (object) new MAVLink.mavlink_heartbeat_t();
+                var obj = (object)new MAVLink.mavlink_heartbeat_t();
                 MavlinkUtil.ByteArrayToStructure(array, ref obj, 6);
             }
             end = DateTime.Now;
@@ -740,7 +753,7 @@ namespace MissionPlanner
 
             fft.Show();
         }
-        
+
 
         private void but_reboot_Click(object sender, EventArgs e)
         {
@@ -805,7 +818,7 @@ namespace MissionPlanner
 
         private void but_agemapdata_Click(object sender, EventArgs e)
         {
-            var removed = ((PureImageCache) MyImageCache.Instance).DeleteOlderThan(DateTime.Now.AddDays(-30),
+            var removed = ((PureImageCache)MyImageCache.Instance).DeleteOlderThan(DateTime.Now.AddDays(-30),
                 FlightData.instance.gMapControl1.MapProvider.DbId);
 
             CustomMessageBox.Show("Removed " + removed + " images");
@@ -920,7 +933,7 @@ namespace MissionPlanner
             flow.CalibrationMode(true);
 
             // setup bitmap to screen
-            flow.newImage += (s, eh) => imagebox.Image = (Image) eh.Image.Clone();
+            flow.newImage += (s, eh) => imagebox.Image = (Image)eh.Image.Clone();
         }
 
         private void myButton2_Click(object sender, EventArgs e)
@@ -958,20 +971,20 @@ namespace MissionPlanner
                         {
                             MAVLink.MAVLinkMessage packet = mine.readPacket();
 
-                            if (packet.msgid == (uint) MAVLink.MAVLINK_MSG_ID.GPS_INJECT_DATA)
+                            if (packet.msgid == (uint)MAVLink.MAVLINK_MSG_ID.GPS_INJECT_DATA)
                             {
                                 var item = packet.ToStructure<MAVLink.mavlink_gps_inject_data_t>();
+                                st.Write(item.data, 0, item.len);
+                            }
+                            else if (packet.msgid == (uint)MAVLink.MAVLINK_MSG_ID.GPS_RTCM_DATA)
+                            {
+                                var item = packet.ToStructure<MAVLink.mavlink_gps_rtcm_data_t>();
                                 st.Write(item.data, 0, item.len);
                             }
                         }
                     }
                 }
             }
-        }
-
-        private void but_AA_Click(object sender, EventArgs e)
-        {
-            Utilities.AltitudeAngel.AltitudeAngel.service.SignInAsync();
         }
 
         private void but_followswarm_Click(object sender, EventArgs e)
@@ -981,7 +994,58 @@ namespace MissionPlanner
 
         private void myButton3_Click(object sender, EventArgs e)
         {
-            Common.getFilefromNet("http://firm.ardupilot.org/", "./test.txt");
+            but_GDAL_Click(sender, e);
+        }
+
+        protected override void WndProc(ref Message m)
+        {
+            switch (m.Msg)
+            {
+                case 0x86: // WM_NCACTIVATE
+                    var child = Control.FromHandle(m.LParam);
+
+                    if (child is Form)
+                    {
+                        ThemeManager.ApplyThemeTo(child);
+                    }
+                    break;
+            }
+            base.WndProc(ref m);
+        }
+
+        private void but_GDAL_Click(object sender, EventArgs e)
+        {
+            FolderBrowserDialog fbd = new FolderBrowserDialog();
+
+            if (fbd.ShowDialog() == DialogResult.OK)
+            {
+                if (Directory.Exists(fbd.SelectedPath))
+                {
+                    GDAL.GDAL.OnProgress += GDAL_OnProgress;
+                    GDAL.GDAL.ScanDirectory(fbd.SelectedPath);
+                    DTED.OnProgress += GDAL_OnProgress;
+                    DTED.AddCustomDirectory(fbd.SelectedPath);
+
+                    Loading.Close();
+                }
+            }
+        }
+
+        private void GDAL_OnProgress(double percent, string message)
+        {
+            Loading.ShowLoading((percent).ToString("0.0%") + " " +message, this);
+        }
+
+        private void but_sortlogs_Click(object sender, EventArgs e)
+        {
+            MissionPlanner.Log.LogSort.SortLogs(Directory.GetFiles(Settings.Instance.LogDir, "*.tlog",
+                SearchOption.AllDirectories), Settings.Instance.LogDir);
+        }
+
+        private void but_logdlscp_Click(object sender, EventArgs e)
+        {
+            LogDownloadscp form = new LogDownloadscp();
+            form.Show();
         }
     }
 }

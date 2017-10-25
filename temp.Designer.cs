@@ -46,7 +46,7 @@
             this.BUT_movingbase = new MissionPlanner.Controls.MyButton();
             this.but_getfw = new MissionPlanner.Controls.MyButton();
             this.but_mavserialport = new MissionPlanner.Controls.MyButton();
-            this.button3 = new System.Windows.Forms.Button();
+            this.button3 = new MissionPlanner.Controls.MyButton();
             this.BUT_shptopoly = new MissionPlanner.Controls.MyButton();
             this.but_gimbaltest = new MissionPlanner.Controls.MyButton();
             this.but_maplogs = new MissionPlanner.Controls.MyButton();
@@ -94,10 +94,12 @@
             this.myButton2 = new MissionPlanner.Controls.MyButton();
             this.BUT_magfit2 = new MissionPlanner.Controls.MyButton();
             this.but_gpsinj = new MissionPlanner.Controls.MyButton();
-            this.but_AA = new MissionPlanner.Controls.MyButton();
             this.controlSensorsStatus1 = new MissionPlanner.Controls.ControlSensorsStatus();
             this.but_followswarm = new MissionPlanner.Controls.MyButton();
             this.myButton3 = new MissionPlanner.Controls.MyButton();
+            this.but_GDAL = new MissionPlanner.Controls.MyButton();
+            this.but_sortlogs = new MissionPlanner.Controls.MyButton();
+            this.but_logdlscp = new MissionPlanner.Controls.MyButton();
             this.tableLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -300,7 +302,6 @@
             // 
             // button3
             // 
-            this.button3.Dock = System.Windows.Forms.DockStyle.Fill;
             this.button3.Location = new System.Drawing.Point(0, 21);
             this.button3.Margin = new System.Windows.Forms.Padding(0);
             this.button3.Name = "button3";
@@ -839,18 +840,9 @@
             this.but_gpsinj.UseVisualStyleBackColor = true;
             this.but_gpsinj.Click += new System.EventHandler(this.but_gpsinj_Click);
             // 
-            // but_AA
-            // 
-            this.but_AA.Location = new System.Drawing.Point(467, 501);
-            this.but_AA.Name = "but_AA";
-            this.but_AA.Size = new System.Drawing.Size(75, 23);
-            this.but_AA.TabIndex = 82;
-            this.but_AA.Text = "altitudeangel";
-            this.but_AA.UseVisualStyleBackColor = true;
-            this.but_AA.Click += new System.EventHandler(this.but_AA_Click);
-            // 
             // controlSensorsStatus1
             // 
+            this.controlSensorsStatus1.BackColor = System.Drawing.Color.Transparent;
             this.controlSensorsStatus1.Location = new System.Drawing.Point(548, 12);
             this.controlSensorsStatus1.Name = "controlSensorsStatus1";
             this.controlSensorsStatus1.Size = new System.Drawing.Size(272, 586);
@@ -872,18 +864,49 @@
             this.myButton3.Name = "myButton3";
             this.myButton3.Size = new System.Drawing.Size(75, 23);
             this.myButton3.TabIndex = 84;
-            this.myButton3.Text = "test redirect";
+            this.myButton3.Text = "Custom DTED";
             this.myButton3.UseVisualStyleBackColor = true;
             this.myButton3.Click += new System.EventHandler(this.myButton3_Click);
             // 
+            // but_GDAL
+            // 
+            this.but_GDAL.Location = new System.Drawing.Point(386, 566);
+            this.but_GDAL.Name = "but_GDAL";
+            this.but_GDAL.Size = new System.Drawing.Size(75, 23);
+            this.but_GDAL.TabIndex = 85;
+            this.but_GDAL.Text = "Custom GDAL";
+            this.but_GDAL.UseVisualStyleBackColor = true;
+            this.but_GDAL.Click += new System.EventHandler(this.but_GDAL_Click);
+            // 
+            // but_sortlogs
+            // 
+            this.but_sortlogs.Location = new System.Drawing.Point(305, 566);
+            this.but_sortlogs.Name = "but_sortlogs";
+            this.but_sortlogs.Size = new System.Drawing.Size(75, 23);
+            this.but_sortlogs.TabIndex = 86;
+            this.but_sortlogs.Text = "ReSort All logs";
+            this.but_sortlogs.UseVisualStyleBackColor = true;
+            this.but_sortlogs.Click += new System.EventHandler(this.but_sortlogs_Click);
+            // 
+            // but_logdlscp
+            // 
+            this.but_logdlscp.Location = new System.Drawing.Point(224, 566);
+            this.but_logdlscp.Name = "but_logdlscp";
+            this.but_logdlscp.Size = new System.Drawing.Size(75, 23);
+            this.but_logdlscp.TabIndex = 87;
+            this.but_logdlscp.Text = "logdownload scp";
+            this.but_logdlscp.UseVisualStyleBackColor = true;
+            this.but_logdlscp.Click += new System.EventHandler(this.but_logdlscp_Click);
+            // 
             // temp
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.ClientSize = new System.Drawing.Size(830, 595);
+            this.Controls.Add(this.but_logdlscp);
+            this.Controls.Add(this.but_sortlogs);
+            this.Controls.Add(this.but_GDAL);
             this.Controls.Add(this.myButton3);
             this.Controls.Add(this.but_followswarm);
-            this.Controls.Add(this.but_AA);
             this.Controls.Add(this.but_gpsinj);
             this.Controls.Add(this.controlSensorsStatus1);
             this.Controls.Add(this.BUT_magfit2);
@@ -931,7 +954,7 @@
         private Controls.MyButton BUT_movingbase;
         private Controls.MyButton but_getfw;
         private Controls.MyButton but_mavserialport;
-        System.Windows.Forms.Button button3;
+        MissionPlanner.Controls.MyButton button3;
         private Controls.MyButton BUT_shptopoly;
         private Controls.MyButton but_gimbaltest;
         private Controls.MyButton but_maplogs;
@@ -980,8 +1003,10 @@
         private Controls.MyButton BUT_magfit2;
         private Controls.ControlSensorsStatus controlSensorsStatus1;
         private Controls.MyButton but_gpsinj;
-        private Controls.MyButton but_AA;
         private Controls.MyButton but_followswarm;
         private Controls.MyButton myButton3;
+        private Controls.MyButton but_GDAL;
+        private Controls.MyButton but_sortlogs;
+        private Controls.MyButton but_logdlscp;
     }
 }

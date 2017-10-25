@@ -16,9 +16,6 @@ namespace MissionPlanner.Swarm.WaypointLeader
     public class DroneGroup
     {
         private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-        
-        const float rad2deg = (float)(180 / Math.PI);
-        const float deg2rad = (float)(1.0 / rad2deg);
 
         public List<Drone> Drones = new List<Drone>();
         public MAVState airmaster;
@@ -32,6 +29,7 @@ namespace MissionPlanner.Swarm.WaypointLeader
         public bool V { get; set; }
         public double Takeoff_Land_alt_sep { get; set; }
         public bool AltInterleave { get; set; }
+        public decimal WPNAV_ACCEL { get; internal set; }
 
         public PointPairList path_to_fly = new PointPairList();
 
@@ -57,6 +55,7 @@ namespace MissionPlanner.Swarm.WaypointLeader
             OffPathTrigger = 10;
             Takeoff_Land_alt_sep = 2;
             AltInterleave = false;
+            WPNAV_ACCEL = 1;
         }
 
         public void UpdatePositions()
@@ -74,9 +73,9 @@ namespace MissionPlanner.Swarm.WaypointLeader
                 drone.Location.Alt = drone.MavState.cs.alt;
                 if (drone.Velocity == null)
                     drone.Velocity = new Vector3();
-                drone.Velocity.x = Math.Cos(drone.MavState.cs.groundcourse*deg2rad)*drone.MavState.cs.groundspeed;
-                drone.Velocity.y = Math.Sin(drone.MavState.cs.groundcourse*deg2rad)*drone.MavState.cs.groundspeed;
-                drone.Velocity.z = drone.MavState.cs.verticalspeed;
+                drone.Velocity.x = drone.MavState.cs.vx;
+                drone.Velocity.y = drone.MavState.cs.vy;
+                drone.Velocity.z = drone.MavState.cs.vz;
 
                 // set default target as ground reference
                 drone.TargetVelocity = GroundMasterDrone.Velocity;
@@ -117,27 +116,56 @@ namespace MissionPlanner.Swarm.WaypointLeader
                     if(!drone2.MavState.cs.armed)
                         continue;
 
-                    // check how close they are based on a 1 second projection
-                    if (drone1.ProjectedLocation.GetDistance(drone2.ProjectedLocation) < Seperation/2)
+                    // check how close they are based on current position
+                    if (drone1.Location.GetDistance(drone2.Location) < Seperation / 2)
+                    {
+                        // check if the alt seperation is less than 1m
+                        if (Math.Abs(drone1.Location.Alt - drone2.Location.Alt) < 1)
+                        {
+                            // check which is higher already, and seperate further
+                            if (drone1.Location.Alt > drone2.Location.Alt)
+                            {
+                                drone1.SendPositionVelocity(new PointLatLngAlt(drone1.Location) { Alt = drone1.Location.Alt + Takeoff_Land_alt_sep }, Vector3.Zero);
+                                return;
+                            }
+                            else
+                            {
+                                drone2.SendPositionVelocity(new PointLatLngAlt(drone2.Location) { Alt = drone2.Location.Alt + Takeoff_Land_alt_sep }, Vector3.Zero);
+                                return;
+                            }
+                        }
+                    }
+
+                        // check how close they are based on a 1 second projection
+                        if (drone1.ProjectedLocation.GetDistance(drone2.ProjectedLocation) < Seperation/2)
                     {
                         // check if they are heading the same direction
                         if (((Math.Abs(drone1.Heading - drone2.Heading)+360)%360) < 45 && drone1.MavState.cs.groundspeed > 0.5)
                         {
-                            // they are heading within 45 degrees of each other
-                            // return here to let them settle themselfs, as the target position will be correct
-                            // ie the ground refrence is moving faster than the drones can maintain
-                            Console.WriteLine("1 drone, to close");
-                            return;
+                            // check if the alt seperation is less than 1m
+                            if (Math.Abs(drone1.Location.Alt - drone2.Location.Alt) < 1)
+                            {
+                                // they are heading within 45 degrees of each other
+                                // return here to let them settle themselfs, as the target position will be correct
+                                // ie the ground refrence is moving faster than the drones can maintain
+                                Console.WriteLine("1 drone, to close");
+                                drone1.SendPositionVelocity(drone1.Location, Vector3.Zero);
+                                return;
+                            }
                         }
 
                         // check if the are heading are at each other
                         if (((Math.Abs(drone1.Heading - drone2.Heading)+360)%360) > 135 )
                         {
-                            // stop the drones
-                            drone1.SendPositionVelocity(drone1.Location, Vector3.Zero);
-                            drone2.SendPositionVelocity(drone2.Location, Vector3.Zero);
-                            Console.WriteLine("2 stopping drone, to close and heading towards each other");
-                            return;
+                            // check if the alt seperation is less than 1m
+                            if (Math.Abs(drone1.Location.Alt - drone2.Location.Alt) < 1)
+                            {
+                                // stop the drones
+                                drone1.SendPositionVelocity(new PointLatLngAlt(drone1.Location) { Alt = drone1.Location.Alt + Takeoff_Land_alt_sep }, Vector3.Zero);
+                                drone2.SendPositionVelocity(drone2.Location, Vector3.Zero);
+                                Console.WriteLine("2 stopping drone, to close and heading towards each other");
+                                return;
+                            }
                         }
                     }
                 }
@@ -183,6 +211,8 @@ namespace MissionPlanner.Swarm.WaypointLeader
                         MAV.parent.requestDatastream(MAVLink.MAV_DATA_STREAM.POSITION, 5, MAV.sysid, MAV.compid);
                         MAV.cs.rateposition = 5;
 
+                        drone.takeoffdone = false;
+
                         if (drone != GroundMasterDrone)
                         {
                             try
@@ -191,6 +221,16 @@ namespace MissionPlanner.Swarm.WaypointLeader
                                 MAV.parent.GetParam(MAV.sysid, MAV.compid, "RTL_ALT");
                                 // set param
                                 MAV.parent.setParam(MAV.sysid, MAV.compid, "RTL_ALT", 0); // cms - rtl at current alt
+                            }
+                            catch
+                            {
+                            }
+                            try
+                            {
+                                // get param
+                                MAV.parent.GetParam(MAV.sysid, MAV.compid, "WPNAV_ACCEL");
+                                // set param to default 100cm/s
+                                MAV.parent.setParam(MAV.sysid, MAV.compid, "WPNAV_ACCEL", 100);
                             }
                             catch
                             {
@@ -239,10 +279,12 @@ namespace MissionPlanner.Swarm.WaypointLeader
                         try
                         {
                             // takeoff
-                            if (MAV.cs.alt < (takeoffalt - 0.5))
+                            if (MAV.cs.alt < (takeoffalt - 0.5) && !drone.takeoffdone)
                                 if (MAV.parent.doCommand(MAV.sysid, MAV.compid, MAVLink.MAV_CMD.TAKEOFF, 0, 0, 0, 0, 0,
                                     0, takeoffalt))
-                                    return;
+                                {
+                                    drone.takeoffdone = true;
+                                }                            
                         }
                         catch (Exception ex)
                         {
@@ -268,6 +310,8 @@ namespace MissionPlanner.Swarm.WaypointLeader
                             // move on to next drone
                             continue;
                         }
+
+                        // we should only get here once takeoff alt has been archived by this drone.
 
                         // position control
                         drone.SendPositionVelocity(drone.TargetLocation, Vector3.Zero);
@@ -343,6 +387,17 @@ namespace MissionPlanner.Swarm.WaypointLeader
                     // check how far off target we are
                     if (newpositionsfollowuser.Count > 0 && AirMasterDrone.Location.GetDistance(newpositionsfollowuser.First()) < Seperation)
                     {
+                        // update speed as we are changing to a high dynamic mode
+                        foreach (var drone in newlist)
+                        {
+                            if (drone == GroundMasterDrone)
+                                continue;
+                            var MAV = drone.MavState;
+                            // update to faster speed
+                            MAV.parent.setParam(MAV.sysid, MAV.compid, "WPNAV_ACCEL", (float)WPNAV_ACCEL*100.0f);
+
+                            MAV.parent.setMode(MAV.sysid, MAV.compid, "GUIDED");
+                        }
                         //if we are off target, we have already sent the command to this drone,
                         //but skip the one behind it untill this one is within the seperation range 
                         CurrentMode = Mode.followuser;
@@ -428,6 +483,17 @@ namespace MissionPlanner.Swarm.WaypointLeader
                         if (d > (newpositions4.Count - 1))
                             break;
 
+                        try
+                        {
+                            var MAV = drone.MavState;
+                            // set param to default 100cm/s
+                            if (MAV.param["WPNAV_ACCEL"].Value != 100)
+                                MAV.parent.setParam(MAV.sysid, MAV.compid, "WPNAV_ACCEL", 100);
+                        }
+                        catch
+                        {
+                        }
+
                         // set drone target position
                         drone.TargetLocation = newpositions4[d];
 
@@ -455,6 +521,17 @@ namespace MissionPlanner.Swarm.WaypointLeader
                     foreach (var drone in newlist)
                     {
                         drone.TargetLocation.Alt += Takeoff_Land_alt_sep * e;
+
+                        try
+                        {
+                            var MAV = drone.MavState;
+                            // set param to default 100cm/s
+                            if (MAV.param["WPNAV_ACCEL"].Value != 100)
+                                MAV.parent.setParam(MAV.sysid, MAV.compid, "WPNAV_ACCEL", 100);
+                        }
+                        catch
+                        {
+                        }
 
                         // position control
                         drone.SendPositionVelocity(drone.TargetLocation, Vector3.Zero);
@@ -539,7 +616,7 @@ namespace MissionPlanner.Swarm.WaypointLeader
                 if (angle < 0)
                     angle += 360;
 
-                var alongline = Math.Cos(angle * deg2rad) * distToLocation;
+                var alongline = Math.Cos(angle * MathHelper.deg2rad) * distToLocation;
 
                 // check to see if our point is still within the line length
                 if (Math.Abs(alongline) > lineDist)
@@ -548,7 +625,7 @@ namespace MissionPlanner.Swarm.WaypointLeader
                     continue;
                 }
 
-                var dXt2 = Math.Sin(angle * deg2rad) * distToLocation;
+                var dXt2 = Math.Sin(angle * MathHelper.deg2rad) * distToLocation;
 
                 disttotal = Math.Min(disttotal, Math.Abs(dXt2));
 

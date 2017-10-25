@@ -306,7 +306,7 @@ namespace MissionPlanner.GCSViews.ConfigurationView
 
             var no = readSwitch(pwm);
 
-            fmodelist[no].BackColor = Color.Green;
+            fmodelist[no].BackColor = ThemeManager.CurrentPPMBackground;
         }
 
         // from arducopter code
@@ -395,12 +395,12 @@ namespace MissionPlanner.GCSViews.ConfigurationView
         {
             try
             {
-                Process.Start("http://copter.ardupilot.com/wiki/flight-modes/simpleandsuper-simple-modes/");
+                Process.Start("http://ardupilot.org/copter/docs/simpleandsuper-simple-modes.html");
             }
             catch
             {
                 CustomMessageBox.Show(Strings.ERROR +
-                                      " http://copter.ardupilot.com/wiki/flight-modes/simpleandsuper-simple-modes/");
+                                      " http://ardupilot.org/copter/docs/simpleandsuper-simple-modes.html");
             }
         }
 

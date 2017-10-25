@@ -6,7 +6,6 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Flurl.Util;
 using ZedGraph;
 
 namespace MissionPlanner.Swarm.WaypointLeader
@@ -86,6 +85,22 @@ namespace MissionPlanner.Swarm.WaypointLeader
                 but_start.Text = Strings.Start;
                 return;
             }
+
+            foreach (var port in MainV2.Comports)
+            {
+                foreach (var MAV in port.MAVlist)
+                {
+                    if (MAV.cs.armed && MAV.cs.alt > 1)
+                    {
+                        var result = CustomMessageBox.Show("There appears to be a drone in the air at the moment. Are you sure you want to continue?", "continue", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                            break;
+                        return;
+                    }
+                }
+            }
+
+            zedGraphControl1.AxisChange();
 
             //if (SwarmInterface != null)
             {
@@ -200,7 +215,7 @@ namespace MissionPlanner.Swarm.WaypointLeader
                             ((Status) ctl).MAV.Text = String.Format("MAV {0}-{1}",MAV.sysid,MAV.compid);
                             ((Status) ctl).Guided.Text = MAV.GuidedMode.x + "," + MAV.GuidedMode.y + "," +
                                                          MAV.GuidedMode.z;
-                            ((Status)ctl).Location.Text = MAV.cs.lat.ToString("0.00000") + "," + MAV.cs.lng.ToString("0.00000") + "," +
+                            ((Status)ctl).Location1.Text = MAV.cs.lat.ToString("0.00000") + "," + MAV.cs.lng.ToString("0.00000") + "," +
                                                       MAV.cs.alt;
                             ((Status)ctl).Speed.Text = MAV.cs.groundspeed.ToString("0.00");
 
@@ -282,6 +297,20 @@ namespace MissionPlanner.Swarm.WaypointLeader
 
         private void but_resetmode_Click(object sender, EventArgs e)
         {
+            foreach (var port in MainV2.Comports)
+            {
+                foreach (var MAV in port.MAVlist)
+                {
+                    if (MAV.cs.armed && MAV.cs.alt > 1)
+                    {
+                        var result = CustomMessageBox.Show("There appears to be a drone in the air at the moment. Are you sure you want to continue?", "continue", MessageBoxButtons.YesNo);
+                        if (result == DialogResult.Yes)
+                            break;
+                        return;
+                    }
+                }
+            }
+
             DG.CurrentMode = DroneGroup.Mode.idle;
         }
 
@@ -314,6 +343,16 @@ namespace MissionPlanner.Swarm.WaypointLeader
         {
             threadrun = false;
             System.Threading.Thread.Sleep(500);
+        }
+
+        private void but_setmoderltland_Click(object sender, EventArgs e)
+        {
+            DG.CurrentMode = DroneGroup.Mode.LandAlt;
+        }
+
+        private void num_wpnav_accel_ValueChanged(object sender, EventArgs e)
+        {
+            DG.WPNAV_ACCEL = num_wpnav_accel.Value;
         }
     }
 }

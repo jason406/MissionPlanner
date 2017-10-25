@@ -29,7 +29,7 @@ namespace MissionPlanner.Joystick
 
                 foreach (DeviceInstance device in joysticklist)
                 {
-                    CMB_joysticks.Items.Add(device.ProductName);
+                    CMB_joysticks.Items.Add(device.ProductName.TrimUnPrintable());
                 }
             }
             catch
@@ -62,7 +62,8 @@ namespace MissionPlanner.Joystick
 
             try
             {
-                CHK_elevons.Checked = bool.Parse(Settings.Instance["joy_elevons"].ToString());
+                if(Settings.Instance.ContainsKey("joy_elevons"))
+                    CHK_elevons.Checked = bool.Parse(Settings.Instance["joy_elevons"].ToString());
             }
             catch
             {
@@ -269,6 +270,9 @@ namespace MissionPlanner.Joystick
                 {
                     BUT_enable_Click(null, null);
                 }
+
+                if (ex.Message.Contains("DIERR_NOTACQUIRED"))
+                    MainV2.joystick = null;
             }
             catch
             {
@@ -325,7 +329,7 @@ namespace MissionPlanner.Joystick
 
             foreach (DeviceInstance device in joysticklist)
             {
-                CMB_joysticks.Items.Add(device.ProductName);
+                CMB_joysticks.Items.Add(device.ProductName.TrimUnPrintable());
             }
 
             if (CMB_joysticks.Items.Count > 0 && CMB_joysticks.SelectedIndex == -1)
@@ -643,6 +647,26 @@ namespace MissionPlanner.Joystick
         {
             if (MainV2.joystick != null)
                 MainV2.joystick.setReverse(8, ((CheckBox) sender).Checked);
+        }
+
+        private void chk_manualcontrol_CheckedChanged(object sender, EventArgs e)
+        {
+            MainV2.joystick.manual_control = chk_manualcontrol.Checked;
+
+            if (chk_manualcontrol.Checked)
+            {
+                CMB_CH5.Enabled = false;
+                CMB_CH6.Enabled = false;
+                CMB_CH7.Enabled = false;
+                CMB_CH8.Enabled = false;
+            }
+            else
+            {
+                CMB_CH5.Enabled = true;
+                CMB_CH6.Enabled = true;
+                CMB_CH7.Enabled = true;
+                CMB_CH8.Enabled = true;
+            }
         }
     }
 }

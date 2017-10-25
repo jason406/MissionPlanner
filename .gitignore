@@ -37,3 +37,11 @@ obj/
 /appxkey.cer
 /ExtLibs/Portable/Portable
 /ExtLibs/AltitudeAngelWings/Keys.config
+/MissionPlannerBeta.zip
+*.vspx
+/ExtLibs/Android
+/ExtLibs/w3w
+/ExtLibs/java
+/ExtLibs/netcore
+/.vs
+/ExtLibs/Zeroconf

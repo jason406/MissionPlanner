@@ -36,6 +36,7 @@ namespace MissionPlanner.Utilities.AltitudeAngel
             this.but_disable = new MissionPlanner.Controls.MyButton();
             this.chk_airdata = new System.Windows.Forms.CheckBox();
             this.chk_grounddata = new System.Windows.Forms.CheckBox();
+            this.chklb_layers = new System.Windows.Forms.CheckedListBox();
             this.SuspendLayout();
             // 
             // but_enable
@@ -80,11 +81,21 @@ namespace MissionPlanner.Utilities.AltitudeAngel
             this.chk_grounddata.UseVisualStyleBackColor = true;
             this.chk_grounddata.CheckedChanged += new System.EventHandler(this.chk_grounddata_CheckedChanged);
             // 
+            // chklb_layers
+            // 
+            this.chklb_layers.CheckOnClick = true;
+            this.chklb_layers.FormattingEnabled = true;
+            this.chklb_layers.Location = new System.Drawing.Point(12, 65);
+            this.chklb_layers.Name = "chklb_layers";
+            this.chklb_layers.Size = new System.Drawing.Size(159, 199);
+            this.chklb_layers.TabIndex = 4;
+            this.chklb_layers.SelectedIndexChanged += new System.EventHandler(this.chklb_layers_SelectedIndexChanged);
+            // 
             // AASettings
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.ClientSize = new System.Drawing.Size(183, 62);
+            this.ClientSize = new System.Drawing.Size(183, 274);
+            this.Controls.Add(this.chklb_layers);
             this.Controls.Add(this.chk_grounddata);
             this.Controls.Add(this.chk_airdata);
             this.Controls.Add(this.but_disable);
@@ -103,5 +114,6 @@ namespace MissionPlanner.Utilities.AltitudeAngel
         private System.Windows.Forms.CheckBox chk_grounddata;
         private MyButton but_enable;
         private MyButton but_disable;
+        private System.Windows.Forms.CheckedListBox chklb_layers;
     }
 }

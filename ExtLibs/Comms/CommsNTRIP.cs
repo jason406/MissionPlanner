@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data.SqlClient;
 using System.Reflection;
 using System.Text;
 using System.IO.Ports;
@@ -11,17 +10,20 @@ using System.Net.Sockets; // tcplistner
 using log4net;
 using System.IO;
 using System.Runtime.InteropServices;
-using MissionPlanner.Controls;
 using System.Text.RegularExpressions;
 
 namespace MissionPlanner.Comms
 {
     public class CommsNTRIP : CommsBase,  ICommsSerial, IDisposable
     {
-        private static readonly ILog log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog log = LogManager.GetLogger(typeof(CommsNTRIP));
         public TcpClient client = new TcpClient();
         IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
         private Uri remoteUri;
+
+        public double lat = 0;
+        public double lng = 0;
+        public double alt = 0;
 
         int retrys = 3;
 
@@ -30,10 +32,11 @@ namespace MissionPlanner.Comms
         public int WriteBufferSize { get; set; }
         public int WriteTimeout { get; set; }
         public bool RtsEnable { get; set; }
-        public Stream BaseStream { get { return this.BaseStream; } }
+        public Stream BaseStream { get { return client.GetStream(); } }
 
         public CommsNTRIP()
         {
+            ReadTimeout = 500;
         }
 
         public void toggleDTR()
@@ -84,8 +87,7 @@ namespace MissionPlanner.Comms
 
             string url = OnSettings("NTRIP_url", "");
 
-            if (System.Windows.Forms.DialogResult.Cancel ==
-                InputBox.Show("remote host", "Enter url (eg http://user:pass@host:port/mount)", ref url))
+            if (OnInputBoxShow("remote host", "Enter url (eg http://user:pass@host:port/mount)", ref url) == inputboxreturn.Cancel)
             {
                 throw new Exception("Canceled by request");
             }
@@ -148,19 +150,80 @@ namespace MissionPlanner.Comms
 
             sw.Write(line);
 
+            log.Info(line);
+
             sw.Flush();
+
+            // vrs may take up to 60+ seconds to respond
+
+            if (lat != 0 || lng != 0)
+            {
+                double latdms = (int) lat + ((lat - (int) lat)*.6f);
+                double lngdms = (int) lng + ((lng - (int) lng)*.6f);
+
+                line = string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                 "$GP{0},{1:HHmmss.fff},{2},{3},{4},{5},{6},{7},{8},{9},{10},{11},{12},{13},", "GGA",
+                 DateTime.Now.ToUniversalTime(), Math.Abs(latdms * 100).ToString("0.00000"), lat < 0 ? "S" : "N",
+                 Math.Abs(lngdms * 100).ToString("0.00000"), lng < 0 ? "W" : "E", 1, 10,
+                 1, alt, "M", 0, "M", "");
+
+                string checksum = GetChecksum(line);
+                sw.WriteLine(line + "*" + checksum);
+
+                log.Info(line + "*" + checksum);
+
+                sw.Flush();
+            }
 
             line = sr.ReadLine();
 
+            log.Info(line);
+
             if (!line.Contains("200"))
             {
-                client.Close();
+                client.Dispose();
+
+                client = new TcpClient();
 
                 throw new Exception("Bad ntrip Responce\n\n" + line);
             }
 
-
             VerifyConnected();
+        }
+
+
+        // Calculates the checksum for a sentence
+        string GetChecksum(string sentence)
+        {
+            // Loop through all chars to get a checksum
+            int Checksum = 0;
+            foreach (char Character in sentence.ToCharArray())
+            {
+                switch (Character)
+                {
+                    case '$':
+                        // Ignore the dollar sign
+                        break;
+                    case '*':
+                        // Stop processing before the asterisk
+                        continue;
+                    default:
+                        // Is this the first value for the checksum?
+                        if (Checksum == 0)
+                        {
+                            // Yes. Set the checksum to the value
+                            Checksum = Convert.ToByte(Character);
+                        }
+                        else
+                        {
+                            // No. XOR the checksum with this character's value
+                            Checksum = Checksum ^ Convert.ToByte(Character);
+                        }
+                        break;
+                }
+            }
+            // Return the checksum formatted as a two-character hexadecimal
+            return Checksum.ToString("X2");
         }
 
         void VerifyConnected()
@@ -169,7 +232,8 @@ namespace MissionPlanner.Comms
             {
                 try
                 {
-                    client.Close();
+                    client.Dispose();
+                    client = new TcpClient();
                 }
                 catch { }
 
@@ -311,15 +375,15 @@ namespace MissionPlanner.Comms
             {
                 if (client.Client != null && client.Client.Connected)
                 {
-                    client.Client.Close();
-                    client.Close();
+                    client.Client.Dispose();
+                    client.Dispose();
                 }
             }
             catch { }
 
             try
             {
-                client.Close();
+                client.Dispose();
             }
             catch { }
 

@@ -8,13 +8,14 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MissionPlanner</RootNamespace>
     <AssemblyName>MissionPlanner</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <TargetFrameworkProfile>
     </TargetFrameworkProfile>
     <FileAlignment>512</FileAlignment>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">.\</SolutionDir>
     <RestorePackages>true</RestorePackages>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
     <PublishUrl>f:\publish\MissionPlanner\</PublishUrl>
@@ -130,147 +131,242 @@
     <LangVersion>default</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <DebugSymbols>true</DebugSymbols>
     <OutputPath>bin\Release\</OutputPath>
-    <DebugType>full</DebugType>
+    <DebugType>embedded</DebugType>
     <PlatformTarget>AnyCPU</PlatformTarget>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LangVersion>default</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="alglibnet2">
-      <HintPath>ExtLibs\alglibnet2.dll</HintPath>
+    <Reference Include="alglibnet2, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\alglibnet2.0.0.0\lib\alglibnet2.dll</HintPath>
+      <Private>True</Private>
     </Reference>
-    <Reference Include="DirectShowLib-2005">
+    <Reference Include="BouncyCastle.Crypto, Version=1.8.1.0, Culture=neutral, PublicKeyToken=0e99375e54769942">
+      <HintPath>packages\BouncyCastle.1.8.1\lib\BouncyCastle.Crypto.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="CSMatIO, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\CSMatIO.1.0.2\lib\net40\CSMatIO.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="DirectShowLib-2005, Version=2.1.0.0, Culture=neutral, PublicKeyToken=67e7b740cdfc2d3f, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>ExtLibs\DirectShowLib-2005.dll</HintPath>
     </Reference>
-    <Reference Include="DotSpatial.Data">
-      <HintPath>packages\DotSpatial.Data.1.6.0.0\lib\net40-Client\DotSpatial.Data.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Extensions">
-      <HintPath>packages\DotSpatial.Extensions.1.6.0.0\lib\net40-Client\DotSpatial.Extensions.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Mono">
-      <HintPath>packages\DotSpatial.Mono.1.6.0.0\lib\net40-Client\DotSpatial.Mono.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Projections">
-      <HintPath>packages\DotSpatial.Projections.1.6.0.0\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Serialization">
-      <HintPath>packages\DotSpatial.Serialization.1.6.0.0\lib\net40-Client\DotSpatial.Serialization.dll</HintPath>
-    </Reference>
-    <Reference Include="DotSpatial.Topology">
-      <HintPath>packages\DotSpatial.Topology.1.6.0.0\lib\net40-Client\DotSpatial.Topology.dll</HintPath>
-    </Reference>
-    <Reference Include="Flurl, Version=2.2.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExtLibs\Flurl.dll</HintPath>
-    </Reference>
-    <Reference Include="Flurl.Http, Version=1.0.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>ExtLibs\Flurl.Http.dll</HintPath>
-    </Reference>
-    <Reference Include="GeoJSON.Net, Version=0.1.37.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\GeoJSON.Net.0.1.37\lib\GeoJSON.Net.dll</HintPath>
+    <Reference Include="DotNetZip, Version=1.10.1.0, Culture=neutral, PublicKeyToken=6583c7c814667745, processorArchitecture=MSIL">
+      <HintPath>packages\DotNetZip.1.10.1\lib\net20\DotNetZip.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="DotSpatial.Data, Version=1.9.0.0, Culture=neutral, PublicKeyToken=c29dbf30e059ca9d, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Data.1.9\lib\net40-Client\DotSpatial.Data.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Data.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=53ab5a198378d4c1, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Data.Forms.1.9\lib\net40-Client\DotSpatial.Data.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Extensions, Version=1.9.0.0, Culture=neutral, PublicKeyToken=4d9e49339a7d240c, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Extensions.1.9\lib\net40-Client\DotSpatial.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Modeling.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=712bef29a31a9354, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Modeling.Forms.1.9\lib\net40-Client\DotSpatial.Modeling.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Mono, Version=1.9.0.0, Culture=neutral, PublicKeyToken=425ba4de41127026, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Mono.1.9\lib\net40-Client\DotSpatial.Mono.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections, Version=1.9.0.0, Culture=neutral, PublicKeyToken=272632bddd08a38b, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Projections.1.9\lib\net40-Client\DotSpatial.Projections.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Projections.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=52099474f11b7ff0, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Projections.Forms.1.9\lib\net40-Client\DotSpatial.Projections.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Serialization, Version=1.9.0.0, Culture=neutral, PublicKeyToken=441f200f827611e7, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Serialization.1.9\lib\net40-Client\DotSpatial.Serialization.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology, Version=1.9.0.0, Culture=neutral, PublicKeyToken=6178c08da7998387, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Symbology.1.9\lib\net40-Client\DotSpatial.Symbology.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Symbology.Forms, Version=1.9.0.0, Culture=neutral, PublicKeyToken=0544cdeefb662382, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Symbology.Forms.1.9\lib\net40-Client\DotSpatial.Symbology.Forms.dll</HintPath>
+    </Reference>
+    <Reference Include="DotSpatial.Topology, Version=1.9.0.0, Culture=neutral, PublicKeyToken=a66b5e9434ca3671, processorArchitecture=MSIL">
+      <HintPath>packages\DotSpatial.Topology.1.9\lib\net40-Client\DotSpatial.Topology.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl, Version=2.3.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Flurl.2.3.0\lib\netstandard1.4\Flurl.dll</HintPath>
+    </Reference>
+    <Reference Include="Flurl.Http, Version=1.1.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Flurl.Http.1.1.2\lib\net45\Flurl.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="GeoJSON.Net, Version=0.1.51.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\GeoJSON.Net.0.1.51\lib\portable-net40+sl5+wp80+win8+wpa81\GeoJSON.Net.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Ionic.Zip">
-      <HintPath>packages\DotNetZip.1.9.2\lib\net20\Ionic.Zip.dll</HintPath>
+    <Reference Include="IronPython, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.dll</HintPath>
     </Reference>
-    <Reference Include="log4net">
-      <HintPath>packages\log4net.2.0.0\lib\net40-full\log4net.dll</HintPath>
+    <Reference Include="IronPython.Modules, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.Modules.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython.SQLite, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.SQLite.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="IronPython.Wpf, Version=2.7.7.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\IronPython.2.7.7\lib\Net45\IronPython.Wpf.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="netDxf, Version=0.9.3.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\netDXF.0.9.3\lib\netDxf.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Dynamic, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Dynamic.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>packages\Newtonsoft.Json.9.0.1\lib\net40\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Microsoft.Scripting, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.AspNet, Version=1.1.1.21, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.AspNet.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.2.22, Culture=neutral, PublicKeyToken=7f709c5b713576e1, processorArchitecture=MSIL">
+      <HintPath>packages\DynamicLanguageRuntime.1.1.2\lib\Net45\Microsoft.Scripting.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Threading, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.VisualStudio.Threading.15.0.240\lib\net45\Microsoft.VisualStudio.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.VisualStudio.Validation, Version=15.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.VisualStudio.Validation.15.0.82\lib\net45\Microsoft.VisualStudio.Validation.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="netDxf, Version=2.0.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\netDXF.2.0.2\lib\net45\netDxf.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="ObjectListView">
       <HintPath>packages\Unofficial.ObjectListView.2.6.0\lib\net20\ObjectListView.dll</HintPath>
     </Reference>
-    <Reference Include="protobuf-net">
-      <HintPath>packages\protobuf-net.2.0.0.668\lib\net40\protobuf-net.dll</HintPath>
+    <Reference Include="OpenTK, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\OpenTK.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX">
-      <HintPath>$(SharpDXPackageBinDir)\SharpDX.dll</HintPath>
+    <Reference Include="OpenTK.GLControl, Version=1.1.0.0, Culture=neutral, PublicKeyToken=bad199fe84eb3df4, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\OpenTK.GLControl.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.DirectInput">
-      <HintPath>$(SharpDXPackageBinDir)\SharpDX.DirectInput.dll</HintPath>
+    <Reference Include="protobuf-net, Version=2.1.0.0, Culture=neutral, PublicKeyToken=257b51d87d2e4d67, processorArchitecture=MSIL">
+      <HintPath>packages\protobuf-net.2.1.0\lib\net40\protobuf-net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Renci.SshNet">
+      <HintPath>packages\SSH.NET.2016.0.0\lib\net40\Renci.SshNet.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>packages\SharpDX.3.1.1\lib\net45\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DirectInput, Version=3.1.1.0, Culture=neutral, PublicKeyToken=b4dcf0f35e5521f1, processorArchitecture=MSIL">
+      <HintPath>packages\SharpDX.DirectInput.3.1.1\lib\net45\SharpDX.DirectInput.dll</HintPath>
+    </Reference>
+    <Reference Include="StreamJsonRpc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\StreamJsonRpc.1.0.36\lib\net45\StreamJsonRpc.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Console, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Console.4.3.0\lib\net46\System.Console.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Diagnostics.DiagnosticSource, Version=4.0.1.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.DiagnosticSource.4.3.0\lib\net46\System.Diagnostics.DiagnosticSource.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Diagnostics.Tracing, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Diagnostics.Tracing.4.3.0\lib\net462\System.Diagnostics.Tracing.dll</HintPath>
+    </Reference>
     <Reference Include="System.DirectoryServices" />
-    <Reference Include="System.IO, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.IO.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Globalization.Calendars, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Globalization.Calendars.4.3.0\lib\net46\System.Globalization.Calendars.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression, Version=4.1.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.4.3.0\lib\net46\System.IO.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.Compression.ZipFile, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.Compression.ZipFile.4.3.0\lib\net46\System.IO.Compression.ZipFile.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.FileSystem.4.3.0\lib\net46\System.IO.FileSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
     </Reference>
     <Reference Include="System.Management" />
     <Reference Include="System.Net" />
-    <Reference Include="System.Net.Http, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Sockets, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Net.Sockets.4.3.0\lib\net46\System.Net.Sockets.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Extensions, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Extensions.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Reactive.Core, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.Core.3.0.0\lib\net46\System.Reactive.Core.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.Primitives, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.Primitives.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reactive.Interfaces, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.Interfaces.3.0.0\lib\net45\System.Reactive.Interfaces.dll</HintPath>
     </Reference>
-    <Reference Include="System.Net.Http.WebRequest, Version=2.2.29.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Net.Http.2.2.29\lib\net40\System.Net.Http.WebRequest.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reactive.Linq, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.Linq.3.0.0\lib\net46\System.Reactive.Linq.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Core, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Rx-Core.2.2.5\lib\net40\System.Reactive.Core.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reactive.PlatformServices, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.PlatformServices.3.0.0\lib\net46\System.Reactive.PlatformServices.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Interfaces, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Rx-Interfaces.2.2.5\lib\net40\System.Reactive.Interfaces.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reactive.Windows.Threading, Version=3.0.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reactive.Windows.Threading.3.0.0\lib\net45\System.Reactive.Windows.Threading.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.Linq, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Rx-Linq.2.2.5\lib\net40\System.Reactive.Linq.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reflection, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.4.3.0\lib\net462\System.Reflection.dll</HintPath>
     </Reference>
-    <Reference Include="System.Reactive.PlatformServices, Version=2.2.5.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>packages\Rx-PlatformServices.2.2.5\lib\net40\System.Reactive.PlatformServices.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Reflection.TypeExtensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Reflection.TypeExtensions.4.3.0\lib\net462\System.Reflection.TypeExtensions.dll</HintPath>
     </Reference>
-    <Reference Include="System.Runtime, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.Runtime.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Runtime.Extensions, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.Extensions.4.3.0\lib\net462\System.Runtime.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.4.3.0\lib\net462\System.Runtime.InteropServices.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.InteropServices.RuntimeInformation, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Runtime.InteropServices.RuntimeInformation.4.3.0\lib\net45\System.Runtime.InteropServices.RuntimeInformation.dll</HintPath>
     </Reference>
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.Security.Cryptography.Algorithms, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Algorithms.4.3.0\lib\net461\System.Security.Cryptography.Algorithms.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Encoding, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Encoding.4.3.0\lib\net46\System.Security.Cryptography.Encoding.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.Primitives.4.3.0\lib\net46\System.Security.Cryptography.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
+    </Reference>
     <Reference Include="System.Speech">
       <Private>True</Private>
     </Reference>
-    <Reference Include="System.Threading.Tasks, Version=2.6.10.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>packages\Microsoft.Bcl.1.1.10\lib\net40\System.Threading.Tasks.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Text.Encoding.CodePages, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Text.Encoding.CodePages.4.0.1\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
     </Reference>
     <Reference Include="System.Web" />
     <Reference Include="System.Web.Extensions" />
@@ -278,53 +374,35 @@
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="BouncyCastle.Crypto">
-      <HintPath>packages\BouncyCastle.1.7.0\lib\Net20\BouncyCastle.Crypto.dll</HintPath>
-    </Reference>
-    <Reference Include="csmatio">
-      <HintPath>ExtLibs\csmatio.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\IronPython.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Modules, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\IronPython.Modules.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.SQLite, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\IronPython.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="IronPython.Wpf, Version=2.7.0.40, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\IronPython.Wpf.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Dynamic, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\Microsoft.Dynamic.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\Microsoft.Scripting.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.AspNet, Version=1.0.0.0, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\Microsoft.Scripting.AspNet.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Scripting.Metadata, Version=1.1.0.20, Culture=neutral, PublicKeyToken=7f709c5b713576e1">
-      <HintPath>packages\IronPython.2.7.5-beta1\lib\Net40\Microsoft.Scripting.Metadata.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK">
-      <HintPath>ExtLibs\OpenTK.dll</HintPath>
-    </Reference>
-    <Reference Include="OpenTK.GLControl">
-      <HintPath>ExtLibs\OpenTK.GLControl.dll</HintPath>
-    </Reference>
     <Reference Include="ProjNet">
       <HintPath>packages\ProjNet.1.2\lib\net20\ProjNet.dll</HintPath>
     </Reference>
     <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml.ReaderWriter, Version=4.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>packages\System.Xml.ReaderWriter.4.3.0\lib\net46\System.Xml.ReaderWriter.dll</HintPath>
+    </Reference>
     <Reference Include="Transitions, Version=1.2.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>ExtLibs\Transitions.dll</HintPath>
     </Reference>
-    <Reference Include="zlib.net">
-      <HintPath>ExtLibs\zlib.net.dll</HintPath>
+    <Reference Include="WindowsBase" />
+    <Reference Include="Xamarin.Forms.Core, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Platform, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Platform.dll</HintPath>
+    </Reference>
+    <Reference Include="Xamarin.Forms.Xaml, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>packages\Xamarin.Forms.2.3.4.231\lib\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.Xaml.dll</HintPath>
+    </Reference>
+    <Reference Include="Zeroconf, Version=2.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>ExtLibs\Zeroconf.dll</HintPath>
+    </Reference>
+    <Reference Include="zlib.net, Version=1.0.3.0, Culture=neutral, PublicKeyToken=47d7877cb3620160">
+      <HintPath>packages\zlib.net.1.0.4.0\lib\zlib.net.dll</HintPath>
+      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
@@ -338,12 +416,45 @@
     <Compile Include="Antenna\Tracker.Designer.cs">
       <DependentUpon>Tracker.cs</DependentUpon>
     </Compile>
-    <Compile Include="Arduino\IArduinoComms.cs" />
     <Compile Include="Controls\ControlSensorsStatus.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Controls\ControlSensorsStatus.Designer.cs">
       <DependentUpon>ControlSensorsStatus.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\MyDataGridView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Video.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Controls\Video.Designer.cs">
+      <DependentUpon>Video.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigFrameClassType.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigFrameClassType.Designer.cs">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigGPSInject.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="GCSViews\ConfigurationView\ConfigGPSInject.Designer.cs">
+      <DependentUpon>ConfigGPSInject.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Log\LogDownloadscp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Log\LogDownloadscp.Designer.cs">
+      <DependentUpon>LogDownloadscp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Log\test\MotorFailure.cs" />
+    <Compile Include="Strings.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Strings.Designer.cs">
+      <DependentUpon>Strings.cs</DependentUpon>
     </Compile>
     <Compile Include="Swarm\FollowLeader\Control.cs">
       <SubType>Form</SubType>
@@ -362,26 +473,10 @@
     <Compile Include="Swarm\WaypointLeader\Drone.cs" />
     <Compile Include="Swarm\WaypointLeader\DroneGroup.cs" />
     <Compile Include="Swarm\WaypointLeader\Path.cs" />
-    <Compile Include="Utilities\AltitudeAngel\AASettings.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Utilities\AltitudeAngel\AASettings.Designer.cs">
-      <DependentUpon>AASettings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Utilities\AltitudeAngel\AltitudeAngel.cs" />
-    <Compile Include="Utilities\AltitudeAngel\MapAdapter.cs" />
-    <Compile Include="Utilities\AltitudeAngel\MissionPlannerAdaptor.cs" />
-    <Compile Include="Utilities\AltitudeAngel\OverlayAdapter.cs" />
     <Compile Include="Utilities\BoardDetect.cs" />
-    <Compile Include="Arduino\ArduinoSTK.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Arduino\ArduinoSTKv2.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="CodeGen.cs" />
     <Compile Include="Comms\CommsSerialScan.cs" />
-    <Compile Include="Comms\MAVLinkSerialPort.cs" />
+    <Compile Include="Mavlink\MAVLinkSerialPort.cs" />
     <Compile Include="Controls\AuthKeys.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -518,12 +613,6 @@
     </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigAntennaTracker.Designer.cs">
       <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
-    </Compile>
-    <Compile Include="GCSViews\ConfigurationView\ConfigAP_Limits.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="GCSViews\ConfigurationView\ConfigAP_Limits.Designer.cs">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
     </Compile>
     <Compile Include="GCSViews\ConfigurationView\ConfigArducopter.cs">
       <SubType>UserControl</SubType>
@@ -885,7 +974,6 @@
     <Compile Include="Log\LogSort.cs" />
     <Compile Include="Log\MatLab.cs" />
     <Compile Include="Magfitrotation.cs" />
-    <Compile Include="Models\BattMonitor.cs" />
     <Compile Include="OpenGLtest2.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -897,7 +985,6 @@
     <Compile Include="Plugin\PluginUI.Designer.cs">
       <DependentUpon>PluginUI.cs</DependentUpon>
     </Compile>
-    <Compile Include="Models\ConfigCameraStabModel.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -911,7 +998,7 @@
       <DependentUpon>ScriptConsole.cs</DependentUpon>
     </Compile>
     <Compile Include="SerialInjectGPS.cs">
-      <SubType>Form</SubType>
+      <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="SerialInjectGPS.Designer.cs">
       <DependentUpon>SerialInjectGPS.cs</DependentUpon>
@@ -921,31 +1008,6 @@
     </Compile>
     <Compile Include="ConnectionOptions.Designer.cs">
       <DependentUpon>ConnectionOptions.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Strings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Strings.id-ID.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.id-ID.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Strings.ja-JP.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.ja-JP.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Strings.ko-KR.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.ko-KR.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Strings.zh-Hans.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Strings.zh-Hans.resx</DependentUpon>
     </Compile>
     <Compile Include="Swarm\FollowPathControl.cs">
       <SubType>Form</SubType>
@@ -959,7 +1021,11 @@
     <Compile Include="Utilities\AP_GPS_NOVA.cs" />
     <Compile Include="Utilities\AP_GPS_SBF.cs" />
     <Compile Include="Utilities\AP_Terrain.cs" />
+    <Compile Include="Utilities\CircleSurveyMission.cs" />
+    <Compile Include="Utilities\Device.cs" />
     <Compile Include="Utilities\dxf.cs" />
+    <Compile Include="Utilities\ExpireType.cs" />
+    <Compile Include="Utilities\Extensions.cs" />
     <Compile Include="Utilities\GMapMarkerOverlapCount.cs" />
     <Compile Include="Utilities\GMapMarkerPOI.cs" />
     <Compile Include="Utilities\GMapMarkerPhoto.cs" />
@@ -989,7 +1055,13 @@
     <Compile Include="Utilities\ParameterMetaDataRepositoryAPM.cs" />
     <Compile Include="Utilities\ParameterMetaDataRepositoryPX4.cs" />
     <Compile Include="Utilities\Firmware.cs" />
+    <Compile Include="Utilities\Proximity.cs" />
+    <Compile Include="Utilities\Tools.cs" />
+    <Compile Include="Utilities\nmea.cs" />
     <Compile Include="Utilities\ubx_m8p.cs" />
+    <Compile Include="Utilities\UDPMavlinkShim.cs" />
+    <Compile Include="Utilities\UDPVideoShim.cs" />
+    <Compile Include="Utilities\ZeroConf.cs" />
     <Compile Include="Wizard\10FlightModes.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -1087,8 +1159,32 @@
     <Compile Include="Wizard\Wizard.Designer.cs">
       <DependentUpon>Wizard.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="Antenna\Tracker.ar.resx">
+      <DependentUpon>Tracker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Antenna\Tracker.pt.resx">
+      <DependentUpon>Tracker.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionOptions.ar.resx">
+      <DependentUpon>ConnectionOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConnectionOptions.pt.resx">
+      <DependentUpon>ConnectionOptions.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\AuthKeys.resx">
       <DependentUpon>AuthKeys.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConnectionControl.ar.resx">
+      <DependentUpon>ConnectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConnectionControl.pt.resx">
+      <DependentUpon>ConnectionControl.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConnectionStats.ar.resx">
+      <DependentUpon>ConnectionStats.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ConnectionStats.pt.resx">
+      <DependentUpon>ConnectionStats.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ControlSensorsStatus.resx">
       <DependentUpon>ControlSensorsStatus.cs</DependentUpon>
@@ -1096,8 +1192,44 @@
     <EmbeddedResource Include="Controls\ControlTest.resx">
       <DependentUpon>ControlTest.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Controls\DefaultSettings.ar.resx">
+      <DependentUpon>DefaultSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\DefaultSettings.pt.resx">
+      <DependentUpon>DefaultSettings.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Controls\Loading.resx">
       <DependentUpon>Loading.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ModifyandSet.ar.resx">
+      <DependentUpon>ModifyandSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ModifyandSet.pt.resx">
+      <DependentUpon>ModifyandSet.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ServoOptions.ar.resx">
+      <DependentUpon>ServoOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ServoOptions.pt.resx">
+      <DependentUpon>ServoOptions.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ThemeColors.ar.resx">
+      <DependentUpon>ThemeColors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\ThemeColors.pt.resx">
+      <DependentUpon>ThemeColors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\Video.resx">
+      <DependentUpon>Video.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FollowMe.ar.resx">
+      <DependentUpon>FollowMe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FollowMe.pt.resx">
+      <DependentUpon>FollowMe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.ar.resx">
+      <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.de-DE.resx">
       <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
@@ -1120,6 +1252,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.pl.resx">
       <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.pt.resx">
+      <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.resx">
       <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
     </EmbeddedResource>
@@ -1132,6 +1267,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAccelerometerCalibration.zh-TW.resx">
       <DependentUpon>ConfigAccelerometerCalibration.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.ar.resx">
+      <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.id-ID.resx">
       <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
     </EmbeddedResource>
@@ -1139,6 +1277,9 @@
       <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.ko-KR.resx">
+      <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.pt.resx">
       <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.resx">
@@ -1153,6 +1294,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAC_Fence.zh-TW.resx">
       <DependentUpon>ConfigAC_Fence.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAntennaTracker.ar.resx">
+      <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAntennaTracker.id-ID.resx">
       <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
     </EmbeddedResource>
@@ -1162,32 +1306,14 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAntennaTracker.ko-KR.resx">
       <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAntennaTracker.pt.resx">
+      <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAntennaTracker.resx">
       <DependentUpon>ConfigAntennaTracker.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.de-DE.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.fr.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.id-ID.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.it-IT.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.ja-JP.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.ko-KR.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAP_Limits.zh-Hans.resx">
-      <DependentUpon>ConfigAP_Limits.cs</DependentUpon>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.ar.resx">
+      <DependentUpon>ConfigArducopter.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.de-DE.resx">
       <DependentUpon>ConfigArducopter.cs</DependentUpon>
@@ -1208,6 +1334,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.ko-KR.resx">
       <DependentUpon>ConfigArducopter.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.pt.resx">
+      <DependentUpon>ConfigArducopter.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.resx">
       <DependentUpon>ConfigArducopter.cs</DependentUpon>
     </EmbeddedResource>
@@ -1219,6 +1348,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArducopter.zh-TW.resx">
       <DependentUpon>ConfigArducopter.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.ar.resx">
+      <DependentUpon>ConfigArduplane.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.de-DE.resx">
       <DependentUpon>ConfigArduplane.cs</DependentUpon>
@@ -1238,6 +1370,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.ko-KR.resx">
       <DependentUpon>ConfigArduplane.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.pt.resx">
+      <DependentUpon>ConfigArduplane.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.resx">
       <DependentUpon>ConfigArduplane.cs</DependentUpon>
     </EmbeddedResource>
@@ -1249,6 +1384,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArduplane.zh-TW.resx">
       <DependentUpon>ConfigArduplane.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.ar.resx">
+      <DependentUpon>ConfigArdurover.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.de-DE.resx">
       <DependentUpon>ConfigArdurover.cs</DependentUpon>
@@ -1268,11 +1406,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.ko-KR.resx">
       <DependentUpon>ConfigArdurover.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.pt.resx">
+      <DependentUpon>ConfigArdurover.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.resx">
       <DependentUpon>ConfigArdurover.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigArdurover.zh-Hans.resx">
       <DependentUpon>ConfigArdurover.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.ar.resx">
+      <DependentUpon>ConfigAteryx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.de-DE.resx">
       <DependentUpon>ConfigAteryx.cs</DependentUpon>
@@ -1292,11 +1436,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.ko-KR.resx">
       <DependentUpon>ConfigAteryx.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.pt.resx">
+      <DependentUpon>ConfigAteryx.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.resx">
       <DependentUpon>ConfigAteryx.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryx.zh-Hans.resx">
       <DependentUpon>ConfigAteryx.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.ar.resx">
+      <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.de-DE.resx">
       <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
@@ -1322,6 +1472,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.pl.resx">
       <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.pt.resx">
+      <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.resx">
       <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1334,6 +1487,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigAteryxSensors.zh-TW.resx">
       <DependentUpon>ConfigAteryxSensors.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.ar.resx">
+      <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.de-DE.resx">
       <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
@@ -1359,6 +1515,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.pl.resx">
       <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.pt.resx">
+      <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.resx">
       <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
     </EmbeddedResource>
@@ -1370,6 +1529,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring.zh-TW.resx">
       <DependentUpon>ConfigBatteryMonitoring.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.ar.resx">
+      <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.de-DE.resx">
       <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
@@ -1395,6 +1557,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.pl.resx">
       <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.pt.resx">
+      <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigBatteryMonitoring2.resx">
       <DependentUpon>ConfigBatteryMonitoring2.cs</DependentUpon>
     </EmbeddedResource>
@@ -1410,10 +1575,16 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigCompassMot.resx">
       <DependentUpon>ConfigCompassMot.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.ar.resx">
+      <DependentUpon>ConfigESCCalibration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.id-ID.resx">
       <DependentUpon>ConfigESCCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.ko-KR.resx">
+      <DependentUpon>ConfigESCCalibration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.pt.resx">
       <DependentUpon>ConfigESCCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.resx">
@@ -1421,6 +1592,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigESCCalibration.zh-Hans.resx">
       <DependentUpon>ConfigESCCalibration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.ar.resx">
+      <DependentUpon>ConfigFailSafe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.de-DE.resx">
       <DependentUpon>ConfigFailSafe.cs</DependentUpon>
@@ -1446,6 +1620,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.pl.resx">
       <DependentUpon>ConfigFailSafe.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.pt.resx">
+      <DependentUpon>ConfigFailSafe.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.resx">
       <DependentUpon>ConfigFailSafe.cs</DependentUpon>
     </EmbeddedResource>
@@ -1457,6 +1634,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFailSafe.zh-TW.resx">
       <DependentUpon>ConfigFailSafe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.ar.resx">
+      <DependentUpon>ConfigFirmware.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.de-DE.resx">
       <DependentUpon>ConfigFirmware.cs</DependentUpon>
@@ -1482,6 +1662,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.pl.resx">
       <DependentUpon>ConfigFirmware.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.pt.resx">
+      <DependentUpon>ConfigFirmware.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.resx">
       <DependentUpon>ConfigFirmware.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -1498,6 +1681,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmware.zh-TW.resx">
       <DependentUpon>ConfigFirmware.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.ar.resx">
+      <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.id-ID.resx">
       <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
     </EmbeddedResource>
@@ -1507,11 +1693,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.ko-KR.resx">
       <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.pt.resx">
+      <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.resx">
       <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFirmwareDisabled.zh-Hans.resx">
       <DependentUpon>ConfigFirmwareDisabled.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.ar.resx">
+      <DependentUpon>ConfigFlightModes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.de-DE.resx">
       <DependentUpon>ConfigFlightModes.cs</DependentUpon>
@@ -1537,6 +1729,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.pl.resx">
       <DependentUpon>ConfigFlightModes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.pt.resx">
+      <DependentUpon>ConfigFlightModes.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.resx">
       <DependentUpon>ConfigFlightModes.cs</DependentUpon>
     </EmbeddedResource>
@@ -1548,6 +1743,51 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFlightModes.zh-TW.resx">
       <DependentUpon>ConfigFlightModes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.ar.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.de-DE.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.es-ES.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.fr.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.id-ID.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.it-IT.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.ja-JP.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.ko-KR.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.pl.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.pt.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.zh-Hans.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.zh-Hant.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameClassType.zh-TW.resx">
+      <DependentUpon>ConfigFrameClassType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.ar.resx">
+      <DependentUpon>ConfigFrameType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.de-DE.resx">
       <DependentUpon>ConfigFrameType.cs</DependentUpon>
@@ -1573,6 +1813,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.pl.resx">
       <DependentUpon>ConfigFrameType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.pt.resx">
+      <DependentUpon>ConfigFrameType.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.resx">
       <DependentUpon>ConfigFrameType.cs</DependentUpon>
     </EmbeddedResource>
@@ -1585,6 +1828,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFrameType.zh-TW.resx">
       <DependentUpon>ConfigFrameType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.ar.resx">
+      <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.id-ID.resx">
       <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
     </EmbeddedResource>
@@ -1594,11 +1840,20 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.ko-KR.resx">
       <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.pt.resx">
+      <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.resx">
       <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigFriendlyParams.zh-Hans.resx">
       <DependentUpon>ConfigFriendlyParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigGPSInject.resx">
+      <DependentUpon>ConfigGPSInject.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.ar.resx">
+      <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.de-DE.resx">
       <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
@@ -1624,6 +1879,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.pl.resx">
       <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.pt.resx">
+      <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.resx">
       <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
     </EmbeddedResource>
@@ -1635,6 +1893,24 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWAirspeed.zh-TW.resx">
       <DependentUpon>ConfigHWAirspeed.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWBT.ar.resx">
+      <DependentUpon>ConfigHWBT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWBT.pt.resx">
+      <DependentUpon>ConfigHWBT.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWCompass.ar.resx">
+      <DependentUpon>ConfigHWCompass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWCompass.pt.resx">
+      <DependentUpon>ConfigHWCompass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWESP8266.ar.resx">
+      <DependentUpon>ConfigHWesp8266.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWESP8266.pt.resx">
+      <DependentUpon>ConfigHWesp8266.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWesp8266.resx">
       <DependentUpon>ConfigHWesp8266.cs</DependentUpon>
@@ -1690,6 +1966,42 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWCompass.zh-TW.resx">
       <DependentUpon>ConfigHWCompass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWOptFlow.ar.resx">
+      <DependentUpon>ConfigHWOptFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWOptFlow.pt.resx">
+      <DependentUpon>ConfigHWOptFlow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWOSD.ar.resx">
+      <DependentUpon>ConfigHWOSD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWOSD.pt.resx">
+      <DependentUpon>ConfigHWOSD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWParachute.ar.resx">
+      <DependentUpon>ConfigHWParachute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWParachute.pt.resx">
+      <DependentUpon>ConfigHWParachute.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWPX4Flow.ar.resx">
+      <DependentUpon>ConfigHWPX4Flow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWPX4Flow.pt.resx">
+      <DependentUpon>ConfigHWPX4Flow.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWRangeFinder.ar.resx">
+      <DependentUpon>ConfigHWRangeFinder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWRangeFinder.pt.resx">
+      <DependentUpon>ConfigHWRangeFinder.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.ar.resx">
+      <DependentUpon>ConfigHWUAVCAN.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.pt.resx">
+      <DependentUpon>ConfigHWUAVCAN.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWUAVCAN.resx">
       <DependentUpon>ConfigHWUAVCAN.cs</DependentUpon>
@@ -1817,6 +2129,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigHWRangeFinder.zh-TW.resx">
       <DependentUpon>ConfigHWRangeFinder.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.ar.resx">
+      <DependentUpon>ConfigMandatory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.id-ID.resx">
       <DependentUpon>ConfigMandatory.cs</DependentUpon>
     </EmbeddedResource>
@@ -1826,11 +2141,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.ko-KR.resx">
       <DependentUpon>ConfigMandatory.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.pt.resx">
+      <DependentUpon>ConfigMandatory.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.resx">
       <DependentUpon>ConfigMandatory.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMandatory.zh-Hans.resx">
       <DependentUpon>ConfigMandatory.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.ar.resx">
+      <DependentUpon>ConfigMotorTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.id-ID.resx">
       <DependentUpon>ConfigMotorTest.cs</DependentUpon>
@@ -1841,11 +2162,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.ko-KR.resx">
       <DependentUpon>ConfigMotorTest.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.pt.resx">
+      <DependentUpon>ConfigMotorTest.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.resx">
       <DependentUpon>ConfigMotorTest.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMotorTest.zh-Hans.resx">
       <DependentUpon>ConfigMotorTest.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.ar.resx">
+      <DependentUpon>ConfigMount.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.de-DE.resx">
       <DependentUpon>ConfigMount.cs</DependentUpon>
@@ -1865,6 +2192,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.ko-KR.resx">
       <DependentUpon>ConfigMount.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.pt.resx">
+      <DependentUpon>ConfigMount.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.resx">
       <DependentUpon>ConfigMount.cs</DependentUpon>
     </EmbeddedResource>
@@ -1877,6 +2207,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigMount.zh-TW.resx">
       <DependentUpon>ConfigMount.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.ar.resx">
+      <DependentUpon>ConfigOptional.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.id-ID.resx">
       <DependentUpon>ConfigOptional.cs</DependentUpon>
     </EmbeddedResource>
@@ -1886,11 +2219,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.ko-KR.resx">
       <DependentUpon>ConfigOptional.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.pt.resx">
+      <DependentUpon>ConfigOptional.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.resx">
       <DependentUpon>ConfigOptional.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigOptional.zh-Hans.resx">
       <DependentUpon>ConfigOptional.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.ar.resx">
+      <DependentUpon>ConfigPlanner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.de-DE.resx">
       <DependentUpon>ConfigPlanner.cs</DependentUpon>
@@ -1910,6 +2249,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.ko-KR.resx">
       <DependentUpon>ConfigPlanner.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.pt.resx">
+      <DependentUpon>ConfigPlanner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.resx">
       <DependentUpon>ConfigPlanner.cs</DependentUpon>
     </EmbeddedResource>
@@ -1921,6 +2263,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigPlanner.zh-TW.resx">
       <DependentUpon>ConfigPlanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.ar.resx">
+      <DependentUpon>ConfigRadioInput.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.de-DE.resx">
       <DependentUpon>ConfigRadioInput.cs</DependentUpon>
@@ -1946,6 +2291,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.pl.resx">
       <DependentUpon>ConfigRadioInput.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.pt.resx">
+      <DependentUpon>ConfigRadioInput.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.resx">
       <DependentUpon>ConfigRadioInput.cs</DependentUpon>
     </EmbeddedResource>
@@ -1957,6 +2305,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRadioInput.zh-TW.resx">
       <DependentUpon>ConfigRadioInput.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.ar.resx">
+      <DependentUpon>ConfigRawParams.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.de-DE.resx">
       <DependentUpon>ConfigRawParams.cs</DependentUpon>
@@ -1976,6 +2327,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.ko-KR.resx">
       <DependentUpon>ConfigRawParams.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.pt.resx">
+      <DependentUpon>ConfigRawParams.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.resx">
       <DependentUpon>ConfigRawParams.cs</DependentUpon>
     </EmbeddedResource>
@@ -1987,6 +2341,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParams.zh-TW.resx">
       <DependentUpon>ConfigRawParams.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.ar.resx">
+      <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.de-DE.resx">
       <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
@@ -2005,6 +2362,10 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.ko-KR.resx">
       <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.pt.resx">
+      <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.resx">
       <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
@@ -2018,6 +2379,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigRawParamsTree.zh-TW.resx">
       <DependentUpon>ConfigRawParamsTree.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.ar.resx">
+      <DependentUpon>ConfigSimplePids.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.id-ID.resx">
       <DependentUpon>ConfigSimplePids.cs</DependentUpon>
     </EmbeddedResource>
@@ -2027,11 +2391,17 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.ko-KR.resx">
       <DependentUpon>ConfigSimplePids.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.pt.resx">
+      <DependentUpon>ConfigSimplePids.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.resx">
       <DependentUpon>ConfigSimplePids.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigSimplePids.zh-Hans.resx">
       <DependentUpon>ConfigSimplePids.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigTradHeli.ar.resx">
+      <DependentUpon>ConfigTradHeli.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigTradHeli.de-DE.resx">
       <DependentUpon>ConfigTradHeli.cs</DependentUpon>
@@ -2057,6 +2427,9 @@
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigTradHeli.pl.resx">
       <DependentUpon>ConfigTradHeli.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigTradHeli.pt.resx">
+      <DependentUpon>ConfigTradHeli.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigTradHeli.resx">
       <DependentUpon>ConfigTradHeli.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -2069,6 +2442,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\ConfigurationView\ConfigWizard.resx">
       <DependentUpon>ConfigWizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightData.ar.resx">
+      <DependentUpon>FlightData.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightData.de-DE.resx">
       <DependentUpon>FlightData.cs</DependentUpon>
@@ -2094,6 +2470,9 @@
     <EmbeddedResource Include="GCSViews\FlightData.pl.resx">
       <DependentUpon>FlightData.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightData.pt.resx">
+      <DependentUpon>FlightData.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightData.resx">
       <DependentUpon>FlightData.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -2110,6 +2489,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightData.zh-TW.resx">
       <DependentUpon>FlightData.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightPlanner.ar.resx">
+      <DependentUpon>FlightPlanner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightPlanner.de-DE.resx">
       <DependentUpon>FlightPlanner.cs</DependentUpon>
@@ -2136,6 +2518,9 @@
     <EmbeddedResource Include="GCSViews\FlightPlanner.pl.resx">
       <DependentUpon>FlightPlanner.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\FlightPlanner.pt.resx">
+      <DependentUpon>FlightPlanner.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightPlanner.resx">
       <DependentUpon>FlightPlanner.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -2152,6 +2537,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\FlightPlanner.zh-TW.resx">
       <DependentUpon>FlightPlanner.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Help.ar.resx">
+      <DependentUpon>Help.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\Help.de-DE.resx">
       <DependentUpon>Help.cs</DependentUpon>
@@ -2178,6 +2566,9 @@
     <EmbeddedResource Include="GCSViews\Help.pl.resx">
       <DependentUpon>Help.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Help.pt.resx">
+      <DependentUpon>Help.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\Help.resx">
       <DependentUpon>Help.cs</DependentUpon>
     </EmbeddedResource>
@@ -2194,6 +2585,9 @@
     <EmbeddedResource Include="GCSViews\Help.zh-TW.resx">
       <DependentUpon>Help.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\InitialSetup.ar.resx">
+      <DependentUpon>InitialSetup.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\InitialSetup.id-ID.resx">
       <DependentUpon>InitialSetup.cs</DependentUpon>
     </EmbeddedResource>
@@ -2201,6 +2595,9 @@
       <DependentUpon>InitialSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\InitialSetup.ko-KR.resx">
+      <DependentUpon>InitialSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\InitialSetup.pt.resx">
       <DependentUpon>InitialSetup.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\InitialSetup.resx">
@@ -2217,6 +2614,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\SoftwareConfig.resx">
       <DependentUpon>SoftwareConfig.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Terminal.ar.resx">
+      <DependentUpon>Terminal.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\Terminal.de-DE.resx">
       <DependentUpon>Terminal.cs</DependentUpon>
@@ -2242,6 +2642,9 @@
     <EmbeddedResource Include="GCSViews\Terminal.pl.resx">
       <DependentUpon>Terminal.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GCSViews\Terminal.pt.resx">
+      <DependentUpon>Terminal.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="GCSViews\Terminal.resx">
       <DependentUpon>Terminal.cs</DependentUpon>
     </EmbeddedResource>
@@ -2257,18 +2660,146 @@
     <EmbeddedResource Include="GCSViews\Terminal.zh-TW.resx">
       <DependentUpon>Terminal.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="GeoRef\Georefimage.ar.resx">
+      <DependentUpon>georefimage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="GeoRef\Georefimage.pt.resx">
+      <DependentUpon>georefimage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick\JoystickSetup.ar.resx">
+      <DependentUpon>JoystickSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick\JoystickSetup.pt.resx">
+      <DependentUpon>JoystickSetup.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick\Joy_Mount_Mode.ar.resx">
+      <DependentUpon>Joy_Mount_Mode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Joystick\Joy_Mount_Mode.pt.resx">
+      <DependentUpon>Joy_Mount_Mode.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogBrowse.ar.resx">
+      <DependentUpon>LogBrowse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogBrowse.pt.resx">
+      <DependentUpon>LogBrowse.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownload.ar.resx">
+      <DependentUpon>LogDownload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownload.pt.resx">
+      <DependentUpon>LogDownload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownloadMavLink.pt.resx">
+      <DependentUpon>LogDownloadMavLink.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownloadscp.pt.resx">
+      <DependentUpon>LogDownloadscp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownloadscp.resx">
+      <DependentUpon>LogDownloadscp.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\LogDownloadMavLink.ar.resx">
+      <DependentUpon>LogDownloadMavLink.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Log\LogStrings.resx">
       <LastGenOutput>LogStrings.Designer.cs</LastGenOutput>
       <Generator>PublicResXFileCodeGenerator</Generator>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\MavlinkLog.ar.resx">
+      <DependentUpon>MavlinkLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Log\MavlinkLog.pt.resx">
+      <DependentUpon>MavlinkLog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainV2.ar.resx">
+      <DependentUpon>MainV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainV2.pt.resx">
+      <DependentUpon>MainV2.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MovingBase.ar.resx">
+      <DependentUpon>MovingBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MovingBase.pt.resx">
+      <DependentUpon>MovingBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Radio\Sikradio.ar.resx">
+      <DependentUpon>Sikradio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Radio\Sikradio.zh-Hant.resx">
+      <DependentUpon>Sikradio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Radio\Sikradio.zh-TW.resx">
+      <DependentUpon>Sikradio.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RAW_Sensor.ar.resx">
+      <DependentUpon>RAW_Sensor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="RAW_Sensor.pt.resx">
+      <DependentUpon>RAW_Sensor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptConsole.ar.resx">
+      <DependentUpon>ScriptConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ScriptConsole.pt.resx">
+      <DependentUpon>ScriptConsole.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialInjectGPS.ar.resx">
+      <DependentUpon>SerialInjectGPS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialInjectGPS.pt.resx">
+      <DependentUpon>SerialInjectGPS.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputMD.ar.resx">
+      <DependentUpon>SerialOutputMD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputMD.pt.resx">
+      <DependentUpon>SerialOutputMD.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputNMEA.ar.resx">
+      <DependentUpon>SerialOutputNMEA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputNMEA.pt.resx">
+      <DependentUpon>SerialOutputNMEA.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputPass.ar.resx">
+      <DependentUpon>SerialOutputPass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SerialOutputPass.pt.resx">
+      <DependentUpon>SerialOutputPass.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.id-ID.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.ja-JP.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.ko-KR.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.pt.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Strings.zh-Hans.resx">
+      <DependentUpon>Strings.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Swarm\FollowLeader\Control.resx">
       <DependentUpon>Control.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Swarm\WaypointLeader\WPControl.pt.resx">
+      <DependentUpon>WPControl.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Swarm\WaypointLeader\WPControl.resx">
       <DependentUpon>WPControl.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Utilities\AltitudeAngel\AASettings.resx">
-      <DependentUpon>AASettings.cs</DependentUpon>
+    <EmbeddedResource Include="Wizard\10FlightModes.ar.resx">
+      <DependentUpon>10FlightModes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\10FlightModes.id-ID.resx">
       <DependentUpon>10FlightModes.cs</DependentUpon>
@@ -2277,6 +2808,9 @@
       <DependentUpon>10FlightModes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\10FlightModes.ko-KR.resx">
+      <DependentUpon>10FlightModes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\10FlightModes.pt.resx">
       <DependentUpon>10FlightModes.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\10FlightModes.resx">
@@ -2291,6 +2825,9 @@
     <EmbeddedResource Include="Wizard\10FlightModes.zh-TW.resx">
       <DependentUpon>10FlightModes.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\11Verify.ar.resx">
+      <DependentUpon>11Verify.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\11Verify.id-ID.resx">
       <DependentUpon>11Verify.cs</DependentUpon>
     </EmbeddedResource>
@@ -2298,6 +2835,9 @@
       <DependentUpon>11Verify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\11Verify.ko-KR.resx">
+      <DependentUpon>11Verify.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\11Verify.pt.resx">
       <DependentUpon>11Verify.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\11Verify.resx">
@@ -2312,6 +2852,9 @@
     <EmbeddedResource Include="Wizard\11Verify.zh-TW.resx">
       <DependentUpon>11Verify.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\12FailSafe.ar.resx">
+      <DependentUpon>12FailSafe.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\12FailSafe.id-ID.resx">
       <DependentUpon>12FailSafe.cs</DependentUpon>
     </EmbeddedResource>
@@ -2319,6 +2862,9 @@
       <DependentUpon>12FailSafe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\12FailSafe.ko-KR.resx">
+      <DependentUpon>12FailSafe.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\12FailSafe.pt.resx">
       <DependentUpon>12FailSafe.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\12FailSafe.resx">
@@ -2333,6 +2879,9 @@
     <EmbeddedResource Include="Wizard\12FailSafe.zh-TW.resx">
       <DependentUpon>12FailSafe.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\13GeoFence.ar.resx">
+      <DependentUpon>13GeoFence.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\13GeoFence.id-ID.resx">
       <DependentUpon>13GeoFence.cs</DependentUpon>
     </EmbeddedResource>
@@ -2340,6 +2889,9 @@
       <DependentUpon>13GeoFence.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\13GeoFence.ko-KR.resx">
+      <DependentUpon>13GeoFence.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\13GeoFence.pt.resx">
       <DependentUpon>13GeoFence.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\13GeoFence.resx">
@@ -2354,6 +2906,9 @@
     <EmbeddedResource Include="Wizard\13GeoFence.zh-TW.resx">
       <DependentUpon>13GeoFence.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\1Intro.ar.resx">
+      <DependentUpon>1Intro.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\1Intro.id-ID.resx">
       <DependentUpon>1Intro.cs</DependentUpon>
     </EmbeddedResource>
@@ -2361,6 +2916,9 @@
       <DependentUpon>1Intro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\1Intro.ko-KR.resx">
+      <DependentUpon>1Intro.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\1Intro.pt.resx">
       <DependentUpon>1Intro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\1Intro.resx">
@@ -2375,6 +2933,9 @@
     <EmbeddedResource Include="Wizard\1Intro.zh-TW.resx">
       <DependentUpon>1Intro.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\2FrameFW.ar.resx">
+      <DependentUpon>2FrameFW.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\2FrameFW.id-ID.resx">
       <DependentUpon>2FrameFW.cs</DependentUpon>
     </EmbeddedResource>
@@ -2382,6 +2943,9 @@
       <DependentUpon>2FrameFW.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\2FrameFW.ko-KR.resx">
+      <DependentUpon>2FrameFW.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\2FrameFW.pt.resx">
       <DependentUpon>2FrameFW.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\2FrameFW.resx">
@@ -2396,6 +2960,9 @@
     <EmbeddedResource Include="Wizard\2FrameFW.zh-TW.resx">
       <DependentUpon>2FrameFW.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\3ConnectAP.ar.resx">
+      <DependentUpon>3ConnectAP.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\3ConnectAP.id-ID.resx">
       <DependentUpon>3ConnectAP.cs</DependentUpon>
     </EmbeddedResource>
@@ -2403,6 +2970,9 @@
       <DependentUpon>3ConnectAP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\3ConnectAP.ko-KR.resx">
+      <DependentUpon>3ConnectAP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\3ConnectAP.pt.resx">
       <DependentUpon>3ConnectAP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\3ConnectAP.resx">
@@ -2417,6 +2987,9 @@
     <EmbeddedResource Include="Wizard\3ConnectAP.zh-TW.resx">
       <DependentUpon>3ConnectAP.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\4FrameType.ar.resx">
+      <DependentUpon>4FrameType.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\4FrameType.id-ID.resx">
       <DependentUpon>4FrameType.cs</DependentUpon>
     </EmbeddedResource>
@@ -2424,6 +2997,9 @@
       <DependentUpon>4FrameType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\4FrameType.ko-KR.resx">
+      <DependentUpon>4FrameType.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\4FrameType.pt.resx">
       <DependentUpon>4FrameType.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\4FrameType.resx">
@@ -2438,6 +3014,9 @@
     <EmbeddedResource Include="Wizard\4FrameType.zh-TW.resx">
       <DependentUpon>4FrameType.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\5AccelCalib.ar.resx">
+      <DependentUpon>5AccelCalib.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\5AccelCalib.id-ID.resx">
       <DependentUpon>5AccelCalib.cs</DependentUpon>
     </EmbeddedResource>
@@ -2445,6 +3024,9 @@
       <DependentUpon>5AccelCalib.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\5AccelCalib.ko-KR.resx">
+      <DependentUpon>5AccelCalib.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\5AccelCalib.pt.resx">
       <DependentUpon>5AccelCalib.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\5AccelCalib.resx">
@@ -2459,6 +3041,9 @@
     <EmbeddedResource Include="Wizard\5AccelCalib.zh-TW.resx">
       <DependentUpon>5AccelCalib.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\6CompassCalib.ar.resx">
+      <DependentUpon>6CompassCalib.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\6CompassCalib.id-ID.resx">
       <DependentUpon>6CompassCalib.cs</DependentUpon>
     </EmbeddedResource>
@@ -2466,6 +3051,9 @@
       <DependentUpon>6CompassCalib.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\6CompassCalib.ko-KR.resx">
+      <DependentUpon>6CompassCalib.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\6CompassCalib.pt.resx">
       <DependentUpon>6CompassCalib.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\6CompassCalib.resx">
@@ -2480,6 +3068,9 @@
     <EmbeddedResource Include="Wizard\6CompassCalib.zh-TW.resx">
       <DependentUpon>6CompassCalib.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\7BatteryMonitor.ar.resx">
+      <DependentUpon>7BatteryMonitor.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\7BatteryMonitor.id-ID.resx">
       <DependentUpon>7BatteryMonitor.cs</DependentUpon>
     </EmbeddedResource>
@@ -2487,6 +3078,9 @@
       <DependentUpon>7BatteryMonitor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\7BatteryMonitor.ko-KR.resx">
+      <DependentUpon>7BatteryMonitor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\7BatteryMonitor.pt.resx">
       <DependentUpon>7BatteryMonitor.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\7BatteryMonitor.resx">
@@ -2501,6 +3095,9 @@
     <EmbeddedResource Include="Wizard\7BatteryMonitor.zh-TW.resx">
       <DependentUpon>7BatteryMonitor.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\8OptionalItemsAC.ar.resx">
+      <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAC.id-ID.resx">
       <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
     </EmbeddedResource>
@@ -2508,6 +3105,9 @@
       <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAC.ko-KR.resx">
+      <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\8OptionalItemsAC.pt.resx">
       <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAC.resx">
@@ -2522,6 +3122,9 @@
     <EmbeddedResource Include="Wizard\8OptionalItemsAC.zh-TW.resx">
       <DependentUpon>8OptionalItemsAC.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\8OptionalItemsAP.ar.resx">
+      <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAP.id-ID.resx">
       <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
     </EmbeddedResource>
@@ -2529,6 +3132,9 @@
       <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAP.ko-KR.resx">
+      <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\8OptionalItemsAP.pt.resx">
       <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\8OptionalItemsAP.resx">
@@ -2543,6 +3149,9 @@
     <EmbeddedResource Include="Wizard\8OptionalItemsAP.zh-TW.resx">
       <DependentUpon>8OptionalItemsAP.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\98DontForget.ar.resx">
+      <DependentUpon>98DontForget.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\98DontForget.id-ID.resx">
       <DependentUpon>98DontForget.cs</DependentUpon>
     </EmbeddedResource>
@@ -2550,6 +3159,9 @@
       <DependentUpon>98DontForget.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\98DontForget.ko-KR.resx">
+      <DependentUpon>98DontForget.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\98DontForget.pt.resx">
       <DependentUpon>98DontForget.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\98DontForget.resx">
@@ -2564,6 +3176,9 @@
     <EmbeddedResource Include="Wizard\98DontForget.zh-TW.resx">
       <DependentUpon>98DontForget.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\9RadioCalibration.ar.resx">
+      <DependentUpon>9RadioCalibration.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\9RadioCalibration.id-ID.resx">
       <DependentUpon>9RadioCalibration.cs</DependentUpon>
     </EmbeddedResource>
@@ -2571,6 +3186,9 @@
       <DependentUpon>9RadioCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\9RadioCalibration.ko-KR.resx">
+      <DependentUpon>9RadioCalibration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\9RadioCalibration.pt.resx">
       <DependentUpon>9RadioCalibration.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\9RadioCalibration.resx">
@@ -2585,10 +3203,16 @@
     <EmbeddedResource Include="Wizard\9RadioCalibration.zh-TW.resx">
       <DependentUpon>9RadioCalibration.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\Wizard.ar.resx">
+      <DependentUpon>Wizard.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Wizard\Wizard.ja-JP.resx">
       <DependentUpon>Wizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\Wizard.ko-KR.resx">
+      <DependentUpon>Wizard.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Wizard\Wizard.pt.resx">
       <DependentUpon>Wizard.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Wizard\Wizard.resx">
@@ -2603,6 +3227,9 @@
     <EmbeddedResource Include="Wizard\Wizard.zh-TW.resx">
       <DependentUpon>Wizard.cs</DependentUpon>
     </EmbeddedResource>
+    <None Include="aot.sh">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Drivers\arduinomega2560.cat" />
     <None Include="Drivers\ArduinoMEGA2560.inf" />
     <None Include="Drivers\mindpx.cat">
@@ -2621,6 +3248,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Drivers\px4mav.cat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\ubloxusb.cat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\ubloxusb.sys">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="Drivers\ubloxusb64.sys">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Drivers\vrbrain.cat">
@@ -2642,6 +3278,14 @@
     </None>
     <None Include="LogAnalyzer\py2exe\createexe.bat" />
     <None Include="LogAnalyzer\upload.bat" />
+    <None Include="NoFly\Areas-Lisboa.kmz" />
+    <None Include="NoFly\Regulamento-RPA-ver-3.0.kmz">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="ph2_serial.csv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="PRIVACY.md" />
     <None Include="Utilities\ImageOverFilter.cs" />
     <EmbeddedResource Include="Antenna\Tracker.id-ID.resx">
       <DependentUpon>Tracker.cs</DependentUpon>
@@ -2732,6 +3376,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\SITL.resx">
       <DependentUpon>SITL.cs</DependentUpon>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="Controls\ServoOptions.zh-Hans.resx">
       <DependentUpon>ServoOptions.cs</DependentUpon>
@@ -2977,28 +3622,6 @@
     <EmbeddedResource Include="SerialOutputPass.zh-Hans.resx">
       <DependentUpon>SerialOutputPass.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Strings.id-ID.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.id-ID.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.ja-JP.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.ja-JP.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.ko-KR.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.ko-KR.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.resx">
-      <SubType>Designer</SubType>
-      <Generator>PublicResXFileCodeGenerator</Generator>
-      <LastGenOutput>Strings.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Strings.zh-Hans.resx">
-      <SubType>Designer</SubType>
-      <LastGenOutput>Strings.zh-Hans.Designer.cs</LastGenOutput>
-      <Generator>ResXFileCodeGenerator</Generator>
-    </EmbeddedResource>
     <EmbeddedResource Include="Utilities\fftui.resx">
       <DependentUpon>fftui.cs</DependentUpon>
     </EmbeddedResource>
@@ -3188,7 +3811,6 @@
       <DependentUpon>Grid.cs</DependentUpon>
     </Compile>
     <Compile Include="Swarm\Swarm.cs" />
-    <Compile Include="Swarm\VerticalWave.cs" />
     <Compile Include="Utilities\ParameterMetaDataConstants.cs" />
     <Compile Include="MagCalib.cs" />
     <Compile Include="Radio\Sikradio.cs">
@@ -3533,6 +4155,12 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Resources\Welcome_to_Michael_Oborne.rtf" />
+    <None Include="yuvtorgb_fragment.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="yuvtorgb_vertex.glsl">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Content Include="acsimplepids.xml">
@@ -3593,6 +4221,9 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Drivers\px4mav.inf">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Drivers\ubloxusb.inf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Drivers\vrbrain.inf">
@@ -3664,6 +4295,8 @@
     <None Include="Resources\FW icons 2013+logos-011.png" />
     <None Include="Resources\FW icons 2013+logos-012.png" />
     <None Include="Resources\uavcanesc.jpg" />
+    <None Include="Resources\boat.png" />
+    <None Include="Resources\sub.png" />
     <Content Include="Scripts\example7.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -3672,6 +4305,9 @@
     </Content>
     <Content Include="Scripts\example6.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Scripts\example9 - sitl.py">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\example8 - speech.py">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -3958,9 +4594,9 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="ExtLibs\AltitudeAngelWings\AltitudeAngelWings.csproj">
-      <Project>{098f542c-7c70-4b9c-b2e2-ac5dc5e0294b}</Project>
-      <Name>AltitudeAngelWings</Name>
+    <ProjectReference Include="ExtLibs\Arduino\Arduino.csproj">
+      <Project>{ec0f2b60-cc39-4990-801f-c5db4b570600}</Project>
+      <Name>Arduino</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\AviFile\AviFile.csproj">
       <Project>{ABB32A29-AF50-47FA-B243-5FD75A5ABA54}</Project>
@@ -3968,9 +4604,8 @@
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\BSE.Windows.Forms\BSE.Windows.Forms.csproj">
-      <Project>{9CA367B8-0B98-49D1-84FB-735E612E3BA9}</Project>
+      <Project>{9ca367b8-0b98-49d1-84fb-735e612e3ba9}</Project>
       <Name>BSE.Windows.Forms</Name>
-      <EmbedInteropTypes>False</EmbedInteropTypes>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\Comms\MissionPlanner.Comms.csproj">
       <Project>{825E7A10-390C-4A2B-B3A8-491D14966912}</Project>
@@ -3984,16 +4619,20 @@
       <Project>{59129078-7B12-4198-B93E-0AA08D0BB7ED}</Project>
       <Name>Core</Name>
     </ProjectReference>
+    <ProjectReference Include="ExtLibs\GDAL\GDAL.csproj">
+      <Project>{766fcf85-4809-44db-b316-6c4902c65245}</Project>
+      <Name>GDAL</Name>
+    </ProjectReference>
     <ProjectReference Include="ExtLibs\GeoUtility\GeoUtility.csproj">
       <Project>{7F7994CE-823F-4A04-BBEA-D0A3808FF56D}</Project>
       <Name>GeoUtility</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\GMap.NET.Core\GMap.NET.Core.csproj">
-      <Project>{D0C39D9D-BED0-418B-9A5E-713176CAF40C}</Project>
+      <Project>{d0c39d9d-bed0-418b-9a5e-713176caf40c}</Project>
       <Name>GMap.NET.Core</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\GMap.NET.WindowsForms\GMap.NET.WindowsForms.csproj">
-      <Project>{E06DEF77-F933-42FB-AFD7-DB2D0D8D6A98}</Project>
+      <Project>{e06def77-f933-42fb-afd7-db2d0d8d6a98}</Project>
       <Name>GMap.NET.WindowsForms</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\KMLib\KMLib.csproj">
@@ -4009,7 +4648,7 @@
       <Name>ManagedNativeWifi.Simple</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\Mavlink\MAVLink.csproj">
-      <Project>{20296734-5F3C-4593-A0D5-DD20B440B13A}</Project>
+      <Project>{13d2ec90-c41f-48a1-aada-859b6dc24edc}</Project>
       <Name>MAVLink</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\MetaDataExtractorCSharp240d\MetaDataExtractor.csproj">
@@ -4027,6 +4666,10 @@
     <ProjectReference Include="ExtLibs\SharpKml\SharpKml.csproj">
       <Project>{53F12A60-E9CC-44BC-8366-1AE3AB2B547D}</Project>
       <Name>SharpKml</Name>
+    </ProjectReference>
+    <ProjectReference Include="ExtLibs\solo\solo.csproj">
+      <Project>{cf402948-a3f4-4962-8a57-e40b46759d25}</Project>
+      <Name>solo</Name>
     </ProjectReference>
     <ProjectReference Include="ExtLibs\tlogThumbnailHandler\tlogThumbnailHandler.csproj">
       <Project>{aba78b2e-77c3-4377-8568-9542ac227971}</Project>
@@ -4060,11 +4703,9 @@
       <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
     </PropertyGroup>
     <Error Condition="!Exists('$(SolutionDir)\.nuget\NuGet.targets')" Text="$([System.String]::Format('$(ErrorText)', '$(SolutionDir)\.nuget\NuGet.targets'))" />
-    <Error Condition="!Exists('packages\SharpDX.2.6.3\build\SharpDX.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\SharpDX.2.6.3\build\SharpDX.targets'))" />
-    <Error Condition="!Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+    <Error Condition="!Exists('packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets'))" />
   </Target>
-  <Import Project="packages\SharpDX.2.6.3\build\SharpDX.targets" Condition="Exists('packages\SharpDX.2.6.3\build\SharpDX.targets')" />
-  <Import Project="packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Import Project="packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets" Condition="Exists('packages\Xamarin.Forms.2.3.4.231\build\portable-win+net45+wp80+win81+wpa81+MonoAndroid10+Xamarin.iOS10+xamarinmac20\Xamarin.Forms.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

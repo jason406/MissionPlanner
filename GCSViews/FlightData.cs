@@ -24,7 +24,6 @@ using MissionPlanner.Log;
 using MissionPlanner.Utilities;
 using MissionPlanner.Warnings;
 using OpenTK;
-using Org.BouncyCastle.Asn1.X509.Qualified;
 using WebCamService;
 using ZedGraph;
 using LogAnalyzer = MissionPlanner.Utilities.LogAnalyzer;
@@ -89,10 +88,6 @@ namespace MissionPlanner.GCSViews
         //      private DockStateSerializer _serializer = null;
 
         List<PointLatLng> trackPoints = new List<PointLatLng>();
-
-        const float rad2deg = (float) (180/Math.PI);
-
-        const float deg2rad = (float) (1.0/rad2deg);
 
         public static HUD myhud;
         public static myGMAP mymap;
@@ -328,10 +323,6 @@ namespace MissionPlanner.GCSViews
 
             MainV2.comPort.ParamListChanged += FlightData_ParentChanged;
 
-            MainV2.AdvancedChanged += MainV2_AdvancedChanged;
-
-            // first run
-            MainV2_AdvancedChanged(null, null);
         }
 
         protected override void OnInvalidated(InvalidateEventArgs e)
@@ -385,42 +376,21 @@ namespace MissionPlanner.GCSViews
             int x = 10;
             int y = 10;
 
-            object thisBoxed = MainV2.comPort.MAV.cs;
-            Type test = thisBoxed.GetType();
+            var list = MainV2.comPort.MAV.cs.GetItemList();
+            
 
-            PropertyInfo[] props = test.GetProperties();
-
-            //props
-
-            foreach (var field in props)
+            foreach (var field in list)
             {
-                // field.Name has the field's name.
-                object fieldValue;
-                TypeCode typeCode;
-                try
-                {
-                    fieldValue = field.GetValue(thisBoxed, null); // Get value
-
-                    if (fieldValue == null)
-                        continue;
-                    // Get the TypeCode enumeration. Multiple types get mapped to a common typecode.
-                    typeCode = Type.GetTypeCode(fieldValue.GetType());
-                }
-                catch
-                {
-                    continue;
-                }
-
                 MyLabel lbl1 = null;
                 MyLabel lbl2 = null;
                 try
                 {
-                    var temp = tabStatus.Controls.Find(field.Name, false);
+                    var temp = tabStatus.Controls.Find(field, false);
 
                     if (temp.Length > 0)
                         lbl1 = (MyLabel) temp[0];
 
-                    var temp2 = tabStatus.Controls.Find(field.Name + "value", false);
+                    var temp2 = tabStatus.Controls.Find(field + "value", false);
 
                     if (temp2.Length > 0)
                         lbl2 = (MyLabel) temp2[0];
@@ -435,8 +405,8 @@ namespace MissionPlanner.GCSViews
 
                 lbl1.Location = new Point(x, y);
                 lbl1.Size = new Size(90, 13);
-                lbl1.Text = field.Name;
-                lbl1.Name = field.Name;
+                lbl1.Text = field;
+                lbl1.Name = field;
                 lbl1.Visible = true;
 
                 if (lbl2 == null)
@@ -448,9 +418,9 @@ namespace MissionPlanner.GCSViews
                 lbl2.Size = new Size(50, 13);
                 //if (lbl2.Name == "")
                 lbl2.DataBindings.Clear();
-                lbl2.DataBindings.Add(new Binding("Text", bindingSourceStatusTab, field.Name, false,
+                lbl2.DataBindings.Add(new Binding("Text", bindingSourceStatusTab, field, false,
                     DataSourceUpdateMode.Never, "0"));
-                lbl2.Name = field.Name + "value";
+                lbl2.Name = field + "value";
                 lbl2.Visible = true;
                 //lbl2.Text = fieldValue.ToString();
 
@@ -473,35 +443,6 @@ namespace MissionPlanner.GCSViews
             ThemeManager.ApplyThemeTo(tabStatus);
         }
 
-        private void MainV2_AdvancedChanged(object sender, EventArgs e)
-        {
-            if (!MainV2.Advanced)
-            {
-                if (!tabControlactions.TabPages.Contains(tabActionsSimple))
-                    tabControlactions.TabPages.Add(tabActionsSimple);
-                //tabControlactions.TabPages.Remove(tabGauges);
-                tabControlactions.TabPages.Remove(tabActions);
-                tabControlactions.TabPages.Remove(tabStatus);
-                tabControlactions.TabPages.Remove(tabServo);
-                tabControlactions.TabPages.Remove(tabScripts);
-
-                tabControlactions.Invalidate();
-            }
-            else
-            {
-                //tabControlactions.TabPages.Remove(tabGauges);
-                tabControlactions.TabPages.Remove(tabActionsSimple);
-                if (!tabControlactions.TabPages.Contains(tabActions))
-                    tabControlactions.TabPages.Add(tabActions);
-                if (!tabControlactions.TabPages.Contains(tabStatus))
-                    tabControlactions.TabPages.Add(tabStatus);
-                if (!tabControlactions.TabPages.Contains(tabServo))
-                    tabControlactions.TabPages.Add(tabServo);
-                if (!tabControlactions.TabPages.Contains(tabScripts))
-                    tabControlactions.TabPages.Add(tabScripts);
-            }
-        }
-
         public void Activate()
         {
             log.Info("Activate Called");
@@ -521,7 +462,12 @@ namespace MissionPlanner.GCSViews
                 hud1.Dock = DockStyle.Fill;
             }
 
-            for (int f = 1; f < 10; f++)
+            if (Settings.Instance.ContainsKey("quickViewRows"))
+            {
+                setQuickViewRowsCols(Settings.Instance["quickViewCols"], Settings.Instance["quickViewRows"]);
+            }
+
+            for (int f = 1; f < 30; f++)
             {
                 // load settings
                 if (Settings.Instance["quickView" + f] != null)
@@ -871,6 +817,12 @@ namespace MissionPlanner.GCSViews
                 if (!MainV2.comPort.logreadmode)
                     Thread.Sleep(50); // max is only ever 10 hz but we go a little faster to empty the serial queue
 
+                if (this.IsDisposed)
+                {
+                    threadrun = false;
+                    break;
+                }
+
                 try
                 {
                     if (aviwriter != null && vidrec.AddMilliseconds(100) <= DateTime.Now)
@@ -1142,6 +1094,9 @@ namespace MissionPlanner.GCSViews
                             route.Points.Add(currentloc);
                         }
 
+                        if (!this.IsHandleCreated)
+                            continue;
+
                         updateRoutePosition();
 
                         // update programed wp course
@@ -1234,13 +1189,20 @@ namespace MissionPlanner.GCSViews
                             if (MainV2.ShowAirports)
                             {
                                 // airports
-                                foreach (var item in Airports.getAirports(gMapControl1.Position))
+                                foreach (var item in Airports.getAirports(gMapControl1.Position).ToArray())
                                 {
-                                    rallypointoverlay.Markers.Add(new GMapMarkerAirport(item)
+                                    try
                                     {
-                                        ToolTipText = item.Tag,
-                                        ToolTipMode = MarkerTooltipMode.OnMouseOver
-                                    });
+                                        rallypointoverlay.Markers.Add(new GMapMarkerAirport(item)
+                                        {
+                                            ToolTipText = item.Tag,
+                                            ToolTipMode = MarkerTooltipMode.OnMouseOver
+                                        });
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        log.Error(e);
+                                    }
                                 }
                             }
                             waypoints = DateTime.Now;
@@ -1415,12 +1377,15 @@ namespace MissionPlanner.GCSViews
                             }
 
                             // draw all icons for all connected mavs
-                            foreach (var port in MainV2.Comports)
+                            foreach (var port in MainV2.Comports.ToArray())
                             {
                                 // draw the mavs seen on this port
                                 foreach (var MAV in port.MAVlist)
                                 {
                                     var marker = Common.getMAVMarker(MAV);
+
+                                    if(marker.Position.Lat == 0 && marker.Position.Lng == 0)
+                                        continue;
 
                                     addMissionRouteMarker(marker);
                                 }
@@ -1527,7 +1492,7 @@ namespace MissionPlanner.GCSViews
 
         private void setMapBearing()
         {
-            Invoke((MethodInvoker) delegate { gMapControl1.Bearing = (int) MainV2.comPort.MAV.cs.yaw; });
+            Invoke((MethodInvoker) delegate { gMapControl1.Bearing = (int)((MainV2.comPort.MAV.cs.yaw + 360) % 360); });
         }
 
         // to prevent cross thread calls while in a draw and exception
@@ -1626,12 +1591,12 @@ namespace MissionPlanner.GCSViews
             //  run at 25 hz.
             if (lastscreenupdate.AddMilliseconds(40) < DateTime.Now)
             {
-                // this is an attempt to prevent an invoke queue on the binding update on slow machines
-                if (updateBindingSourcecount > 0)
-                    return;
-
                 lock (updateBindingSourcelock)
                 {
+                    // this is an attempt to prevent an invoke queue on the binding update on slow machines
+                    if (updateBindingSourcecount > 0)
+                    return;
+
                     updateBindingSourcecount++;
                     updateBindingSourceThreadName = Thread.CurrentThread.Name;
                 }
@@ -1684,8 +1649,10 @@ namespace MissionPlanner.GCSViews
                 }
                 lastscreenupdate = DateTime.Now;
             }
-            catch
+            catch (Exception ex)
             {
+                log.Error(ex);
+                Tracking.AddException(ex);
             }
         }
 
@@ -2277,7 +2244,7 @@ namespace MissionPlanner.GCSViews
             }
             else
             {
-                MainV2.comPort.MAV.cs.altoffsethome = -MainV2.comPort.MAV.cs.HomeAlt/CurrentState.multiplierdist;
+                MainV2.comPort.MAV.cs.altoffsethome = (float)(-MainV2.comPort.MAV.cs.HomeAlt/CurrentState.multiplierdist);
             }
         }
 
@@ -2622,11 +2589,8 @@ namespace MissionPlanner.GCSViews
 
             huddropoutresize = true;
 
-            int hudw = hud1.Width;
             int hudh = hud1.Height;
-
             int formh = ((Form) sender).Height - 30;
-            int formw = ((Form) sender).Width;
 
             if (((Form) sender).Height < hudh)
             {
@@ -2636,7 +2600,7 @@ namespace MissionPlanner.GCSViews
                     ((Form) sender).WindowState = FormWindowState.Normal;
                     ((Form) sender).Location = tl;
                 }
-                ((Form) sender).Width = (int) (formh*1.333f);
+                ((Form) sender).Width = (int) (formh*(hud1.SixteenXNine ? 1.777f : 1.333f));
                 ((Form) sender).Height = formh + 20;
             }
             hud1.Refresh();
@@ -2734,9 +2698,19 @@ namespace MissionPlanner.GCSViews
 
         private void zg1_DoubleClick(object sender, EventArgs e)
         {
-            Form selectform = new Form
+            string formname = "select";
+            Form selectform = Application.OpenForms[formname];
+            if(selectform != null)
             {
-                Name = "select",
+                selectform.WindowState = FormWindowState.Minimized;
+                selectform.Show();
+                selectform.WindowState = FormWindowState.Normal;
+                return;
+            }
+
+            selectform = new Form
+            {
+                Name = formname,
                 Width = 50,
                 Height = 550,
                 Text = "Graph This"
@@ -3095,7 +3069,7 @@ namespace MissionPlanner.GCSViews
                     CustomMessageBox.Show("Max 10 at a time.");
                     ((CheckBox) sender).Checked = false;
                 }
-                ThemeManager.ApplyThemeTo(this);
+                ThemeManager.ApplyThemeTo((Control)sender);
 
                 string selected = "";
                 try
@@ -3409,6 +3383,7 @@ namespace MissionPlanner.GCSViews
                     splitContainer1.Panel2.Controls.Add(but);
                     splitContainer1.Panel2.Controls.Add(sc.Control);
                     ThemeManager.ApplyThemeTo(sc.Control);
+                    ThemeManager.ApplyThemeTo(this);
 
                     sc.Control.Dock = DockStyle.Fill;
                     sc.Control.Visible = true;
@@ -3920,6 +3895,8 @@ namespace MissionPlanner.GCSViews
 
                             Controls.LogAnalyzer frm = new Controls.LogAnalyzer(out1);
 
+                            ThemeManager.ApplyThemeTo(frm);
+
                             frm.Show();
                         }
                         catch (Exception ex)
@@ -3958,20 +3935,6 @@ namespace MissionPlanner.GCSViews
             // you cannot call join on the main thread, and invoke on the thread. as it just hangs on the invoke.
 
             //thisthread.Join();
-        }
-
-        private void but_autotune_Click(object sender, EventArgs e)
-        {
-            if (MainV2.comPort.BaseStream.IsOpen)
-            {
-                MainV2.comPort.setMode(new MAVLink.mavlink_set_mode_t
-                {
-                    base_mode = (byte) MAVLink.MAV_MODE_FLAG.CUSTOM_MODE_ENABLED,
-                    custom_mode = 15,
-                    // #define AUTOTUNE    15                  // autotune the vehicle's roll and pitch gains
-                    target_system = MainV2.comPort.MAV.sysid
-                });
-            }
         }
 
         private void takeOffToolStripMenuItem_Click(object sender, EventArgs e)
@@ -4384,5 +4347,123 @@ namespace MissionPlanner.GCSViews
         {
             CameraOverlap = onOffCameraOverlapToolStripMenuItem.Checked;
         }
+
+        private void altitudeAngelSettingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            //new Utilities.AltitudeAngel.AASettings().Show(this);
+        }
+
+        private void setViewCountToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string cols = "2", rows = "3";
+
+            if (Settings.Instance["quickViewRows"]!= null)
+            {
+                rows = Settings.Instance["quickViewRows"];
+                cols = Settings.Instance["quickViewCols"]; 
+            }
+
+            if (InputBox.Show("Columns", "Enter number of columns to have.", ref cols) == DialogResult.OK)
+            {
+                if (InputBox.Show("Rows", "Enter number of rows to have.", ref rows) == DialogResult.OK)
+                {
+                    setQuickViewRowsCols(cols, rows);
+
+                    Activate();
+                }
+            }
+        }
+
+        private void setQuickViewRowsCols(string cols, string rows)
+        {
+            tableLayoutPanelQuick.ColumnCount = int.Parse(cols);
+            tableLayoutPanelQuick.RowCount = int.Parse(rows);
+
+            Settings.Instance["quickViewRows"] = tableLayoutPanelQuick.RowCount.ToString();
+            Settings.Instance["quickViewCols"] = tableLayoutPanelQuick.ColumnCount.ToString();
+
+            int total = tableLayoutPanelQuick.ColumnCount * tableLayoutPanelQuick.RowCount;
+
+            // clean up extra
+            while (tableLayoutPanelQuick.Controls.Count > total)
+                tableLayoutPanelQuick.Controls.RemoveAt(tableLayoutPanelQuick.Controls.Count - 1);
+
+            // add extra
+            while (total != tableLayoutPanelQuick.Controls.Count)
+            {
+                var QV = new QuickView()
+                {
+                    Name = "quickView" + (tableLayoutPanelQuick.Controls.Count + 1)
+                };
+                QV.DoubleClick += quickView_DoubleClick;
+                QV.ContextMenuStrip = contextMenuStripQuickView;
+                QV.Dock = DockStyle.Fill;
+                QV.numberColor = GetColor();
+                QV.number = 0;
+
+                tableLayoutPanelQuick.Controls.Add(QV);
+                QV.GetFontSize();
+            }
+
+            for (int i = 0; i < tableLayoutPanelQuick.ColumnCount; i++)
+            {
+                if (tableLayoutPanelQuick.ColumnStyles.Count <= i)
+                    tableLayoutPanelQuick.ColumnStyles.Add(new ColumnStyle());
+                tableLayoutPanelQuick.ColumnStyles[i].SizeType = SizeType.Percent;
+                tableLayoutPanelQuick.ColumnStyles[i].Width = 100.0f / tableLayoutPanelQuick.ColumnCount;
+            }
+            for (int j = 0; j < tableLayoutPanelQuick.RowCount; j++)
+            {
+                if (tableLayoutPanelQuick.RowStyles.Count <= j)
+                    tableLayoutPanelQuick.RowStyles.Add(new RowStyle());
+                tableLayoutPanelQuick.RowStyles[j].SizeType = SizeType.Percent;
+                tableLayoutPanelQuick.RowStyles[j].Height = 100.0f / tableLayoutPanelQuick.RowCount;
+            }
+        }
+
+        Random random = new Random();
+        private Process gst;
+
+        Color GetColor()
+        {
+            Color mix = Color.White;
+            
+            int red = random.Next(256);
+            int green = random.Next(256);
+            int blue = random.Next(256);
+
+            // mix the color
+            if (mix != null)
+            {
+                red = (red + mix.R) / 2;
+                green = (green + mix.G) / 2;
+                blue = (blue + mix.B) / 2;
+            }
+
+            var col = Color.FromArgb(red, green, blue);
+
+            this.LogInfo("GetColor() " + col);
+
+            return col;
+        }
+
+        private void setGStreamerSourceToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            string url = Settings.Instance["gstreamer_url"] != null
+                ? Settings.Instance["gstreamer_url"]
+                : @"rtspsrc location=rtsp://192.168.1.133:8554/video1 ! application/x-rtp ! rtpjpegdepay ";
+
+            if (DialogResult.OK == InputBox.Show("GStreamer url", "Enter the source pipeline\nEnsure the final type is jpeg data (avenc_mjpeg)", ref url))
+            {
+                Settings.Instance["gstreamer_url"] = url;
+
+                gst = GStreamer.Start(url);
+            }
+            else
+            {
+                GStreamer.Stop(gst);
+            }
+        }
     }
 }
+ 
